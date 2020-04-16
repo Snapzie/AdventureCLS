@@ -10,6 +10,11 @@ namespace AdventureGrains
 {
     public class PlayerGrain : Orleans.Grain, IPlayerGrain
     {
+        //==================== CHANGES =======================
+        private int health = 100;
+        private int damage = 20;
+        //====================================================
+        
         IRoomGrain roomGrain; // Current room
         List<Thing> things = new List<Thing>(); // Things that the player is carrying
 
@@ -163,8 +168,9 @@ namespace AdventureGrains
                 var weapons = monster.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
                 if (weapons.Count() > 0)
                 {
-                    await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain);
-                    return target + " is now dead.";
+                    //======================================== CHANGES =============================================
+                    return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, this.damage);
+                    //==============================================================================================
                 }
                 return "With what? Your bare hands?";
             }

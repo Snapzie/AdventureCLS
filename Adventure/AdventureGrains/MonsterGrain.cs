@@ -10,6 +10,11 @@ namespace AdventureGrains
 {
     public class MonsterGrain : Orleans.Grain, IMonsterGrain
     {
+        //==================== CHANGES =======================
+        private int health = 100;
+        private int damage = 10;
+        //====================================================
+        
         MonsterInfo monsterInfo = new MonsterInfo();
         IRoomGrain roomGrain; // Current room
 
@@ -62,7 +67,7 @@ namespace AdventureGrains
         }
 
 
-        Task<string> IMonsterGrain.Kill(IRoomGrain room)
+        Task<string> IMonsterGrain.Kill(IRoomGrain room, int damage)
         {
             if (this.roomGrain != null)
             {
@@ -70,7 +75,18 @@ namespace AdventureGrains
                 {
                     return Task.FromResult(monsterInfo.Name + " snuck away. You were too slow!");
                 }
-                return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " is dead.");
+                //=================================================== CHANGES =============================================================
+                this.health -= damage;
+                if (this.health <= 0)
+                {
+                    return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " is dead.");
+                }
+                else
+                {
+                    return Task.FromResult(monsterInfo.Name + $" took {damage.ToString()} damage. He now has {this.health} health left!");
+                }
+                //=========================================================================================================================
+                //return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " is dead.");
             }
             return Task.FromResult(monsterInfo.Name + " is already dead. You were too slow and someone else got to him!");
         }
