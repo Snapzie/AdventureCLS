@@ -13,6 +13,10 @@ namespace AdventureGrains
         //==================== CHANGES =======================
         private int health = 100;
         private int damage = 10;
+
+        private IDisposable moveTimer;
+        private IDisposable attackTimer;
+        
         //====================================================
         
         MonsterInfo monsterInfo = new MonsterInfo();
@@ -22,8 +26,8 @@ namespace AdventureGrains
         {
             this.monsterInfo.Id = this.GetPrimaryKeyLong();
 
-            RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20));
-            RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10));
+            this.attackTimer = RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20));
+            this.moveTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10));
             return base.OnActivateAsync();
         }
         
@@ -95,6 +99,8 @@ namespace AdventureGrains
                 this.health -= damage;
                 if (this.health <= 0)
                 {
+                    this.moveTimer?.Dispose();
+                    this.attackTimer?.Dispose();
                     return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " is dead.");
                 }
                 else

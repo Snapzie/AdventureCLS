@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 namespace AdventureGrains
 {
-    /// <summary>
-    /// Orleans grain implementation class Grain1.
-    /// </summary>
     public class RoomGrain : Grain, IRoomGrain
     {
-        // TODO: replace placeholder grain interface with actual grain
-        // communication interface(s).
-
         string description;
+        
+        //=================================== CHANGES ===========================================
+        List<WeatherTypes> weathers = new List<WeatherTypes>() 
+            {WeatherTypes.Blizzard, WeatherTypes.Cloudy, WeatherTypes.Night, WeatherTypes.Sunny};
+
+        private WeatherTypes activeWeather;
+        private Random rand = new Random();
+        //=======================================================================================
 
         List<PlayerInfo> players = new List<PlayerInfo>();
         List<MonsterInfo> monsters = new List<MonsterInfo>();
@@ -24,11 +26,23 @@ namespace AdventureGrains
 
         Dictionary<string, IRoomGrain> exits = new Dictionary<string, IRoomGrain>();
 
-        Task IRoomGrain.Enter(PlayerInfo player)
+        async Task IRoomGrain.Enter(PlayerInfo player)
         {
             players.RemoveAll(x => x.Key == player.Key);
             players.Add(player);
-            return Task.CompletedTask;
+            //=================================== CHANGES ===========================================
+            activeWeather = weathers[rand.Next(0, weathers.Count)];
+            switch (activeWeather)
+            {
+                case WeatherTypes.Blizzard:
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(-5);
+                    break;
+                case WeatherTypes.Sunny:
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(10);
+                    break;
+            }
+            //=======================================================================================
+            return;
         }
 
         Task IRoomGrain.Exit(PlayerInfo player)
@@ -103,34 +117,58 @@ namespace AdventureGrains
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine(this.description);
-
-            if (things.Count > 0)
+            //========================= CHANGES ======================================
+            switch (activeWeather)
             {
-                sb.AppendLine("The following things are present:");
-                foreach (var thing in things)
+                case WeatherTypes.Blizzard:
+                    sb.AppendLine("It is hailing!");
+                    break;
+                case WeatherTypes.Night:
+                    sb.AppendLine("It is dark!");
+                    break;
+                case WeatherTypes.Sunny:
+                    sb.AppendLine("It is sunny!");
+                    break;
+                case WeatherTypes.Cloudy:
+                    sb.AppendLine("It is cloudy!");
+                    break;
+            }
+
+            if (activeWeather != WeatherTypes.Night)
+            {
+                if (things.Count > 0)
                 {
-                    sb.Append("  ").AppendLine(thing.Name);
+                    sb.AppendLine("The following things are present:");
+                    foreach (var thing in things)
+                    {
+                        sb.Append("  ").AppendLine(thing.Name);
+                    }
+                }
+
+                var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
+
+                if (others.Length > 0 || monsters.Count > 0)
+                {
+                    sb.AppendLine("Beware! These guys are in the room with you:");
+                    if (others.Length > 0)
+                        foreach (var player in others)
+                        {
+                            sb.Append("  ").AppendLine(player.Name);
+                        }
+                    if (monsters.Count > 0)
+                        foreach (var monster in monsters)
+                        {
+                            sb.Append("  ").AppendLine(monster.Name);
+                        }
                 }
             }
-
-            var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-
-            if (others.Length > 0 || monsters.Count > 0)
+            else
             {
-                sb.AppendLine("Beware! These guys are in the room with you:");
-                if (others.Length > 0)
-                    foreach (var player in others)
-                    {
-                        sb.Append("  ").AppendLine(player.Name);
-                    }
-                if (monsters.Count > 0)
-                    foreach (var monster in monsters)
-                    {
-                        sb.Append("  ").AppendLine(monster.Name);
-                    }
+                sb.AppendLine("It is too dark to see anything!");
             }
+            //========================================================================
 
-            sb.Append($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key).GetHealth()}");
+            sb.AppendLine($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key).GetHealth()}");
 
             return Task.FromResult(sb.ToString()).Result;
         }
