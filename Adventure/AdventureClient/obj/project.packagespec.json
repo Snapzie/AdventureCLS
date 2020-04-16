@@ -1,0 +1,54 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/Users/casper/Documents/Uni/Bachelor/AdventureCLS/Adventure/AdventureClient/AdventureClient.csproj",
+    "projectName": "AdventureClient",
+    "projectPath": "/Users/casper/Documents/Uni/Bachelor/AdventureCLS/Adventure/AdventureClient/AdventureClient.csproj",
+    "outputPath": "/Users/casper/Documents/Uni/Bachelor/AdventureCLS/Adventure/AdventureClient/obj/",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp3.1"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "projectReferences": {
+          "/Users/casper/Documents/Uni/Bachelor/AdventureCLS/Adventure/AdventureGrainInterfaces/AdventureGrainInterfaces.csproj": {
+            "projectPath": "/Users/casper/Documents/Uni/Bachelor/AdventureCLS/Adventure/AdventureGrainInterfaces/AdventureGrainInterfaces.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp3.1": {
+      "dependencies": {
+        "Microsoft.Extensions.Logging.Console": {
+          "target": "Package",
+          "version": "[3.1.3, )"
+        },
+        "Microsoft.Orleans.Client": {
+          "target": "Package",
+          "version": "[3.1.4, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}
