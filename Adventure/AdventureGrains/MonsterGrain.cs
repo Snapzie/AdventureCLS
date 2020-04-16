@@ -22,9 +22,25 @@ namespace AdventureGrains
         {
             this.monsterInfo.Id = this.GetPrimaryKeyLong();
 
-            RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(150), TimeSpan.FromMinutes(150));
+            RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20));
+            RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10));
             return base.OnActivateAsync();
         }
+        
+        //==================== CHANGES =======================
+        public async Task Attack(IRoomGrain room, int damage)
+        {
+            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+            Random rand = new Random();
+
+            if (targets.Count > 0)
+            {
+                int num = rand.Next(0, targets.Count);
+                await GrainFactory.GetGrain<IPlayerGrain>(targets[num].Key).TakeDamage(room, damage);   
+            }
+            return;
+        }
+        //====================================================
 
         Task IMonsterGrain.SetInfo(MonsterInfo info)
         {

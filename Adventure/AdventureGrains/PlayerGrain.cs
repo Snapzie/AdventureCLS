@@ -27,6 +27,13 @@ namespace AdventureGrains
             this.myInfo = new PlayerInfo { Key = this.GetPrimaryKey(), Name = "nobody" };
             return base.OnActivateAsync();
         }
+        
+        //==================== CHANGES =======================
+        public Task<int> GetHealth()
+        {
+            return Task.FromResult<int>(this.health);
+        }
+        //====================================================
 
         Task<string> IPlayerGrain.Name()
         {
@@ -176,6 +183,26 @@ namespace AdventureGrains
             }
             return "I can't see " + target + " here. Are you sure?";
         }
+        
+        //=========================== CHANGES ==============================
+        public async Task TakeDamage(IRoomGrain room, int damage)
+        {
+            if (this.roomGrain != null)
+            {
+                if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
+                {
+                    this.health -= damage;
+
+                    if (this.health <= 0)
+                    {
+                        await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
+                    }
+                }
+            }
+
+            return;
+        }
+        //==================================================================
 
         private string RemoveStopWords(string s)
         {

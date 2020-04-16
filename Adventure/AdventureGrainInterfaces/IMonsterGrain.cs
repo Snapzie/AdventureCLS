@@ -14,5 +14,9 @@ namespace AdventureGrainInterfaces
         Task<IRoomGrain> RoomGrain();
 
         Task<string> Kill(IRoomGrain room, int damage);
+        
+        //================= CHANGES =====================
+        Task Attack(IRoomGrain room, int damage);
+        //===============================================
     }
 }

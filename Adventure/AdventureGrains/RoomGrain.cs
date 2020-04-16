@@ -1,3 +1,4 @@
+using System;
 using AdventureGrainInterfaces;
 using Orleans;
 using System.Collections.Generic;
@@ -89,8 +90,15 @@ namespace AdventureGrains
             name = name.ToLower();
             return Task.FromResult(monsters.Where(x => x.Name.ToLower().Contains(name)).FirstOrDefault());
         }
+        
+        //==================== CHANGES =======================
+        public Task<List<PlayerInfo>> GetTargetsForMonster()
+        {
+            return Task.FromResult(players);
+        }
+        //====================================================
 
-        Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
+        async Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -122,7 +130,9 @@ namespace AdventureGrains
                     }
             }
 
-            return Task.FromResult(sb.ToString());
+            sb.Append($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key).GetHealth()}");
+
+            return Task.FromResult(sb.ToString()).Result;
         }
 
         Task<IRoomGrain> IRoomGrain.ExitTo(string direction)

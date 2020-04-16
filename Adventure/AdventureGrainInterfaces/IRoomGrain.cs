@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Orleans;
 using System.Threading.Tasks;
 
@@ -31,5 +32,8 @@ namespace AdventureGrainInterfaces
         // Players and monsters can be killed, if you have the right weapon.
         Task<PlayerInfo> FindPlayer(string name);
         Task<MonsterInfo> FindMonster(string name);
+        //==================== CHANGES =======================
+        Task<List<PlayerInfo>> GetTargetsForMonster();
+        //====================================================
     }
 }
