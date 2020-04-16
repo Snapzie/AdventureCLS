@@ -11,8 +11,11 @@ namespace AdventureGrains
     public class PlayerGrain : Orleans.Grain, IPlayerGrain
     {
         //==================== CHANGES =======================
-        private int health = 100;
+        private int health = 100; //Change for player classes
         private int damage = 20;
+        private bool fireballCD = false;
+        private bool roarCD = false;
+        private bool roarActive = false;
         //====================================================
         
         IRoomGrain roomGrain; // Current room
@@ -191,7 +194,14 @@ namespace AdventureGrains
             {
                 if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
-                    this.health -= damage;
+                    if (roarActive) //TODO: Remove for synthesis
+                    {
+                        this.health -= (int)(damage * 0.5);
+                    }
+                    else
+                    {
+                        this.health -= damage;   
+                    }
 
                     if (this.health <= 0)
                     {
@@ -201,6 +211,55 @@ namespace AdventureGrains
             }
 
             return;
+        }
+
+        private async Task<string> Fireball(string target)
+        {
+            var player = await this.roomGrain.FindPlayer(target);
+            if (player != null)
+            {
+                this.fireballCD = true;
+                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 50);
+                return $"{target} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
+            }
+
+            var monster = await this.roomGrain.FindMonster(target);
+            if (monster != null)
+            {
+                this.fireballCD = true;
+                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+                return res;
+            }
+            return "I can't see " + target + " here. Are you sure?";
+        }
+
+        private Task FireballCooldown()
+        {
+            this.fireballCD = false;
+            return Task.CompletedTask;
+        }
+
+        private Task<string> Roar()
+        {
+            this.roarCD = true;
+            this.roarActive = true;
+            RegisterTimer((_) => RoarActive(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+            RegisterTimer((_) => RoarCooldown(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(-1));
+            return Task.FromResult("Roar has been activated!");
+        }
+        
+        private Task RoarActive()
+        {
+            this.roarActive = false;
+            return Task.CompletedTask;
+        }
+
+        private Task RoarCooldown()
+        {
+            this.roarCD = false;
+            return Task.CompletedTask;
         }
         //==================================================================
 
@@ -235,6 +294,7 @@ namespace AdventureGrains
         async Task<string> IPlayerGrain.Play(string command)
         {
             Thing thing;
+            string target;
             command = RemoveStopWords(command);
 
             string[] words = command.Split(' ');
@@ -263,7 +323,7 @@ namespace AdventureGrains
                 case "kill":
                     if (words.Length == 1)
                         return "Kill what?";
-                    var target = command.Substring(verb.Length + 1);
+                    target = command.Substring(verb.Length + 1);
                     return await Kill(target);
 
                 case "drop":
@@ -277,6 +337,27 @@ namespace AdventureGrains
                 case "inv":
                 case "inventory":
                     return "You are carrying: " + string.Join(" ", things.Select(x => x.Name));
+                
+                //======================= CHANGES ============================
+                case "fireball":
+                    if (words.Length == 1)
+                        return "Fireball what?";
+                    if (fireballCD)
+                    {
+                        return "Fireball is on cooldown";
+                    }
+                    target = command.Substring(verb.Length + 1);
+                    return await Fireball(target);
+                
+                case "roar":
+                    if (words.Length > 1)
+                        return "Can not roar others";
+                    if (roarCD)
+                    {
+                        return "Roar is on cooldown";
+                    }
+                    return await Roar();
+                //============================================================
 
                 case "end":
                     return "";
