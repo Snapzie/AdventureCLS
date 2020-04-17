@@ -18,6 +18,7 @@ namespace AdventureGrains
 
         private WeatherTypes activeWeather;
         private Random rand = new Random();
+        private MonsterInfo boss = null;
         //=======================================================================================
 
         List<PlayerInfo> players = new List<PlayerInfo>();
@@ -57,11 +58,30 @@ namespace AdventureGrains
             monsters.Add(monster);
             return Task.CompletedTask;
         }
-
-        Task IRoomGrain.Exit(MonsterInfo monster)
+        
+        //================= CHANGES ============================
+        Task IRoomGrain.BossEnter(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
+            this.boss = monster;
             return Task.CompletedTask;
+        }
+        
+        Task<MonsterInfo> IRoomGrain.GetBoss()
+        {
+            return Task.FromResult(this.boss);
+        }
+        //======================================================
+
+        async Task IRoomGrain.Exit(MonsterInfo monster)
+        {
+            monsters.RemoveAll(x => x.Id == monster.Id);
+            if (this.monsters.Count > 0)
+            {
+                await GrainFactory.GetGrain<IBossGrain>(this.boss.Id).SetAddActive();
+            }
+
+            return;
         }
 
         Task IRoomGrain.Drop(Thing thing)
@@ -110,6 +130,11 @@ namespace AdventureGrains
         {
             return Task.FromResult(players);
         }
+        
+        public Task<List<MonsterInfo>> GetMonsters()
+        {
+            return Task.FromResult(monsters);
+        }
         //====================================================
 
         async Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
@@ -144,10 +169,11 @@ namespace AdventureGrains
                         sb.Append("  ").AppendLine(thing.Name);
                     }
                 }
-
+                
+                
                 var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-
-                if (others.Length > 0 || monsters.Count > 0)
+                //================================== CHANGES ============================
+                if (others.Length > 0 || monsters.Count > 0 || this.boss != null)
                 {
                     sb.AppendLine("Beware! These guys are in the room with you:");
                     if (others.Length > 0)
@@ -160,7 +186,13 @@ namespace AdventureGrains
                         {
                             sb.Append("  ").AppendLine(monster.Name);
                         }
+
+                    if (this.boss != null)
+                    {
+                        sb.Append("  ").AppendLine(this.boss.Name);
+                    }
                 }
+                //=======================================================================
             }
             else
             {

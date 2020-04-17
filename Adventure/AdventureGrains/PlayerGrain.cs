@@ -184,6 +184,18 @@ namespace AdventureGrains
                 }
                 return "With what? Your bare hands?";
             }
+            //======================================== CHANGES =============================================
+            var boss = await this.roomGrain.GetBoss();
+            if (boss != null)
+            {
+                var weapons = boss.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
+                if (weapons.Count() > 0)
+                {
+                    return await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, this.damage);
+                }
+                return "With what? Your bare hands?";
+            }
+            //==============================================================================================
             return "I can't see " + target + " here. Are you sure?";
         }
         
@@ -227,8 +239,15 @@ namespace AdventureGrains
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                this.fireballCD = true;
                 string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+                return res;
+            }
+
+            var boss = await this.roomGrain.GetBoss();
+            if (boss != null)
+            {
+                string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, 50);
                 RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
                 return res;
             }

@@ -8,9 +8,9 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen14404498e9FeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen619a9ec997FeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"AdventureGrains, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
-namespace OrleansGeneratedCode2EF25275
+namespace OrleansGeneratedCodeFD975F09
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -19,7 +19,7 @@ namespace OrleansGeneratedCode2EF25275
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGen14404498e9FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGen619a9ec997FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
@@ -27,6 +27,7 @@ namespace OrleansGeneratedCode
 
         public void Populate(global::Orleans.Metadata.GrainClassFeature feature)
         {
+            feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::AdventureGrains.BossGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::AdventureGrains.MonsterGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::AdventureGrains.PlayerGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::AdventureGrains.RoomGrain)));
@@ -114,6 +115,7 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"System.Linq.ThrowHelper,System.Linq", @"ThrowHelper");
             feature.AddKnownType(@"System.Linq.ExceptionArgument,System.Linq", @"ExceptionArgument");
             feature.AddKnownType(@"System.Linq.Utilities,System.Linq", @"Utilities");
+            feature.AddKnownType(@"AdventureGrains.BossGrain,AdventureGrains", @"AdventureGrains.BossGrain");
             feature.AddKnownType(@"AdventureGrains.MonsterGrain,AdventureGrains", @"AdventureGrains.MonsterGrain");
             feature.AddKnownType(@"AdventureGrains.PlayerGrain,AdventureGrains", @"AdventureGrains.PlayerGrain");
             feature.AddKnownType(@"AdventureGrains.RoomGrain,AdventureGrains", @"AdventureGrains.RoomGrain");

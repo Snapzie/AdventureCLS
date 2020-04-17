@@ -13,6 +13,7 @@ namespace AdventureGrains
         //==================== CHANGES =======================
         private int health = 100;
         private int damage = 10;
+        Random rand = new Random();
 
         private IDisposable moveTimer;
         private IDisposable attackTimer;
@@ -26,8 +27,8 @@ namespace AdventureGrains
         {
             this.monsterInfo.Id = this.GetPrimaryKeyLong();
 
-            this.attackTimer = RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20));
-            this.moveTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10));
+            this.moveTimer = RegisterTimer((_) => Move(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20));
+            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10));
             return base.OnActivateAsync();
         }
         
@@ -35,7 +36,6 @@ namespace AdventureGrains
         public async Task Attack(IRoomGrain room, int damage)
         {
             List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
-            Random rand = new Random();
 
             if (targets.Count > 0)
             {
@@ -52,12 +52,7 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task<string> IMonsterGrain.Name()
-        {
-            return Task.FromResult(this.monsterInfo.Name);
-        }
-
-        async Task IMonsterGrain.SetRoomGrain(IRoomGrain room)
+        async Task IEnemy.SetRoomGrain(IRoomGrain room)
         {
             if (this.roomGrain != null)
                 await this.roomGrain.Exit(this.monsterInfo);
@@ -65,9 +60,10 @@ namespace AdventureGrains
             await this.roomGrain.Enter(this.monsterInfo);
         }
 
-        Task<IRoomGrain> IMonsterGrain.RoomGrain()
+        public Task HealMonster(int heal)
         {
-            return Task.FromResult(roomGrain);
+            this.health += heal;
+            return Task.CompletedTask;
         }
 
         async Task Move()
@@ -86,8 +82,7 @@ namespace AdventureGrains
             this.roomGrain = nextRoom;
         }
 
-
-        Task<string> IMonsterGrain.Kill(IRoomGrain room, int damage)
+        Task<string> IEnemy.Kill(IRoomGrain room, int damage)
         {
             if (this.roomGrain != null)
             {
