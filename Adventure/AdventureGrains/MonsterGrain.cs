@@ -13,7 +13,7 @@ namespace AdventureGrains
         //==================== CHANGES =======================
         private int health = 100;
         private int damage = 10;
-        Random rand = new Random();
+        Random rand = new Random(0);
 
         private IDisposable moveTimer;
         private IDisposable attackTimer;

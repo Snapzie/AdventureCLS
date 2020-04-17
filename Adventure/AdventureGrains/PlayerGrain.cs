@@ -38,17 +38,6 @@ namespace AdventureGrains
         }
         //====================================================
 
-        Task<string> IPlayerGrain.Name()
-        {
-            return Task.FromResult(myInfo.Name);
-        }
-
-        Task<IRoomGrain> IPlayerGrain.RoomGrain()
-        {
-            return Task.FromResult(roomGrain);
-        }
-
-
         async Task IPlayerGrain.Die()
         {
             // Drop everything
