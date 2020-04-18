@@ -216,12 +216,13 @@ namespace AdventureGrains
 
         private async Task<string> Fireball(string target)
         {
+            this.fireballCD = true;
+            IDisposable fcd = RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+            
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                this.fireballCD = true;
-                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 50);
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 10);
                 return $"{target} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
             }
 
@@ -229,7 +230,6 @@ namespace AdventureGrains
             if (monster != null)
             {
                 string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
-                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
                 return res;
             }
 
@@ -237,9 +237,10 @@ namespace AdventureGrains
             if (boss != null)
             {
                 string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, 50);
-                RegisterTimer((_) => FireballCooldown(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
                 return res;
             }
+            this.fireballCD = false;
+            fcd?.Dispose();
             return "I can't see " + target + " here. Are you sure?";
         }
 
@@ -343,6 +344,10 @@ namespace AdventureGrains
                     if (words.Length == 1)
                         return "Kill what?";
                     target = command.Substring(verb.Length + 1);
+                    if (target == "")
+                    {
+                        return "Kill what?";
+                    }
                     return await Kill(target);
 
                 case "drop":
@@ -366,6 +371,10 @@ namespace AdventureGrains
                         return "Fireball is on cooldown";
                     }
                     target = command.Substring(verb.Length + 1);
+                    if (target == "")
+                    {
+                        return "Fireball what?";
+                    }
                     return await Fireball(target);
                 
                 case "roar":

@@ -17,7 +17,7 @@ namespace AdventureGrains
             {WeatherTypes.Blizzard, WeatherTypes.Cloudy, WeatherTypes.Night, WeatherTypes.Sunny};
 
         private WeatherTypes activeWeather;
-        private Random rand = new Random(0);
+        private Random rand = new Random(0); // For testing purposes
         private MonsterInfo boss = null;
         //=======================================================================================
 
