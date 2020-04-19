@@ -2,8 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eafa6257-6051-4a43-9909-9ab707ac86d7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/riderModule.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/riderModule.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IEnemy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IEnemy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/WeatherTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/WeatherTypes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/Adventure.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/Adventure.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureSetup.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureSetup.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OrleansAdventure.sln" beforeDir="false" afterPath="$PROJECT_DIR$/OrleansAdventure.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/BossTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/BossTesting.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/RoomTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/RoomTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" afterDir="false" />
     </list>
+    <list id="d4b183a3-be0b-4a4b-b69f-9914b96a8e8a" name="New changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,30 +39,49 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/WeatherTypes.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureSetup/Adventure.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/AdventureClient/Program.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/Thing.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/MonsterInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/RoomTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/PlayerInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrains/PlayerGrain.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/AdventureSetup/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/PlayerTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureClient/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/Thing.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IEnemy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrains/BossGrain.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/BossTesting.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/AdventureSetup/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/AdventureSetup/Adventure.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/PlayerInfo.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/WeatherTypes.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/MonsterTypes.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IEnemy.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureSetup/Adventure.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureClient/Program.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/PlayerGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" />
+        <option value="$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" />
+        <option value="$PROJECT_DIR$/Tests/RoomTests.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" />
+        <option value="$PROJECT_DIR$/Tests/PlayerTests.cs" />
+        <option value="$PROJECT_DIR$/Tests/BossTesting.cs" />
       </list>
     </option>
   </component>
@@ -47,6 +91,7 @@
     <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
     <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="RiderUnitTestingPageId" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -127,21 +172,87 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="eafa6257-6051-4a43-9909-9ab707ac86d7" name="Default Changelist" comment="" />
+      <changelist id="d4b183a3-be0b-4a4b-b69f-9914b96a8e8a" name="New changelist" comment="" />
       <created>1586340379963</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1586340379963</updated>
       <workItem from="1586340382008" duration="3056000" />
       <workItem from="1586941928510" duration="10118000" />
-      <workItem from="1587026429598" duration="6074000" />
+      <workItem from="1587026429598" duration="16498000" />
+      <workItem from="1587111178773" duration="12442000" />
+      <workItem from="1587132849158" duration="6379000" />
+      <workItem from="1587197177029" duration="17871000" />
+      <workItem from="1587282849867" duration="166000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="sortOrder" value="DESCENDING" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="339" />
+    <coverage-tree-state>
+      <expand>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="3" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="3" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="211" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="3" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="211" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="271" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="6" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="6" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="9" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+        <path>
+          <item name="rootNode" type="c53c71d1:RiderDotCoverCoverageTreeModel$RootNode" />
+          <item name="1" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="6" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="9" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+          <item name="108" type="8b8fad3a:RiderDotCoverCoverageTreeNode" />
+        </path>
+      </expand>
+      <select />
+    </coverage-tree-state>
+  </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>

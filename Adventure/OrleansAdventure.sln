@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureSetup", "Adventure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureClient", "AdventureClient\AdventureClient.csproj", "{20932297-7E65-458A-BC6A-67D0C98E5B89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{21ECC72C-A318-42F0-AAC2-9EBA714341D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{20932297-7E65-458A-BC6A-67D0C98E5B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20932297-7E65-458A-BC6A-67D0C98E5B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20932297-7E65-458A-BC6A-67D0C98E5B89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21ECC72C-A318-42F0-AAC2-9EBA714341D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21ECC72C-A318-42F0-AAC2-9EBA714341D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21ECC72C-A318-42F0-AAC2-9EBA714341D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21ECC72C-A318-42F0-AAC2-9EBA714341D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

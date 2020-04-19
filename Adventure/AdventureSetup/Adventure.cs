@@ -37,6 +37,15 @@ namespace AdventureSetup
             await monsterGrain.SetInfo(data);
             await monsterGrain.SetRoomGrain(room);
         }
+        
+        //======================== CHANGES ===================================
+        private async Task MakeBoss(IRoomGrain room)
+        {
+            var monsterGrain = client.GetGrain<IBossGrain>(666);
+            await monsterGrain.SetInfo();
+            await monsterGrain.SetRoomGrain(room);
+        }
+        //====================================================================
 
 
         public async Task Configure(string filename)
@@ -63,6 +72,10 @@ namespace AdventureSetup
                 {
                     await MakeMonster(monster, rooms[rand.Next(0, rooms.Count)]);
                 }
+                //========= CHANGES =========
+                //Spawn boss
+                await MakeBoss(rooms[4]);
+                //===========================
             }
         }
     }
