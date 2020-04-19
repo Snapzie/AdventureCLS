@@ -10,7 +10,7 @@ using Assert = Xunit.Assert;
 namespace Tests
 {
     [Collection(ClusterCollection.Name)]
-    public class BossTests
+    public class BossTests : IDisposable
     {
         private readonly TestCluster _cluster;
         private IRoomGrain room;
@@ -40,7 +40,12 @@ namespace Tests
             this.boss.SetInfo().Wait(); 
             this.boss.SetRoomGrain(this.room).Wait();
         }
-    
+
+        public async void Dispose()
+        {
+            //Necessary to dispose timers
+            await this.boss.Kill(this.room, 999);
+        }
 
         [Fact]
         public async void AddSpawnTest()
@@ -49,13 +54,8 @@ namespace Tests
             Assert.NotNull(this.room.GetBoss());
             Assert.Empty(await this.room.GetMonsters());
             
-            Thread.Sleep(5001);
+            Thread.Sleep(5010);
             Assert.Single(this.room.GetMonsters().Result);
-            
-            //Necessary to dispose timers
-            long id = this.room.GetBoss().Result.Id;
-            IBossGrain monster = _cluster.GrainFactory.GetGrain<IBossGrain>(id);
-            await monster.Kill(this.room, 999);
         }
         
         [Fact]
@@ -65,7 +65,7 @@ namespace Tests
             Assert.NotNull(this.room.GetBoss());
             Assert.Empty(await this.room.GetMonsters());
             
-            Thread.Sleep(5001);
+            Thread.Sleep(5010);
             Assert.Single(this.room.GetMonsters().Result);
             long id = this.room.GetMonsters().Result[0].Id;
             IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(id);
@@ -76,10 +76,9 @@ namespace Tests
             text = await monster.Kill(this.room, 0);
             Assert.Contains("110 health left!", text);
             
-            //Necessary to dispose timers
-            id = this.room.GetBoss().Result.Id;
-            IBossGrain boss = _cluster.GrainFactory.GetGrain<IBossGrain>(id);
-            await boss.Kill(this.room, 999);
+//            //Necessary to dispose timers
+//            string bossText = await this.boss.Kill(this.room, 999);
+//            Assert.Contains("Patches the one-eyed demon has been slain!", bossText);
         }
     }
 }

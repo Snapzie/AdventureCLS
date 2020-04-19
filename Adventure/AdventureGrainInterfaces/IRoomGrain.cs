@@ -32,6 +32,7 @@ namespace AdventureGrainInterfaces
         Task<List<MonsterInfo>> GetMonsters();
         Task BossEnter(MonsterInfo monster);
         Task<MonsterInfo> GetBoss();
+        Task BossExit(MonsterInfo monster);
         //====================================================
     }
 }

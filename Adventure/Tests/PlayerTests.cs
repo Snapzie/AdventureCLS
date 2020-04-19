@@ -11,7 +11,7 @@ using Assert = Xunit.Assert;
 namespace Tests
 {
     [Collection(ClusterCollection.Name)]
-    public class PlayerMonsterInteraction
+    public class PlayerMonsterInteraction : IDisposable
     {
         private readonly TestCluster _cluster;
         private IRoomGrain room;
@@ -47,6 +47,12 @@ namespace Tests
             this.player.SetRoomGrain(this.room).Wait();
         }
         
+        public async void Dispose()
+        {
+            //Necessary to dispose timers
+            await this.monster.Kill(this.room, 999);
+        }
+        
         //Black
         [Fact]
         public async Task FireballDamageTest()
@@ -62,7 +68,7 @@ namespace Tests
             string text = await this.player.Play("fireball TestMonster");
             Assert.Equal("Fireball is on cooldown", text);
             
-            Thread.Sleep(10001);
+            Thread.Sleep(10010);
             text = await this.player.Play("fireball TestMonster");
             Assert.Equal("TestMonster is dead.", text);
         }
@@ -89,22 +95,22 @@ namespace Tests
             Assert.Equal(100, await this.player.GetHealth());
             string text = await this.player.Play("roar");
             Assert.Equal("Roar has been activated!", text);
-            Thread.Sleep(2000);
+            Thread.Sleep(2010);
             Assert.Equal(95, await this.player.GetHealth());
             
-            Thread.Sleep(10000);
+            Thread.Sleep(10010);
             Assert.Equal(85, await this.player.GetHealth());
         }
         
         [Fact]
-        public async Task RoarCooldownTestTest()
+        public async Task RoarCooldownTest()
         {
             string text = await this.player.Play("roar");
             Assert.Equal("Roar has been activated!", text);
             text = await this.player.Play("roar");
             Assert.Equal("Roar is on cooldown", text);
 
-            Thread.Sleep(20000);
+            Thread.Sleep(20010);
             text = await this.player.Play("roar");
             Assert.Equal("Roar has been activated!", text);
         }

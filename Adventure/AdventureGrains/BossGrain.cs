@@ -112,7 +112,7 @@ namespace AdventureGrains
                     this.attackTimer?.Dispose();
                     this.spawnTimer?.Dispose();
                     this.healTimer?.Dispose();
-                    return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " has been slain!");
+                    return this.roomGrain.BossExit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " has been slain!");
                 }
                 else
                 {

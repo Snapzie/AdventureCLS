@@ -71,6 +71,12 @@ namespace AdventureGrains
         {
             return Task.FromResult(this.boss);
         }
+        
+        Task IRoomGrain.BossExit(MonsterInfo monster)
+        {
+            this.boss = null;
+            return Task.CompletedTask;
+        }
         //======================================================
 
         async Task IRoomGrain.Exit(MonsterInfo monster)
