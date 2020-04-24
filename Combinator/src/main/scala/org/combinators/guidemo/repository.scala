@@ -48,6 +48,20 @@ class Repository(adventureGame: AdventureGame) {
         'testAbility(ability) =>: 'playerTest(ability)
   }
 
+  @combinator object RoomGrain {
+      def apply(caseString: String,
+            ability: String,
+            damageTaken: String): MyResult = {
+          val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
+          addArbCode(file, caseString, "switch (verb)")
+          addArbCode(file, ability, "PlayerGrain")
+          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
+          file
+      }
+      val semanticType: Type =
+        'case(ability) =>: 'ability(ability) =>: 'damageTaken(damageTaken) =>: 'room('weather)
+  }
+
   @combinator object abilityFireball {
     def apply(): String = {
         """

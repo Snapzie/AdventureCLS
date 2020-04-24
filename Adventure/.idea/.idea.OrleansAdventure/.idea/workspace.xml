@@ -2,8 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eafa6257-6051-4a43-9909-9ab707ac86d7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.orleans.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.orleans.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/obj/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/BossTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/BossTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/PlayerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/PlayerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/Tests.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/Tests.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.pdb" afterDir="false" />
     </list>
     <list id="d4b183a3-be0b-4a4b-b69f-9914b96a8e8a" name="New changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,7 +38,6 @@
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/MonsterInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../adventuregameversion1/PlayerGrain.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/RoomTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/AdventureGrainInterfaces/PlayerInfo.cs" root0="FORCE_HIGHLIGHTING" />
@@ -57,11 +73,9 @@
         <option value="$PROJECT_DIR$/Tests/RoomTests.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" />
         <option value="$PROJECT_DIR$/Tests/BossTesting.cs" />
         <option value="$PROJECT_DIR$/Tests/PlayerTests.cs" />
-        <option value="$PROJECT_DIR$/Tests/BossTests.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" />
-        <option value="$PROJECT_DIR$/../adventuregameversion1/PlayerGrain.cs" />
       </list>
     </option>
   </component>
@@ -163,7 +177,7 @@
       <workItem from="1587111178773" duration="12442000" />
       <workItem from="1587132849158" duration="6379000" />
       <workItem from="1587197177029" duration="17871000" />
-      <workItem from="1587282849867" duration="5925000" />
+      <workItem from="1587282849867" duration="4360000" />
     </task>
     <servers />
   </component>
