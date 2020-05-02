@@ -22,7 +22,7 @@ abstract class AdventureGameController (webJars: WebJarsUtil, lifeCycle: Applica
     extends InhabitationController(webJars, lifeCycle)
     with RoutingEntries {
     val adventureGame: AdventureGame
-    lazy val repository = new Repository(adventureGame)
+    lazy val PlayerRepository = new PlayerRepository(adventureGame)
     lazy val Gamma = repository.forInhabitation
     override lazy val combinatorComponents: Map[String, CombinatorInfo] = Gamma.combinatorComponents
     implicit val myResultPersistable: Persistable.Aux[MyResult] =
@@ -30,8 +30,6 @@ abstract class AdventureGameController (webJars: WebJarsUtil, lifeCycle: Applica
     override lazy val results: Results = EmptyInhabitationBatchJobResults(repository.forInhabitation)
         .addJob[MyResult](repository.semanticPlayerTarget) 
         .addJob[MyResult](repository.semanticPlayerTestTarget)
-        .addJob[MyResult](repository.semanticRoomTarget)
-        .addJob[MyResult](repository.semanticRoomTestTarget)
         .compute()
     override lazy val controllerAddress: String = adventureGame.getClass.getSimpleName.toLowerCase
 }

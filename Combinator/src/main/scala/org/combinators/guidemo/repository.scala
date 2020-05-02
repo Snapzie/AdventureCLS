@@ -10,7 +10,7 @@ import org.combinators.templating.twirl.Java
 
 import org.combinators.guidemo.Helpers._
 
-import org.combinators.guidemo.domain.{AdventureGame, AbilityTypes, WeatherTypes}
+import org.combinators.guidemo.domain.{AdventureGame, AbilityTypes}
 import org.combinators.templating.persistable.Persistable
 
 class Repository(adventureGame: AdventureGame) {
@@ -24,19 +24,14 @@ class Repository(adventureGame: AdventureGame) {
   Kinding(damageTaken)
     .addOption('damageTakenRoar).addOption('damageTakenStandard)
 
-  lazy val weather = Variable("weather")
-  lazy val weatherKinding: Kinding =
-  Kinding(weather)
-    .addOption('noWeather).addOption('weather)
-
   @combinator object PlayerGrain {
       def apply(caseString: String,
             ability: String,
             damageTaken: String): MyResult = {
           val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
-          addArbCode(file, caseString, "switch (verb)", '{')
-          addArbCode(file, ability, "PlayerGrain", '{')
-          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())", '{')
+          addArbCode(file, caseString, "switch (verb)")
+          addArbCode(file, ability, "PlayerGrain")
+          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
           file
       }
       val semanticType: Type =
@@ -46,7 +41,7 @@ class Repository(adventureGame: AdventureGame) {
   @combinator object PlayerTests {
       def apply(testAbility: String): MyResult = {
           val file = MyResult(readFile("PlayerTests.cs"), "PlayerTests.cs")
-          addArbCode(file, testAbility, "public class PlayerMonsterInteraction", '{')
+          addArbCode(file, testAbility, "public class PlayerMonsterInteraction")
           file
       }
       val semanticType: Type =
@@ -54,17 +49,17 @@ class Repository(adventureGame: AdventureGame) {
   }
 
   @combinator object RoomGrain {
-      def apply(fieldSetup: String,
-            blizzardSunnyEffect: String,
-            roomDescription: String): MyResult = {
-          val file = MyResult(readFile("RoomGrain.cs"), "RoomGrain.cs")
-          addArbCode(file, fieldSetup, "public class RoomGrain", '{')
-          addArbCode(file, blizzardSunnyEffect, "players.Add(player)", ';')
-          addArbCode(file, roomDescription, "sb.AppendLine(this.description)", ';')
+      def apply(caseString: String,
+            ability: String,
+            damageTaken: String): MyResult = {
+          val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
+          addArbCode(file, caseString, "switch (verb)")
+          addArbCode(file, ability, "PlayerGrain")
+          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
           file
       }
       val semanticType: Type =
-        'fieldSetup(weather) =>: 'blizzardSunnyEffect =>: 'roomDescription =>: 'room(weather)
+        'case(ability) =>: 'ability(ability) =>: 'damageTaken(damageTaken) =>: 'room('weather)
   }
 
   @combinator object abilityFireball {
@@ -143,13 +138,13 @@ class Repository(adventureGame: AdventureGame) {
       def apply(): String = {
           """
                 case "fireball":
-                    if (words.size == 1)
+                    if (words.Length == 1)
                         return "Fireball what?";
                     if (fireballCD)
                     {
                         return "Fireball is on cooldown";
                     }
-                    target = command.Substring(verb.size + 1);
+                    target = command.Substring(verb.Length + 1);
                     if (target == "")
                     {
                         return "Fireball what?";
@@ -163,7 +158,7 @@ class Repository(adventureGame: AdventureGame) {
       def apply(): String = {
           """
                 case "roar":
-                    if (words.size > 1)
+                    if (words.Length > 1)
                         return "Can not roar others";
                     if (roarCD)
                     {
@@ -274,189 +269,6 @@ class Repository(adventureGame: AdventureGame) {
         val semanticType: Type = 'testAbility('roar)
   }
 
-  @combinator object fieldSetupWeather {
-      def apply(): String = {
-        val weathers = adventureGame.getWeather
-        val weatherSize = weathers.size()
-        var weatherString = 
-        """
-        private WeatherTypes activeWeather;
-        List<WeatherTypes> weathers = new List<WeatherTypes>() {"""
-        if (weatherSize == 1){
-            weathers.get(weatherSize - 1) match {
-                case WeatherTypes.Blizzard => weatherString += "WeatherTypes.Blizzard};"
-                case WeatherTypes.Sunny => weatherString += "WeatherTypes.Sunny};"
-                case WeatherTypes.Night => weatherString += "WeatherTypes.Night};"
-                case WeatherTypes.Cloudy => weatherString += "WeatherTypes.Cloudy};"
-            }
-        } else {
-            for (i <- 0 to weatherSize - 2) {
-                weathers.get(i) match {
-                    case WeatherTypes.Blizzard => weatherString += "WeatherTypes.Blizzard, "
-                    case WeatherTypes.Sunny => weatherString += "WeatherTypes.Sunny, "
-                    case WeatherTypes.Night => weatherString += "WeatherTypes.Night, "
-                    case WeatherTypes.Cloudy => weatherString += "WeatherTypes.Cloudy, "
-                }
-            }
-            weathers.get(weatherSize - 1) match {
-                case WeatherTypes.Blizzard => weatherString += "WeatherTypes.Blizzard};"
-                case WeatherTypes.Sunny => weatherString += "WeatherTypes.Sunny};"
-                case WeatherTypes.Night => weatherString += "WeatherTypes.Night};"
-                case WeatherTypes.Cloudy => weatherString += "WeatherTypes.Cloudy};"
-            }
-        }
-        weatherString
-      }
-        val semanticType: Type = 'fieldSetup('weather)
-  }
-
-  @combinator object fieldSetupNoWeather {
-      def apply(): String = {""}
-      val semanticType: Type = 'fieldSetup('noWeather)
-  }
-
-  @combinator object blizzardSunnyEffect {
-      def apply(): String = {
-        if (adventureGame.getWeather.contains(WeatherTypes.Blizzard) || adventureGame.getWeather.contains(WeatherTypes.Sunny)){
-        """
-            activeWeather = weathers[rand.Next(0, weathers.Count)];
-            switch (activeWeather)
-            {
-                case WeatherTypes.Blizzard:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this, 5);
-                    break;
-                case WeatherTypes.Sunny:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this, -10); //Healing the player
-                    break;
-            }"""
-        }else {""}
-      }
-        val semanticType: Type = 'blizzardSunnyEffect
-  }
-
-  @combinator object roomDescription {
-      def apply(): String = {
-        val weathers = adventureGame.getWeather
-        var descString = ""
-        
-        if (weathers.size() > 0){
-            descString += 
-            """
-            switch (activeWeather)
-                {
-            """
-            for (i <- 0 to weathers.size() - 1) {
-                weathers.get(i) match {
-                    case WeatherTypes.Blizzard => descString += 
-                        """
-                            case WeatherTypes.Blizzard:
-                                sb.AppendLine("It is hailing!");
-                                break;
-                        """
-                    case WeatherTypes.Night => descString += 
-                        """
-                            case WeatherTypes.Night:
-                                sb.AppendLine("It is dark!");
-                                break;
-                        """
-                    case WeatherTypes.Sunny => descString += 
-                        """
-                            case WeatherTypes.Sunny:
-                                sb.AppendLine("It is sunny!");
-                                break;
-                        """
-                    case WeatherTypes.Cloudy => descString += 
-                        """
-                            case WeatherTypes.Cloudy:
-                                sb.AppendLine("It is cloudy!");
-                                break;
-                        """
-                }
-            }
-            descString += "}"
-        }
-
-        if (weathers.contains(WeatherTypes.Night)){
-            descString += 
-            """
-                if (activeWeather != WeatherTypes.Night)
-                {
-                    if (things.Count > 0)
-                    {
-                        sb.AppendLine("The following things are present:");
-                        foreach (var thing in things)
-                        {
-                            sb.Append("  ").AppendLine(thing.Name);
-                        }
-                    }
-                    
-                    
-                    var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-                    if (others.Length > 0 || monsters.Count > 0 || this.boss != null) //Boss Stuff
-                    {
-                        sb.AppendLine("Beware! These guys are in the room with you:");
-                        if (others.Length > 0)
-                            foreach (var player in others)
-                            {
-                                sb.Append("  ").AppendLine(player.Name);
-                            }
-                        if (monsters.Count > 0)
-                            foreach (var monster in monsters)
-                            {
-                                sb.Append("  ").AppendLine(monster.Name);
-                            }
-                        
-                        //Boss stuff    
-                        // if (this.boss != null)
-                        // {
-                        //     sb.Append("  ").AppendLine(this.boss.Name);
-                        // }
-                    }
-                }
-                else
-                {
-                    sb.AppendLine("It is too dark to see anything!");
-                }"""
-        }else {
-            descString += 
-            """
-                if (things.Count > 0)
-                    {
-                        sb.AppendLine("The following things are present:");
-                        foreach (var thing in things)
-                        {
-                            sb.Append("  ").AppendLine(thing.Name);
-                        }
-                    }
-                    
-                    
-                    var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-                    if (others.Length > 0 || monsters.Count > 0 || this.boss != null) //Boss Stuff
-                    {
-                        sb.AppendLine("Beware! These guys are in the room with you:");
-                        if (others.Length > 0)
-                            foreach (var player in others)
-                            {
-                                sb.Append("  ").AppendLine(player.Name);
-                            }
-                        if (monsters.Count > 0)
-                            foreach (var monster in monsters)
-                            {
-                                sb.Append("  ").AppendLine(monster.Name);
-                            }
-                        
-                        //Boss stuff    
-                        // if (this.boss != null)
-                        // {
-                        //     sb.Append("  ").AppendLine(this.boss.Name);
-                        // }
-                    }"""
-        }
-        descString
-      }
-        val semanticType: Type = 'roomDescription
-  }
-
   @combinator object testNone {
     def apply(): String = {""}
     val semanticType: Type = 'testAbility('none)
@@ -478,30 +290,10 @@ class Repository(adventureGame: AdventureGame) {
       }
   }
 
-  def semanticRoomTarget: Type = {
-      val weathers = adventureGame.getWeather
-      if (weathers.size == 0) {
-          'room('noWeather)
-      }
-      else {
-          'room('weather)
-      }
-  } 
-
-  def semanticRoomTestTarget: Type = {
-      val weathers = adventureGame.getWeather
-      if (weathers.size == 0) {
-          'room('noWeather)
-      }
-      else {
-          'room('weather)
-      }
-  }
-
   def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(
         this,
         classLoader = this.getClass.getClassLoader,
-        substitutionSpace = this.abilityKinding.merge(this.damageTakenKinding.merge(this.weatherKinding)))
+        substitutionSpace = this.abilityKinding.merge(this.damageTakenKinding))
   }
 }

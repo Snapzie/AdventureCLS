@@ -225,6 +225,18 @@ namespace AdventureGrains
         //RoarActive implementation
 
         //Roar cooldown implementation
+        
+
+        public async Task WeatherEffect(int effect)
+        {
+            this.health += effect;
+            if (this.health <= 0)
+            {
+                await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
+            }
+
+            return;
+        }
         //==================================================================
 
         private string RemoveStopWords(string s)
