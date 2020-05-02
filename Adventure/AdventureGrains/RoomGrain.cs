@@ -36,10 +36,10 @@ namespace AdventureGrains
             switch (activeWeather)
             {
                 case WeatherTypes.Blizzard:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(-5);
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this, 5);
                     break;
                 case WeatherTypes.Sunny:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(10);
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this, -10); //Healing the player
                     break;
             }
             //=======================================================================================

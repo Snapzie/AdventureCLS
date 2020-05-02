@@ -270,17 +270,6 @@ namespace AdventureGrains
             this.roarCD = false;
             return Task.CompletedTask;
         }
-
-        public async Task WeatherEffect(int effect)
-        {
-            this.health += effect;
-            if (this.health <= 0)
-            {
-                await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
-            }
-
-            return;
-        }
         //==================================================================
 
         private string RemoveStopWords(string s)

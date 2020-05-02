@@ -19,7 +19,6 @@ namespace AdventureGrainInterfaces
         //==================== CHANGES =======================
         Task TakeDamage(IRoomGrain room, int damage);
         Task<int> GetHealth();
-        Task WeatherEffect(int effect);
         //====================================================
 
     }

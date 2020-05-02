@@ -1,6 +1,7 @@
 package org.combinators.guidemo.domain;
 
 import java.net.URL;
+import java.util.*;
 
 public class AdventureGame {
     private AbilityTypes ability;

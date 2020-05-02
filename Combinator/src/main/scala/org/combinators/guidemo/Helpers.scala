@@ -15,8 +15,8 @@ object Helpers {
   type Form = CompilationUnit
   type OptionSelection = Form => Runnable
   
-  def addArbCode(file: MyResult, insertion: String, findName: String): Unit = {
-    val pos = file.theCode.indexOf('{', file.theCode.indexOf(findName))
+  def addArbCode(file: MyResult, insertion: String, findName: String, afterChar: Char): Unit = {
+    val pos = file.theCode.indexOf(afterChar, file.theCode.indexOf(findName))
     file.theCode = insertString(file.theCode, insertion, pos)
   }
 
