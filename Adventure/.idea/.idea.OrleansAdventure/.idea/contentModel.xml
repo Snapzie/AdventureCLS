@@ -32,6 +32,7 @@
         <e p="IMonsterGrain.cs" t="Include" />
         <e p="IPlayerGrain.cs" t="Include" />
         <e p="IRoomGrain.cs" t="Include" />
+        <e p="IWeatherEffect.cs" t="Include" />
         <e p="MonsterInfo.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -48,8 +49,11 @@
       <e p="AdventureGrains" t="IncludeRecursive">
         <e p="AdventureGrains.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="BlizzardWeather.cs" t="Include" />
         <e p="BossGrain.cs" t="Include" />
+        <e p="CloudyWeather.cs" t="Include" />
         <e p="MonsterGrain.cs" t="Include" />
+        <e p="NightWeather.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -60,6 +64,7 @@
         </e>
         <e p="PlayerGrain.cs" t="Include" />
         <e p="RoomGrain.cs" t="Include" />
+        <e p="SunnyWeather.cs" t="Include" />
       </e>
       <e p="AdventureSetup" t="IncludeRecursive">
         <e p="Adventure.cs" t="Include" />
@@ -79,7 +84,7 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="Tests" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
-        <e p="BossTest.cs" t="Include" />
+        <e p="BossTests.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">

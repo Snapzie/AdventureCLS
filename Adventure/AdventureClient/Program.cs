@@ -2,6 +2,7 @@
 using Orleans;
 using System;
 using System.Net;
+using System.Threading;
 using Orleans.Runtime;
 using Microsoft.Extensions.Logging;
 using Orleans.Configuration;
@@ -39,7 +40,7 @@ namespace AdventureClient
             var player = client.GetGrain<IPlayerGrain>(Guid.NewGuid());
             player.SetName(name).Wait();
             var room1 = client.GetGrain<IRoomGrain>(0);
-            player.SetRoomGrain(room1).Wait();
+            Console.WriteLine(player.SetRoomGrain(room1).Result);
 
             Console.WriteLine(player.Play("look").Result);
 

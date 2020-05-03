@@ -15,7 +15,7 @@ namespace AdventureGrainInterfaces
         Task SetInfo(RoomInfo info);
         Task<IRoomGrain> ExitTo(string direction);
         // Players can enter or exit a room
-        Task Enter(PlayerInfo player);
+        Task<string> Enter(PlayerInfo player);
         Task Exit(PlayerInfo player);
         // Players can enter or exit a room
         Task Enter(MonsterInfo monster);

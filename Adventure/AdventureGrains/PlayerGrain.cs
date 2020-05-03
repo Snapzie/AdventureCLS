@@ -94,10 +94,10 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task IPlayerGrain.SetRoomGrain(IRoomGrain room)
+        async Task<string> IPlayerGrain.SetRoomGrain(IRoomGrain room)
         {
             this.roomGrain = room;
-            return room.Enter(myInfo);
+            return await room.Enter(myInfo);
         }
 
         async Task<string> Go(string direction)
@@ -109,10 +109,9 @@ namespace AdventureGrains
             if (destination != null)
             {
                 await this.roomGrain.Exit(myInfo);
-                await destination.Enter(myInfo);
-
+                
                 this.roomGrain = destination;
-                var desc = await destination.Description(myInfo);
+                string desc = await destination.Enter(myInfo);
 
                 if (desc != null)
                     description.Append(desc);
@@ -222,8 +221,8 @@ namespace AdventureGrains
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 10);
-                return $"{target} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 50);
+                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
             }
 
             var monster = await this.roomGrain.FindMonster(target);

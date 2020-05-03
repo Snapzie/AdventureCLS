@@ -10,14 +10,11 @@ namespace AdventureGrains
 {
     public class RoomGrain : Grain, IRoomGrain
     {
-        string description;
+        public Random rand = new Random(); // For testing purposes
         
+        private string description;
         //=================================== CHANGES ===========================================
-        List<WeatherTypes> weathers = new List<WeatherTypes>() 
-            {WeatherTypes.Blizzard, WeatherTypes.Cloudy, WeatherTypes.Night, WeatherTypes.Sunny};
-
-        private WeatherTypes activeWeather;
-        private Random rand = new Random(0); // For testing purposes
+        private IWeatherEffect activeWeather;
         private MonsterInfo boss = null;
         //=======================================================================================
 
@@ -27,23 +24,30 @@ namespace AdventureGrains
 
         Dictionary<string, IRoomGrain> exits = new Dictionary<string, IRoomGrain>();
 
-        async Task IRoomGrain.Enter(PlayerInfo player)
+        async Task<string> IRoomGrain.Enter(PlayerInfo player)
         {
             players.RemoveAll(x => x.Key == player.Key);
             players.Add(player);
             //=================================== CHANGES ===========================================
-            activeWeather = weathers[rand.Next(0, weathers.Count)];
-            switch (activeWeather)
+            int num = rand.Next(0, 4);
+            switch (num)
             {
-                case WeatherTypes.Blizzard:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(-5);
+                case 0:
+                    activeWeather = new CloudyWeather();
                     break;
-                case WeatherTypes.Sunny:
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).WeatherEffect(10);
+                case 1:
+                    activeWeather = new SunnyWeather();
+                    break;
+                case 2:
+                    activeWeather = new BlizzardWeather();
+                    break;
+                case 3:
+                    activeWeather = new NightWeather();
                     break;
             }
+            IPlayerGrain playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player.Key);
+            return await activeWeather.WeatherEffect(this, playerGrain, player, this.description);
             //=======================================================================================
-            return;
         }
 
         Task IRoomGrain.Exit(PlayerInfo player)
@@ -145,66 +149,39 @@ namespace AdventureGrains
 
         async Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
         {
+            //================================== CHANGES ============================
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(this.description);
-            //========================= CHANGES ======================================
-            switch (activeWeather)
+            if (things.Count > 0)
             {
-                case WeatherTypes.Blizzard:
-                    sb.AppendLine("It is hailing!");
-                    break;
-                case WeatherTypes.Night:
-                    sb.AppendLine("It is dark!");
-                    break;
-                case WeatherTypes.Sunny:
-                    sb.AppendLine("It is sunny!");
-                    break;
-                case WeatherTypes.Cloudy:
-                    sb.AppendLine("It is cloudy!");
-                    break;
-            }
-
-            if (activeWeather != WeatherTypes.Night)
-            {
-                if (things.Count > 0)
+                sb.AppendLine("The following things are present:");
+                foreach (var thing in things)
                 {
-                    sb.AppendLine("The following things are present:");
-                    foreach (var thing in things)
-                    {
-                        sb.Append("  ").AppendLine(thing.Name);
-                    }
+                    sb.Append("  ").AppendLine(thing.Name);
                 }
-                
-                
-                var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-                //================================== CHANGES ============================
-                if (others.Length > 0 || monsters.Count > 0 || this.boss != null)
-                {
-                    sb.AppendLine("Beware! These guys are in the room with you:");
-                    if (others.Length > 0)
-                        foreach (var player in others)
-                        {
-                            sb.Append("  ").AppendLine(player.Name);
-                        }
-                    if (monsters.Count > 0)
-                        foreach (var monster in monsters)
-                        {
-                            sb.Append("  ").AppendLine(monster.Name);
-                        }
-
-                    if (this.boss != null)
-                    {
-                        sb.Append("  ").AppendLine(this.boss.Name);
-                    }
-                }
-                //=======================================================================
             }
-            else
+            
+            var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
+            if (others.Length > 0 || monsters.Count > 0 || this.boss != null)
             {
-                sb.AppendLine("It is too dark to see anything!");
+                sb.AppendLine("Beware! These guys are in the room with you:");
+                if (others.Length > 0)
+                    foreach (var player in others)
+                    {
+                        sb.Append("  ").AppendLine(player.Name);
+                    }
+                if (monsters.Count > 0)
+                    foreach (var monster in monsters)
+                    {
+                        sb.Append("  ").AppendLine(monster.Name);
+                    }
+
+                if (this.boss != null)
+                {
+                    sb.Append("  ").AppendLine(this.boss.Name);
+                }
             }
-            //========================================================================
+            //=======================================================================
 
             sb.AppendLine($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key).GetHealth()}");
 

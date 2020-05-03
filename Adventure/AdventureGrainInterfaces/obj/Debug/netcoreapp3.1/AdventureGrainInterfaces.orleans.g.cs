@@ -8,7 +8,7 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGenac563249f0FeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen3273e467f8FeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"AdventureGrainInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
 namespace AdventureGrainInterfaces
 {
@@ -587,12 +587,12 @@ namespace AdventureGrainInterfaces
                     {
                         case -2097071229:
                             return @"SetName";
-                        case 1646386818:
-                            return @"SetRoomGrain";
                         case -1632993044:
                             return @"Die";
                         case -1673399966:
                             return @"Play";
+                        case 1646386818:
+                            return @"SetRoomGrain";
                         case 86075387:
                             return @"TakeDamage";
                         case -1118665236:
@@ -613,11 +613,6 @@ namespace AdventureGrainInterfaces
             return base.InvokeMethodAsync<global::System.Object>(-2097071229, new global::System.Object[]{name});
         }
 
-        public global::System.Threading.Tasks.Task SetRoomGrain(global::AdventureGrainInterfaces.IRoomGrain room)
-        {
-            return base.InvokeMethodAsync<global::System.Object>(1646386818, new global::System.Object[]{room is global::Orleans.Grain ? room.AsReference<global::AdventureGrainInterfaces.IRoomGrain>() : room});
-        }
-
         public global::System.Threading.Tasks.Task Die()
         {
             return base.InvokeMethodAsync<global::System.Object>(-1632993044, null);
@@ -626,6 +621,11 @@ namespace AdventureGrainInterfaces
         public global::System.Threading.Tasks.Task<global::System.String> Play(global::System.String command)
         {
             return base.InvokeMethodAsync<global::System.String>(-1673399966, new global::System.Object[]{command});
+        }
+
+        public global::System.Threading.Tasks.Task<global::System.String> SetRoomGrain(global::AdventureGrainInterfaces.IRoomGrain room)
+        {
+            return base.InvokeMethodAsync<global::System.String>(1646386818, new global::System.Object[]{room is global::Orleans.Grain ? room.AsReference<global::AdventureGrainInterfaces.IRoomGrain>() : room});
         }
 
         public global::System.Threading.Tasks.Task TakeDamage(global::AdventureGrainInterfaces.IRoomGrain room, global::System.Int32 damage)
@@ -662,14 +662,13 @@ namespace AdventureGrainInterfaces
                         case -2097071229:
                             await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).SetName((global::System.String)arguments[0]);
                             return null;
-                        case 1646386818:
-                            await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).SetRoomGrain((global::AdventureGrainInterfaces.IRoomGrain)arguments[0]);
-                            return null;
                         case -1632993044:
                             await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).Die();
                             return null;
                         case -1673399966:
                             return await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).Play((global::System.String)arguments[0]);
+                        case 1646386818:
+                            return await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).SetRoomGrain((global::AdventureGrainInterfaces.IRoomGrain)arguments[0]);
                         case 86075387:
                             await ((global::AdventureGrainInterfaces.IPlayerGrain)grain).TakeDamage((global::AdventureGrainInterfaces.IRoomGrain)arguments[0], (global::System.Int32)arguments[1]);
                             return null;
@@ -813,9 +812,9 @@ namespace AdventureGrainInterfaces
             return base.InvokeMethodAsync<global::AdventureGrainInterfaces.IRoomGrain>(983582750, new global::System.Object[]{direction});
         }
 
-        public global::System.Threading.Tasks.Task Enter(global::AdventureGrainInterfaces.PlayerInfo player)
+        public global::System.Threading.Tasks.Task<global::System.String> Enter(global::AdventureGrainInterfaces.PlayerInfo player)
         {
-            return base.InvokeMethodAsync<global::System.Object>(285569207, new global::System.Object[]{player});
+            return base.InvokeMethodAsync<global::System.String>(285569207, new global::System.Object[]{player});
         }
 
         public global::System.Threading.Tasks.Task Exit(global::AdventureGrainInterfaces.PlayerInfo player)
@@ -907,8 +906,7 @@ namespace AdventureGrainInterfaces
                         case 983582750:
                             return await ((global::AdventureGrainInterfaces.IRoomGrain)grain).ExitTo((global::System.String)arguments[0]);
                         case 285569207:
-                            await ((global::AdventureGrainInterfaces.IRoomGrain)grain).Enter((global::AdventureGrainInterfaces.PlayerInfo)arguments[0]);
-                            return null;
+                            return await ((global::AdventureGrainInterfaces.IRoomGrain)grain).Enter((global::AdventureGrainInterfaces.PlayerInfo)arguments[0]);
                         case 1597699032:
                             await ((global::AdventureGrainInterfaces.IRoomGrain)grain).Exit((global::AdventureGrainInterfaces.PlayerInfo)arguments[0]);
                             return null;
@@ -969,7 +967,7 @@ namespace AdventureGrainInterfaces
     }
 }
 
-namespace OrleansGeneratedCode15F98CF5
+namespace OrleansGeneratedCode7E6911A9
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -1122,7 +1120,7 @@ namespace OrleansGeneratedCode15F98CF5
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGenac563249f0FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGen3273e467f8FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
@@ -1139,10 +1137,10 @@ namespace OrleansGeneratedCode
 
         public void Populate(global::Orleans.Serialization.SerializerFeature feature)
         {
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.MonsterInfo), typeof(OrleansGeneratedCode15F98CF5.OrleansCodeGenAdventureGrainInterfaces_MonsterInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.PlayerInfo), typeof(OrleansGeneratedCode15F98CF5.OrleansCodeGenAdventureGrainInterfaces_PlayerInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.RoomInfo), typeof(OrleansGeneratedCode15F98CF5.OrleansCodeGenAdventureGrainInterfaces_RoomInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.Thing), typeof(OrleansGeneratedCode15F98CF5.OrleansCodeGenAdventureGrainInterfaces_ThingSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.MonsterInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_MonsterInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.PlayerInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_PlayerInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.RoomInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_RoomInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.Thing), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_ThingSerializer));
             feature.AddKnownType(@"System.Action`9,System.Runtime", @"Action`9'9");
             feature.AddKnownType(@"System.Action`10,System.Runtime", @"Action`10'10");
             feature.AddKnownType(@"System.Action`11,System.Runtime", @"Action`11'11");
@@ -1238,6 +1236,7 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"AdventureGrainInterfaces.IMonsterGrain,AdventureGrainInterfaces", @"AdventureGrainInterfaces.IMonsterGrain");
             feature.AddKnownType(@"AdventureGrainInterfaces.IPlayerGrain,AdventureGrainInterfaces", @"AdventureGrainInterfaces.IPlayerGrain");
             feature.AddKnownType(@"AdventureGrainInterfaces.IRoomGrain,AdventureGrainInterfaces", @"AdventureGrainInterfaces.IRoomGrain");
+            feature.AddKnownType(@"AdventureGrainInterfaces.IWeatherEffect,AdventureGrainInterfaces", @"AdventureGrainInterfaces.IWeatherEffect");
             feature.AddKnownType(@"AdventureGrainInterfaces.MonsterInfo,AdventureGrainInterfaces", @"AdventureGrainInterfaces.MonsterInfo");
             feature.AddKnownType(@"AdventureGrainInterfaces.PlayerInfo,AdventureGrainInterfaces", @"AdventureGrainInterfaces.PlayerInfo");
             feature.AddKnownType(@"AdventureGrainInterfaces.Thing,AdventureGrainInterfaces", @"AdventureGrainInterfaces.Thing");
