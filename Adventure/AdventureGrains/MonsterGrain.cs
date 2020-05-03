@@ -59,12 +59,14 @@ namespace AdventureGrains
             this.roomGrain = room;
             await this.roomGrain.Enter(this.monsterInfo);
         }
-
+        
+        //=============== CHANGES =============
         public Task HealMonster(int heal)
         {
             this.health += heal;
             return Task.CompletedTask;
         }
+        //=====================================
 
         async Task Move()
         {

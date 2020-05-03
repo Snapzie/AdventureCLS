@@ -8,7 +8,7 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen3273e467f8FeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGene48d91ed7aFeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"AdventureGrainInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
 namespace AdventureGrainInterfaces
 {
@@ -68,14 +68,12 @@ namespace AdventureGrainInterfaces
                     {
                         case -1220248952:
                             return @"SpawnAdds";
-                        case -2139577519:
-                            return @"AddBuff";
                         case 737193568:
                             return @"HealAdds";
                         case 586276066:
                             return @"SetInfo";
-                        case -1259748773:
-                            return @"SetAddActive";
+                        case -1140398715:
+                            return @"UpdateAdds";
                         case 793587951:
                             return @"Kill";
                         case 1646386818:
@@ -109,11 +107,6 @@ namespace AdventureGrainInterfaces
             return base.InvokeMethodAsync<global::System.Object>(-1220248952, new global::System.Object[]{room is global::Orleans.Grain ? room.AsReference<global::AdventureGrainInterfaces.IRoomGrain>() : room});
         }
 
-        public global::System.Threading.Tasks.Task AddBuff(global::AdventureGrainInterfaces.IRoomGrain room)
-        {
-            return base.InvokeMethodAsync<global::System.Object>(-2139577519, new global::System.Object[]{room is global::Orleans.Grain ? room.AsReference<global::AdventureGrainInterfaces.IRoomGrain>() : room});
-        }
-
         public global::System.Threading.Tasks.Task HealAdds()
         {
             return base.InvokeMethodAsync<global::System.Object>(737193568, null);
@@ -124,9 +117,9 @@ namespace AdventureGrainInterfaces
             return base.InvokeMethodAsync<global::System.Object>(586276066, null);
         }
 
-        public global::System.Threading.Tasks.Task SetAddActive()
+        public global::System.Threading.Tasks.Task UpdateAdds(global::AdventureGrainInterfaces.MonsterInfo mi)
         {
-            return base.InvokeMethodAsync<global::System.Object>(-1259748773, null);
+            return base.InvokeMethodAsync<global::System.Object>(-1140398715, new global::System.Object[]{mi});
         }
 
         public global::System.Threading.Tasks.Task<global::System.String> Kill(global::AdventureGrainInterfaces.IRoomGrain room, global::System.Int32 damage)
@@ -163,17 +156,14 @@ namespace AdventureGrainInterfaces
                         case -1220248952:
                             await ((global::AdventureGrainInterfaces.IBossGrain)grain).SpawnAdds((global::AdventureGrainInterfaces.IRoomGrain)arguments[0]);
                             return null;
-                        case -2139577519:
-                            await ((global::AdventureGrainInterfaces.IBossGrain)grain).AddBuff((global::AdventureGrainInterfaces.IRoomGrain)arguments[0]);
-                            return null;
                         case 737193568:
                             await ((global::AdventureGrainInterfaces.IBossGrain)grain).HealAdds();
                             return null;
                         case 586276066:
                             await ((global::AdventureGrainInterfaces.IBossGrain)grain).SetInfo();
                             return null;
-                        case -1259748773:
-                            await ((global::AdventureGrainInterfaces.IBossGrain)grain).SetAddActive();
+                        case -1140398715:
+                            await ((global::AdventureGrainInterfaces.IBossGrain)grain).UpdateAdds((global::AdventureGrainInterfaces.MonsterInfo)arguments[0]);
                             return null;
                         case 793587951:
                             return await ((global::AdventureGrainInterfaces.IBossGrain)grain).Kill((global::AdventureGrainInterfaces.IRoomGrain)arguments[0], (global::System.Int32)arguments[1]);
@@ -780,8 +770,6 @@ namespace AdventureGrainInterfaces
                             return @"FindMonster";
                         case 1866146173:
                             return @"GetTargetsForMonster";
-                        case -9588258:
-                            return @"GetMonsters";
                         case 1907095022:
                             return @"BossEnter";
                         case 2036534774:
@@ -862,11 +850,6 @@ namespace AdventureGrainInterfaces
             return base.InvokeMethodAsync<global::System.Collections.Generic.List<global::AdventureGrainInterfaces.PlayerInfo>>(1866146173, null);
         }
 
-        public global::System.Threading.Tasks.Task<global::System.Collections.Generic.List<global::AdventureGrainInterfaces.MonsterInfo>> GetMonsters()
-        {
-            return base.InvokeMethodAsync<global::System.Collections.Generic.List<global::AdventureGrainInterfaces.MonsterInfo>>(-9588258, null);
-        }
-
         public global::System.Threading.Tasks.Task BossEnter(global::AdventureGrainInterfaces.MonsterInfo monster)
         {
             return base.InvokeMethodAsync<global::System.Object>(1907095022, new global::System.Object[]{monster});
@@ -930,8 +913,6 @@ namespace AdventureGrainInterfaces
                             return await ((global::AdventureGrainInterfaces.IRoomGrain)grain).FindMonster((global::System.String)arguments[0]);
                         case 1866146173:
                             return await ((global::AdventureGrainInterfaces.IRoomGrain)grain).GetTargetsForMonster();
-                        case -9588258:
-                            return await ((global::AdventureGrainInterfaces.IRoomGrain)grain).GetMonsters();
                         case 1907095022:
                             await ((global::AdventureGrainInterfaces.IRoomGrain)grain).BossEnter((global::AdventureGrainInterfaces.MonsterInfo)arguments[0]);
                             return null;
@@ -967,7 +948,7 @@ namespace AdventureGrainInterfaces
     }
 }
 
-namespace OrleansGeneratedCode7E6911A9
+namespace OrleansGeneratedCode2A56224
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -1120,7 +1101,7 @@ namespace OrleansGeneratedCode7E6911A9
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGen3273e467f8FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGene48d91ed7aFeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
@@ -1137,10 +1118,10 @@ namespace OrleansGeneratedCode
 
         public void Populate(global::Orleans.Serialization.SerializerFeature feature)
         {
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.MonsterInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_MonsterInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.PlayerInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_PlayerInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.RoomInfo), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_RoomInfoSerializer));
-            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.Thing), typeof(OrleansGeneratedCode7E6911A9.OrleansCodeGenAdventureGrainInterfaces_ThingSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.MonsterInfo), typeof(OrleansGeneratedCode2A56224.OrleansCodeGenAdventureGrainInterfaces_MonsterInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.PlayerInfo), typeof(OrleansGeneratedCode2A56224.OrleansCodeGenAdventureGrainInterfaces_PlayerInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.RoomInfo), typeof(OrleansGeneratedCode2A56224.OrleansCodeGenAdventureGrainInterfaces_RoomInfoSerializer));
+            feature.AddSerializerType(typeof(global::AdventureGrainInterfaces.Thing), typeof(OrleansGeneratedCode2A56224.OrleansCodeGenAdventureGrainInterfaces_ThingSerializer));
             feature.AddKnownType(@"System.Action`9,System.Runtime", @"Action`9'9");
             feature.AddKnownType(@"System.Action`10,System.Runtime", @"Action`10'10");
             feature.AddKnownType(@"System.Action`11,System.Runtime", @"Action`11'11");

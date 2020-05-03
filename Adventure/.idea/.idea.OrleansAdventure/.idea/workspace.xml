@@ -2,25 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eafa6257-6051-4a43-9909-9ab707ac86d7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IWeatherEffect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AdventureGrains/BlizzardWeather.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AdventureGrains/CloudyWeather.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AdventureGrains/NightWeather.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AdventureGrains/SunnyWeather.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OrleansAdventure/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureClient/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureClient.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureClient.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.csprojAssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureClient/obj/Debug/netcoreapp3.1/AdventureClient.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.csprojAssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.orleans.g.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrainInterfaces/obj/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventureGrains/PlayerGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/PlayerGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureGrains/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
@@ -30,11 +21,6 @@
       <change beforePath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/AdventureSetup/obj/Debug/netcoreapp3.1/AdventureSetup.csprojAssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrainInterfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/AdventureGrains.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/Tests.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/bin/Debug/netcoreapp3.1/Tests.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.csprojAssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/obj/Debug/netcoreapp3.1/Tests.pdb" afterDir="false" />
     </list>
     <list id="d4b183a3-be0b-4a4b-b69f-9914b96a8e8a" name="New changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -110,15 +96,11 @@
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/MonsterTypes.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IEnemy.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IMonsterGrain.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureSetup/Adventure.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" />
         <option value="$PROJECT_DIR$/Tests/SiloAndClientSetup.cs" />
         <option value="$PROJECT_DIR$/Tests/RoomTests.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" />
         <option value="$PROJECT_DIR$/Tests/BossTesting.cs" />
         <option value="$PROJECT_DIR$/Tests/PlayerTests.cs" />
-        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IPlayerGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureClient/Program.cs" />
         <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IWeatherEffect.cs" />
@@ -127,6 +109,10 @@
         <option value="$PROJECT_DIR$/AdventureGrains/BlizzardWeather.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/PlayerGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/CloudyWeather.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrains/MonsterGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IBossGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrainInterfaces/IRoomGrain.cs" />
+        <option value="$PROJECT_DIR$/AdventureGrains/BossGrain.cs" />
         <option value="$PROJECT_DIR$/AdventureGrains/RoomGrain.cs" />
       </list>
     </option>
@@ -230,7 +216,7 @@
       <workItem from="1587132849158" duration="6379000" />
       <workItem from="1587197177029" duration="17871000" />
       <workItem from="1587282849867" duration="4360000" />
-      <workItem from="1588494784549" duration="6842000" />
+      <workItem from="1588494784549" duration="12919000" />
     </task>
     <servers />
   </component>

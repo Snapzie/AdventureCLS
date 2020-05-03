@@ -6,9 +6,8 @@ namespace AdventureGrainInterfaces
     public interface IBossGrain : IEnemy
     {
         Task SpawnAdds(IRoomGrain room);
-        Task AddBuff(IRoomGrain room);
         Task HealAdds();
         Task SetInfo();
-        Task SetAddActive();
+        Task UpdateAdds(MonsterInfo mi);
     }
 }

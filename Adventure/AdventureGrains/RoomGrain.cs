@@ -86,10 +86,12 @@ namespace AdventureGrains
         async Task IRoomGrain.Exit(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
-            if (this.monsters.Count > 0)
+            //================================== CHANGES ============================
+            if (this.boss != null)
             {
-                await GrainFactory.GetGrain<IBossGrain>(this.boss.Id).SetAddActive();
+                await GrainFactory.GetGrain<IBossGrain>(this.boss.Id).UpdateAdds(monster);
             }
+            //=======================================================================
 
             return;
         }
@@ -140,11 +142,6 @@ namespace AdventureGrains
         {
             return Task.FromResult(players);
         }
-        
-        public Task<List<MonsterInfo>> GetMonsters()
-        {
-            return Task.FromResult(monsters);
-        }
         //====================================================
 
         async Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
@@ -162,7 +159,7 @@ namespace AdventureGrains
             }
             
             var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-            if (others.Length > 0 || monsters.Count > 0 || this.boss != null)
+            if (others.Length > 0 || monsters.Count > 0 || this.boss != null) //Boss Synthesis
             {
                 sb.AppendLine("Beware! These guys are in the room with you:");
                 if (others.Length > 0)

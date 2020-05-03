@@ -12,15 +12,16 @@ namespace AdventureGrains
     {
         private int health = 200;
         private int damage = 2;
-        Random rand = new Random();
+        private Random rand = new Random();
         private IDisposable attackTimer;
         private IDisposable spawnTimer;
         private IDisposable healTimer;
         private IRoomGrain roomGrain;
         private int addCounter = 100;
         private bool addActive = false;
-        MonsterInfo monsterInfo = new MonsterInfo();
-        
+        private MonsterInfo monsterInfo = new MonsterInfo();
+        private List<MonsterInfo> spawnedMonsters = new List<MonsterInfo>();
+
         public override Task OnActivateAsync()
         {
             this.healTimer = RegisterTimer((_) => HealAdds(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20));
@@ -28,13 +29,7 @@ namespace AdventureGrains
             this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
             return base.OnActivateAsync();
         }
-
-        public Task SetAddActive()
-        {
-            this.addActive = false;
-            return Task.CompletedTask;
-        }
-
+        
         public Task SetInfo()
         {
             this.monsterInfo.Id = this.GetPrimaryKeyLong();
@@ -63,32 +58,42 @@ namespace AdventureGrains
                 addInfo.Id = addCounter;
                 addInfo.Name = "one-and-a-half-eyed demon";
                 addInfo.KilledBy = new List<long>() {1};
+                this.spawnedMonsters.Add(addInfo);
                 await monsterGrain.SetInfo(addInfo);
                 await monsterGrain.SetRoomGrain(room);
                 this.addCounter += 1;
-                this.addActive = true;
+                this.addActive = true; //Damage reduction synthesis
             }
 
             return;
         }
 
-        public Task AddBuff(IRoomGrain room)
+        public Task UpdateAdds(MonsterInfo mi)
         {
-            throw new System.NotImplementedException();
+            foreach (MonsterInfo monster in this.spawnedMonsters)
+            {
+                if (mi.Id == monster.Id)
+                {
+                    this.spawnedMonsters.Remove(monster);
+
+                    if (this.spawnedMonsters.Count < 1) //Damage reduction synthesis
+                    {
+                        this.addActive = false;
+                    }
+                    break;
+                }
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task HealAdds()
         {
-            List<MonsterInfo> targets = await this.roomGrain.GetMonsters();
-
-            if (targets.Count > 0)
+            if (this.spawnedMonsters.Count > 0)
             {
-                foreach (var monster in targets)
+                foreach (var monster in this.spawnedMonsters)
                 {
-                    if (monster.Id != this.monsterInfo.Id)
-                    {
-                        await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);   
-                    }
+                    await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);
                 }
             }
         }

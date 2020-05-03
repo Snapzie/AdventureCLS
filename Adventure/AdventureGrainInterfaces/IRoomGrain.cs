@@ -29,7 +29,6 @@ namespace AdventureGrainInterfaces
         Task<MonsterInfo> FindMonster(string name);
         //==================== CHANGES =======================
         Task<List<PlayerInfo>> GetTargetsForMonster();
-        Task<List<MonsterInfo>> GetMonsters();
         Task BossEnter(MonsterInfo monster);
         Task<MonsterInfo> GetBoss();
         Task BossExit(MonsterInfo monster);
