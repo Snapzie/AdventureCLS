@@ -43,6 +43,7 @@
 *.iml
 *.name
 *.user
+*.AssemblyInfo*
 
 # Logs and databases #
 ######################
