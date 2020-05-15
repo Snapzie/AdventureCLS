@@ -19,6 +19,31 @@
 *.rar
 *.tar
 *.zip
+*.csproj
+*.less
+*.js
+*.map
+*.eot
+*.svg
+*.ttf
+*.woff
+*.woff2
+*.css
+*.xml
+*.properties
+*.conf
+*.cache
+*.db
+*.json
+*.pdb
+*.txt
+*.CopyComplete
+*.targets
+*.props
+*.g.cs
+*.iml
+*.name
+*.user
 
 # Logs and databases #
 ######################

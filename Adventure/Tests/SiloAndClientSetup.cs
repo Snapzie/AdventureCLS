@@ -30,6 +30,7 @@ namespace Tests
         }
 
         public TestCluster Cluster { get; private set; }
+        
     }
     class TestSiloBuilderConfigurator : ISiloBuilderConfigurator
     {

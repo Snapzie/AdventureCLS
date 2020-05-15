@@ -24,6 +24,16 @@ namespace AdventureGrains
         bool killed = false;
 
         PlayerInfo myInfo;
+        
+        //==================== CHANGES =======================
+        public new virtual IGrainFactory GrainFactory
+        {
+            get { return base.GrainFactory; }
+        }
+        
+        public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
+            base.RegisterTimer(asyncCallback, state, dueTime, period);
+        //====================================================
 
         public override Task OnActivateAsync()
         {
@@ -94,7 +104,7 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        async Task<string> IPlayerGrain.SetRoomGrain(IRoomGrain room)
+        public async Task<string> SetRoomGrain(IRoomGrain room)
         {
             this.roomGrain = room;
             return await room.Enter(myInfo);
@@ -221,14 +231,16 @@ namespace AdventureGrains
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 50);
-                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").TakeDamage(this.roomGrain, 50);
+                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").GetHealth()} health left!";
             }
 
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                var mon = GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "Monster");
+                string res = await mon.Kill(this.roomGrain, 50);
+                //string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
                 return res;
             }
 
@@ -239,7 +251,7 @@ namespace AdventureGrains
                 return res;
             }
             this.fireballCD = false;
-            fcd?.Dispose();
+            //fcd?.Dispose();
             return "I can't see " + target + " here. Are you sure?";
         }
 
@@ -268,17 +280,6 @@ namespace AdventureGrains
         {
             this.roarCD = false;
             return Task.CompletedTask;
-        }
-
-        public async Task WeatherEffect(int effect)
-        {
-            this.health += effect;
-            if (this.health <= 0)
-            {
-                await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
-            }
-
-            return;
         }
         //==================================================================
 
@@ -310,7 +311,7 @@ namespace AdventureGrains
             return sb.ToString().Trim().ToLower();
         }
 
-        async Task<string> IPlayerGrain.Play(string command)
+        public async Task<string> Play(string command)
         {
             Thing thing;
             string target;
