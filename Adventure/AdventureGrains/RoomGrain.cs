@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Orleans.Runtime;
 
 namespace AdventureGrains
 {
     public class RoomGrain : Grain, IRoomGrain
     {
         public Random rand = new Random(0); // For testing purposes
-
         private string description;
         //=================================== CHANGES ===========================================
         private IWeatherEffect activeWeather;
@@ -21,6 +21,7 @@ namespace AdventureGrains
         List<PlayerInfo> players = new List<PlayerInfo>();
         List<MonsterInfo> monsters = new List<MonsterInfo>();
         List<Thing> things = new List<Thing>();
+        RoomInfo roomInfo = new RoomInfo();
 
         Dictionary<string, IRoomGrain> exits = new Dictionary<string, IRoomGrain>();
         
@@ -123,6 +124,7 @@ namespace AdventureGrains
 
         public Task SetInfo(RoomInfo info)
         {
+            roomInfo = info;
             this.description = info.Description;
 
             foreach (var kv in info.Directions)
