@@ -62,7 +62,7 @@ namespace AdventureGrains
             //=======================================================================================
         }
 
-        Task IRoomGrain.Exit(PlayerInfo player)
+        public Task Exit(PlayerInfo player)
         {
             players.RemoveAll(x => x.Key == player.Key);
             return Task.CompletedTask;
@@ -76,26 +76,26 @@ namespace AdventureGrains
         }
         
         //================= CHANGES ============================
-        Task IRoomGrain.BossEnter(MonsterInfo monster)
+        public Task BossEnter(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
             this.boss = monster;
             return Task.CompletedTask;
         }
         
-        Task<MonsterInfo> IRoomGrain.GetBoss()
+        public Task<MonsterInfo> GetBoss()
         {
             return Task.FromResult(this.boss);
         }
         
-        Task IRoomGrain.BossExit(MonsterInfo monster)
+        public Task BossExit(MonsterInfo monster)
         {
             this.boss = null;
             return Task.CompletedTask;
         }
         //======================================================
 
-        async Task IRoomGrain.Exit(MonsterInfo monster)
+        public async Task Exit(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
             //================================== CHANGES ============================
@@ -108,14 +108,14 @@ namespace AdventureGrains
             return;
         }
 
-        Task IRoomGrain.Drop(Thing thing)
+        public Task Drop(Thing thing)
         {
             things.RemoveAll(x => x.Id == thing.Id);
             things.Add(thing);
             return Task.CompletedTask;
         }
 
-        Task IRoomGrain.Take(Thing thing)
+        public Task Take(Thing thing)
         {
             things.RemoveAll(x => x.Name == thing.Name);
             return Task.CompletedTask;
@@ -132,12 +132,12 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task<Thing> IRoomGrain.FindThing(string name)
+        public Task<Thing> FindThing(string name)
         {
             return Task.FromResult(things.Where(x => x.Name == name).FirstOrDefault());
         }
 
-        Task<PlayerInfo> IRoomGrain.FindPlayer(string name)
+        public Task<PlayerInfo> FindPlayer(string name)
         {
             name = name.ToLower();
             return Task.FromResult(players.Where(x => x.Name.ToLower().Contains(name)).FirstOrDefault());
@@ -179,6 +179,7 @@ namespace AdventureGrains
                     {
                         sb.Append("  ").AppendLine(player.Name);
                     }
+                
                 if (monsters.Count > 0)
                     foreach (var monster in monsters)
                     {
