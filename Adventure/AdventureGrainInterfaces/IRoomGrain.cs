@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Orleans;
 using System.Threading.Tasks;
+using System;
 
 namespace AdventureGrainInterfaces
 {
@@ -32,6 +33,7 @@ namespace AdventureGrainInterfaces
         Task BossEnter(MonsterInfo monster);
         Task<MonsterInfo> GetBoss();
         Task BossExit(MonsterInfo monster);
+        public Task<long> GetId();
         //====================================================
     }
 }

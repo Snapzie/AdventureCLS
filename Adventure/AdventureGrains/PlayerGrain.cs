@@ -30,7 +30,12 @@ namespace AdventureGrains
         {
             get { return base.GrainFactory; }
         }
-        
+
+        public virtual Task<Guid> GetId()
+        {
+            return Task.FromResult(myInfo.Key);
+        }
+
         public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
             base.RegisterTimer(asyncCallback, state, dueTime, period);
         //====================================================
@@ -121,7 +126,7 @@ namespace AdventureGrains
                 await this.roomGrain.Exit(myInfo);
                 
                 this.roomGrain = destination;
-                string desc = await destination.Enter(myInfo);
+                string desc = await destination.Enter(myInfo); //HER DET SKER!
 
                 if (desc != null)
                     description.Append(desc);
@@ -202,7 +207,7 @@ namespace AdventureGrains
         {
             if (this.roomGrain != null)
             {
-                if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
+                if (await this.roomGrain.GetId() == await room.GetId())
                 {
                     if (roarActive) //TODO: Remove for synthesis
                     {
@@ -215,7 +220,7 @@ namespace AdventureGrains
 
                     if (this.health <= 0)
                     {
-                        await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
+                        await GrainFactory.GetGrain<IPlayerGrain>(await this.GetId(), "AdventureGrains.Player").Die();
                     }
                 }
             }
@@ -231,14 +236,14 @@ namespace AdventureGrains
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").TakeDamage(this.roomGrain, 50);
-                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").GetHealth()} health left!";
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").TakeDamage(this.roomGrain, 50);
+                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").GetHealth()} health left!";
             }
 
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                var mon = GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "Monster");
+                var mon = GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster");
                 string res = await mon.Kill(this.roomGrain, 50);
                 //string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
                 return res;

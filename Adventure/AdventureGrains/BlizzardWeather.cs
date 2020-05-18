@@ -10,7 +10,7 @@ namespace AdventureGrains
     {
         public async Task<string> WeatherEffect(IRoomGrain room, IPlayerGrain pg, PlayerInfo pi, string desc)
         {
-            await pg.TakeDamage(room, 5);
+            pg.TakeDamage(room, 5);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(desc);
             sb.AppendLine("It is hailing!");
