@@ -22,7 +22,7 @@ namespace Tests
         private Mock<IMonsterGrain> monster;
         MonsterInfo mi;
         RoomInfo ri;
-        Guid roomGUID;
+        //Guid roomGUID;
 
 
         public PlayerMonsterInteraction(ClusterFixture fixture)
@@ -32,13 +32,13 @@ namespace Tests
             mi = new MonsterInfo();
             mi.Id = 1;
             mi.Name = "testMonster";
-            mi.KilledBy = new List<long>();
+            mi.KilledBy = new List<long>{ 0 };
             
             //Room Setup
             room = new Mock<IRoomGrain>();
             ri = new RoomInfo();
             ri.Id = 1;
-            roomGUID = new Guid();
+            //roomGUID = new Guid();
             
             //Monster Setup
             monster = new Mock<IMonsterGrain>();
@@ -114,6 +114,12 @@ namespace Tests
             string res = await player.Object.Play("fireball testPlayer");
 
             Assert.Equal("testPlayer took 50 damage and now has 0 health left!", res);
+        }
+
+        [Fact]
+        public async void FireballTestBoss()
+        {
+
         }
 
         [Fact]
@@ -225,13 +231,7 @@ namespace Tests
         [Fact]
         public async void DieTest() // :THONKING:
         {
-            //Arrange
-            var somePlayer = new Mock<IPlayerGrain>();
-            PlayerInfo pi = new PlayerInfo();
-            pi.Key = new Guid();
-            pi.Name = "testPlayer";
-            room.Setup(x => x.FindPlayer(It.IsAny<string>())).Returns(Task.FromResult<PlayerInfo>(pi));
-
+            Assert.NotNull(null);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace Tests
             //room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
             PlayerInfo pi = new PlayerInfo();
             pi.Key = new Guid();
-            player.Setup(p => p.GetId()).Returns(Task.FromResult(pi.Key));
+            //player.Setup(p => p.GetId()).Returns(Task.FromResult(pi.Key));
             player.Setup(p => p.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player")).Returns(player.Object);
 
             //Act
@@ -269,21 +269,258 @@ namespace Tests
         [Fact]
         public async void GoRoomTest()
         {
+            //Arrange
+            Mock<IRoomGrain> newRoom = new Mock<IRoomGrain>();
+            newRoom.Setup(nr => nr.Enter(It.IsAny<PlayerInfo>())).Returns(Task.FromResult("Some description"));
+            room.Setup(r => r.ExitTo(It.IsAny<string>())).Returns(Task.FromResult(newRoom.Object));
 
+            //Act
+            string res = await this.player.Object.Play("north");
+
+            //Assert
+            Assert.Equal("Some description", res);
         }
 
         [Fact]
-        public async void DropTest()
+        public async void GoNoAdjacentRoomTest()
         {
+            //Act
+            string res = await this.player.Object.Play("north");
 
+            //Assert
+            Assert.Equal("You cannot go in that direction.", res);
         }
 
         [Fact]
         public async void TakeTest()
         {
+            //Arrange
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            //room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+
+            //Act
+            string res = await this.player.Object.Play("take knife");
+
+            //Assert
+            Assert.Equal("Okay.", res);
+        }
+
+        [Fact]
+        public async void TakeNoItemTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("take knife");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
+
+        [Fact]
+        public async void DropTest()
+        {
+            //Arrange
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+
+            //Act
+            string res = await this.player.Object.Play("Drop knife");
+
+            //Assert
+            Assert.Equal("Okay.", res);
+        }
+
+        [Fact]
+        public async void DropNoItemTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("Drop knife");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
+
+        [Fact]
+        public async void KillPlayerTest()
+        {
+            //Arrange
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            knife.Category = "weapon";
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+            Mock<IPlayerGrain> enemyPlayer = new Mock<IPlayerGrain>();
+            PlayerInfo pi = new PlayerInfo();
+            pi.Key = new Guid();
+            pi.Name = "testPlayer";
+            room.Setup(r => r.FindPlayer(It.IsAny<string>())).Returns(Task.FromResult(pi));
+            player.Setup(p => p.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player")).Returns(enemyPlayer.Object);
+
+            //Act
+            string res = await player.Object.Play("kill testPlayer");
+
+            //Assert
+            Assert.Equal("testPlayer is now dead.", res);
 
         }
 
+        [Fact]
+        public async void KillMonsterTest()
+        {
+            //Arrange
+            monster.Setup(m => m.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Oof!"));
+            player.Setup(p => p.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(monster.Object);
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            knife.Id = 0;
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.FindMonster(It.IsAny<string>())).Returns(Task.FromResult(mi));
+            await this.player.Object.Play("take knife");
+
+            //Act
+            string res = await this.player.Object.Play("kill testMonster");
+
+            //Assert
+            Assert.Equal("Oof!", res);
+        }
+
+        [Fact]
+        public async void KillBossTest()
+        {
+            //Arrange
+            MonsterInfo bi = new MonsterInfo();
+            bi.Id = 0;
+            bi.KilledBy = new List<long> { 0 };
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            knife.Category = "weapon";
+            knife.Id = 0;
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+            Mock<IBossGrain> enemyBoss = new Mock<IBossGrain>();
+            enemyBoss.Setup(eb => eb.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
+            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bi));
+            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(enemyBoss.Object);
+
+            //Act
+            string res = await player.Object.Play("kill testBoss");
+
+            //Assert
+            Assert.Equal("Ouch!", res);
+        }
+
+        [Fact]
+        public async void KillNoTargetTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("kill No One");
+
+            //Assert
+            Assert.Equal("With what? Your bare hands?", res);
+        }
+
+        [Fact]
+        public async void KillNoTargetWithItemTest()
+        {
+            //Arrange
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+
+            //Act
+            string res = await this.player.Object.Play("kill No One");
+
+            //Assert
+            Assert.Equal("I can't see No One here. Are you sure?", res);
+        }
+
+        [Fact]
+        public async void KillNoOneTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("kill");
+
+            //Assert
+            Assert.Equal("Kill what?", res);
+        }
+
+        [Fact]
+        public async void LookTest()
+        {
+            //Arrange
+            room.Setup(r => r.Description(It.IsAny<PlayerInfo>())).Returns(Task.FromResult("This is a room."));
+
+            //Act
+            string res = await this.player.Object.Play("look");
+
+            //Assert
+            Assert.Equal("This is a room.", res);
+        }
+
+        [Fact]
+        public async void InventoryTest()
+        {
+            //Arrange
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+
+            //Act
+            string res = await this.player.Object.Play("inv");
+
+            //Assert
+            Assert.Contains("knife", res);
+        }
+
+        [Fact]
+        public async void InventoryEmptyTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("inventory");
+            //Assert
+            Assert.Equal("You are carrying: ", res);
+        }
+
+        [Fact]
+        public async void EndTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("end");
+
+            //Assert
+            Assert.Equal("", res);
+        }
+
+        [Fact]
+        public async void NoInputTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
+
+        [Fact]
+        public async void InvalidInputTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("123#?!_hey");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
         //Black
         //        [Fact]
         //        public async Task FireballDamageTest()

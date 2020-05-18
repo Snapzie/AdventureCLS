@@ -31,11 +31,6 @@ namespace AdventureGrains
             get { return base.GrainFactory; }
         }
 
-        public virtual Task<Guid> GetId()
-        {
-            return Task.FromResult(myInfo.Key);
-        }
-
         public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
             base.RegisterTimer(asyncCallback, state, dueTime, period);
         //====================================================
@@ -169,7 +164,7 @@ namespace AdventureGrains
                 var weapon = things.Where(t => t.Category == "weapon").FirstOrDefault();
                 if (weapon != null)
                 {
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).Die();
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").Die();
                     return target + " is now dead.";
                 }
                 return "With what? Your bare hands?";
@@ -182,7 +177,7 @@ namespace AdventureGrains
                 if (weapons.Count() > 0)
                 {
                     //======================================== CHANGES =============================================
-                    return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, this.damage);
+                    return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, this.damage);
                     //==============================================================================================
                 }
                 return "With what? Your bare hands?";
@@ -194,7 +189,7 @@ namespace AdventureGrains
                 var weapons = boss.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
                 if (weapons.Count() > 0)
                 {
-                    return await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, this.damage);
+                    return await GrainFactory.GetGrain<IBossGrain>(boss.Id, "AdventureGrains.Boss").Kill(this.roomGrain, this.damage);
                 }
                 return "With what? Your bare hands?";
             }
@@ -222,7 +217,7 @@ namespace AdventureGrains
 
                     if (this.health <= 0)
                     {
-                        await GrainFactory.GetGrain<IPlayerGrain>(await this.GetId(), "AdventureGrains.Player").Die();
+                        await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key, "AdventureGrains.Player").Die();
                     }
                 }
             }
