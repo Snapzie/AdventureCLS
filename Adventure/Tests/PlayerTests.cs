@@ -168,7 +168,7 @@ namespace Tests
         public async void RoarTest()
         {
             //Arrange
-            room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
+            //room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
 
             //Act
             string res = await this.player.Object.Play("roar someone");
@@ -238,7 +238,7 @@ namespace Tests
         public async void TakeDamageTest() //GetPrimaryKey is inaccessible and non-overridable
         {
             //Arrange partly done in Constructor
-            room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
+            //room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
             PlayerInfo pi = new PlayerInfo();
             pi.Key = new Guid();
             player.Setup(p => p.GetId()).Returns(Task.FromResult(pi.Key));

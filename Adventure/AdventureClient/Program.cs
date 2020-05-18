@@ -42,8 +42,6 @@ namespace AdventureClient
             var room1 = client.GetGrain<IRoomGrain>(0);
             Console.WriteLine(player.SetRoomGrain(room1).Result);
 
-            Console.WriteLine(player.Play("look").Result);
-
             string result = "Start";
 
             try

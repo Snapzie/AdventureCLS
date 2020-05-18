@@ -126,7 +126,7 @@ namespace AdventureGrains
                 await this.roomGrain.Exit(myInfo);
                 
                 this.roomGrain = destination;
-                string desc = await destination.Enter(myInfo); //HER DET SKER!
+                string desc = await destination.Enter(myInfo);
 
                 if (desc != null)
                     description.Append(desc);
@@ -207,7 +207,9 @@ namespace AdventureGrains
         {
             if (this.roomGrain != null)
             {
-                if (await this.roomGrain.GetId() == await room.GetId())
+//                Guid g1 = await this.roomGrain.RoomId();
+//                Guid g2 = await room.RoomId();
+                if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
                     if (roarActive) //TODO: Remove for synthesis
                     {
@@ -224,7 +226,6 @@ namespace AdventureGrains
                     }
                 }
             }
-
             return;
         }
 
@@ -243,9 +244,7 @@ namespace AdventureGrains
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                var mon = GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster");
-                string res = await mon.Kill(this.roomGrain, 50);
-                //string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, 50);
                 return res;
             }
 
@@ -256,7 +255,7 @@ namespace AdventureGrains
                 return res;
             }
             this.fireballCD = false;
-            //fcd?.Dispose();
+            fcd?.Dispose();
             return "I can't see " + target + " here. Are you sure?";
         }
 
