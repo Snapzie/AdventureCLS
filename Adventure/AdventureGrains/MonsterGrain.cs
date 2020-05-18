@@ -18,6 +18,13 @@ namespace AdventureGrains
         private IDisposable moveTimer;
         private IDisposable attackTimer;
         
+        public new virtual IGrainFactory GrainFactory
+        {
+            get { return base.GrainFactory; }
+        }
+        
+        public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
+            base.RegisterTimer(asyncCallback, state, dueTime, period);
         //====================================================
         
         MonsterInfo monsterInfo = new MonsterInfo();
@@ -46,13 +53,13 @@ namespace AdventureGrains
         }
         //====================================================
 
-        Task IMonsterGrain.SetInfo(MonsterInfo info)
+        public Task SetInfo(MonsterInfo info)
         {
             this.monsterInfo = info;
             return Task.CompletedTask;
         }
 
-        async Task IEnemy.SetRoomGrain(IRoomGrain room)
+        public async Task SetRoomGrain(IRoomGrain room)
         {
             if (this.roomGrain != null)
                 await this.roomGrain.Exit(this.monsterInfo);
@@ -72,7 +79,7 @@ namespace AdventureGrains
         {
             var directions = new string [] { "north", "south", "west", "east" };
 
-            var rand = new Random().Next(0, 4);
+            var rand = this.rand.Next(0, 4);
             IRoomGrain nextRoom = await this.roomGrain.ExitTo(directions[rand]);
 
             if (null == nextRoom) 
