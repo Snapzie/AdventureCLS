@@ -15,7 +15,7 @@ namespace AdventureGrains
             sb.AppendLine("It is cloudy!");
             sb.AppendLine(await room.Description(pi));
             
-            return Task.FromResult(sb.ToString()).Result;
+            return sb.ToString();
         }
     }
 }

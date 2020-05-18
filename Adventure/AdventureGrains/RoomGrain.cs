@@ -10,8 +10,8 @@ namespace AdventureGrains
 {
     public class RoomGrain : Grain, IRoomGrain
     {
-        public Random rand = new Random(); // For testing purposes
-        
+        public Random rand = new Random(0); // For testing purposes
+
         private string description;
         //=================================== CHANGES ===========================================
         private IWeatherEffect activeWeather;
@@ -23,8 +23,20 @@ namespace AdventureGrains
         List<Thing> things = new List<Thing>();
 
         Dictionary<string, IRoomGrain> exits = new Dictionary<string, IRoomGrain>();
+        
+        //==================== CHANGES =======================
+        public new virtual IGrainFactory GrainFactory
+        {
+            get { return base.GrainFactory; }
+        }
 
-        async Task<string> IRoomGrain.Enter(PlayerInfo player)
+//        public Task<Guid> RoomId()
+//        {
+//            return Task.FromResult(this.GetPrimaryKey());
+//        }
+        //====================================================
+
+        public async Task<string> Enter(PlayerInfo player)
         {
             players.RemoveAll(x => x.Key == player.Key);
             players.Add(player);
@@ -45,7 +57,7 @@ namespace AdventureGrains
                     activeWeather = new NightWeather();
                     break;
             }
-            IPlayerGrain playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player.Key);
+            IPlayerGrain playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player");
             return await activeWeather.WeatherEffect(this, playerGrain, player, this.description);
             //=======================================================================================
         }
@@ -56,7 +68,7 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task IRoomGrain.Enter(MonsterInfo monster)
+        public Task Enter(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
             monsters.Add(monster);
@@ -109,13 +121,13 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task IRoomGrain.SetInfo(RoomInfo info)
+        public Task SetInfo(RoomInfo info)
         {
             this.description = info.Description;
 
             foreach (var kv in info.Directions)
             {
-                this.exits[kv.Key] = GrainFactory.GetGrain<IRoomGrain>(kv.Value);
+                this.exits[kv.Key] = GrainFactory.GetGrain<IRoomGrain>(kv.Value, "AdventureGrains.Room");
             }
             return Task.CompletedTask;
         }
@@ -131,7 +143,7 @@ namespace AdventureGrains
             return Task.FromResult(players.Where(x => x.Name.ToLower().Contains(name)).FirstOrDefault());
         }
 
-        Task<MonsterInfo> IRoomGrain.FindMonster(string name)
+        public Task<MonsterInfo> FindMonster(string name)
         {
             name = name.ToLower();
             return Task.FromResult(monsters.Where(x => x.Name.ToLower().Contains(name)).FirstOrDefault());
@@ -144,7 +156,7 @@ namespace AdventureGrains
         }
         //====================================================
 
-        async Task<string> IRoomGrain.Description(PlayerInfo whoisAsking)
+        public async Task<string> Description(PlayerInfo whoisAsking)
         {
             //================================== CHANGES ============================
             StringBuilder sb = new StringBuilder();
@@ -179,13 +191,12 @@ namespace AdventureGrains
                 }
             }
             //=======================================================================
+            sb.AppendLine($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key, "AdventureGrains.Player").GetHealth()}");
 
-            sb.AppendLine($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key).GetHealth()}");
-
-            return Task.FromResult(sb.ToString()).Result;
+            return await Task.FromResult(sb.ToString());
         }
 
-        Task<IRoomGrain> IRoomGrain.ExitTo(string direction)
+        public Task<IRoomGrain> ExitTo(string direction)
         {
             return Task.FromResult((exits.ContainsKey(direction)) ? exits[direction] : null);
         }

@@ -202,6 +202,8 @@ namespace AdventureGrains
         {
             if (this.roomGrain != null)
             {
+//                Guid g1 = await this.roomGrain.RoomId();
+//                Guid g2 = await room.RoomId();
                 if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
                     if (roarActive) //TODO: Remove for synthesis
@@ -219,7 +221,6 @@ namespace AdventureGrains
                     }
                 }
             }
-
             return;
         }
 
@@ -231,16 +232,14 @@ namespace AdventureGrains
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").TakeDamage(this.roomGrain, 50);
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").TakeDamage(this.roomGrain, 50);
                 return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "Player").GetHealth()} health left!";
             }
 
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                var mon = GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "Monster");
-                string res = await mon.Kill(this.roomGrain, 50);
-                //string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, 50);
                 return res;
             }
 
@@ -251,7 +250,7 @@ namespace AdventureGrains
                 return res;
             }
             this.fireballCD = false;
-            //fcd?.Dispose();
+            fcd?.Dispose();
             return "I can't see " + target + " here. Are you sure?";
         }
 
