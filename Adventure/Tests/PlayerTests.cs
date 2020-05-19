@@ -229,12 +229,6 @@ namespace Tests
         }
 
         [Fact]
-        public async void DieTest() // :THONKING:
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
         public async void TakeDamageTest() //GetPrimaryKey is inaccessible and non-overridable
         {
             //Arrange partly done in Constructor
