@@ -14,7 +14,7 @@ using Assert = Xunit.Assert;
 namespace Tests
 {
     [Collection(ClusterCollection.Name)]
-    public class PlayerMonsterInteraction : TestKitBase, IDisposable
+    public class PlayerTests : TestKitBase, IDisposable
     {
         private readonly TestCluster _cluster;
         private Mock<IRoomGrain> room;
@@ -25,7 +25,7 @@ namespace Tests
         //Guid roomGUID;
 
 
-        public PlayerMonsterInteraction(ClusterFixture fixture)
+        public PlayerTests(ClusterFixture fixture)
         {
             _cluster = fixture.Cluster;
             
