@@ -19,23 +19,16 @@ class Repository(adventureGame: AdventureGame) {
   Kinding(ability)
     .addOption('fireball).addOption('roar).addOption('none)
 
-  lazy val damageTaken = Variable("damageTaken")
-  lazy val damageTakenKinding: Kinding =
-  Kinding(damageTaken)
-    .addOption('damageTakenRoar).addOption('damageTakenStandard)
-
   @combinator object PlayerGrain {
       def apply(caseString: String,
-            ability: String,
-            damageTaken: String): MyResult = {
+            ability: String): MyResult = {
           val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
           addArbCode(file, caseString, "switch (verb)")
           addArbCode(file, ability, "PlayerGrain")
-          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
           file
       }
       val semanticType: Type =
-        'case(ability) =>: 'ability(ability) =>: 'damageTaken(damageTaken) =>: 'player(ability, damageTaken)
+        'case(ability) =>: 'ability(ability) =>: 'player(ability)
   }
 
   @combinator object PlayerTests {
@@ -48,19 +41,19 @@ class Repository(adventureGame: AdventureGame) {
         'testAbility(ability) =>: 'playerTest(ability)
   }
 
-  @combinator object RoomGrain {
-      def apply(caseString: String,
-            ability: String,
-            damageTaken: String): MyResult = {
-          val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
-          addArbCode(file, caseString, "switch (verb)")
-          addArbCode(file, ability, "PlayerGrain")
-          addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
-          file
-      }
-      val semanticType: Type =
-        'case(ability) =>: 'ability(ability) =>: 'damageTaken(damageTaken) =>: 'room('weather)
-  }
+//   @combinator object RoomGrain {
+//       def apply(caseString: String,
+//             ability: String,
+//             damageTaken: String): MyResult = {
+//           val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
+//           addArbCode(file, caseString, "switch (verb)")
+//           addArbCode(file, ability, "PlayerGrain")
+//           addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
+//           file
+//       }
+//       val semanticType: Type =
+//         'case(ability) =>: 'ability(ability) =>: 'room('weather)
+//   }
 
   @combinator object abilityFireball {
     def apply(): String = {
@@ -75,14 +68,21 @@ class Repository(adventureGame: AdventureGame) {
             var player = await this.roomGrain.FindPlayer(target);
             if (player != null)
             {
-                await GrainFactory.GetGrain<IPlayerGrain>(player.Key).TakeDamage(this.roomGrain, 10);
-                return $"{target} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key).GetHealth()} left!";
+                await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").TakeDamage(this.roomGrain, 50);
+                return $"{player.Name} took 50 damage and now has {await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").GetHealth()} health left!";
             }
 
             var monster = await this.roomGrain.FindMonster(target);
             if (monster != null)
             {
-                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, 50);
+                string res = await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, 50);
+                return res;
+            }
+
+            var boss = await this.roomGrain.GetBoss();
+            if (boss != null)
+            {
+                string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id, "AdventureGrains.Boss").Kill(this.roomGrain, 50);
                 return res;
             }
             this.fireballCD = false;
@@ -174,29 +174,6 @@ class Repository(adventureGame: AdventureGame) {
     val semanticType: Type = 'case('none)
   }
 
-  @combinator object damageTakenStandard {
-      def apply(): String = {
-          """
-                    this.health -= damage;"""
-      }
-        val semanticType: Type = 'damageTaken('damageTakenStandard)
-  }
-
-  @combinator object damageTakenRoar {
-      def apply(): String = {
-          """
-                    if (roarActive)
-                    {
-                        this.health -= (int)(damage * 0.5);
-                    }
-                    else
-                    {
-                        this.health -= damage;   
-                    }"""
-      }
-        val semanticType: Type = 'damageTaken('damageTakenRoar)
-  }
-
   @combinator object testFireball {
       def apply(): String = {
         """
@@ -276,9 +253,9 @@ class Repository(adventureGame: AdventureGame) {
   
   def semanticPlayerTarget: Type = {
       adventureGame.getAbility match {
-          case AbilityTypes.fireball => 'player('fireball, 'damageTakenStandard)
-          case AbilityTypes.roar => 'player('roar, 'damageTakenRoar)
-          case AbilityTypes.none => 'player('none, 'damageTakenStandard)
+          case AbilityTypes.fireball => 'player('fireball)
+          case AbilityTypes.roar => 'player('roar)
+          case AbilityTypes.none => 'player('none)
       }
   }
 
@@ -294,6 +271,6 @@ class Repository(adventureGame: AdventureGame) {
     ReflectedRepository(
         this,
         classLoader = this.getClass.getClassLoader,
-        substitutionSpace = this.abilityKinding.merge(this.damageTakenKinding))
+        substitutionSpace = this.abilityKinding)//.merge(this.damageTakenKinding)
   }
 }

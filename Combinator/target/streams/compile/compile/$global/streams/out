@@ -1,6 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/scala/org/combinators/guidemo/repository.scala:228:9: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : String("\n        [Fact]\n        public async Task RoarTest()\n        {\n            Assert.Equal(100, await this.player.GetHealth());\n            string text = await this.player.Play(\"roar\");\n            Assert.Equal(\"Roar has been activated!\", text);\n            Thread.Sleep(2010);\n            Assert.Equal(95, await this.player.GetHealth());\n            \n            Thread.Sleep(10010);\n            Assert.Equal(85, await this.player.GetHealth());\n        }\n        \n        [Fact]\n        public async Task RoarCooldownTest()\n        {\n            string text = await this.player.Play(\"roar\");\n            Assert.Equal(\"Roar has been activated!\", text);\n            text = await this.player.Play(\"roar\");\n            Assert.Equal(\"Roar is on cooldown\", text);\n\n            Thread.Sleep(20010);\n            text = await this.player.Play(\"roar\");\n            Assert.Equal(\"Roar has been activated!\", text);\n        }")[0m
-[0m[[0m[31merror[0m] [0m[0m required: org.combinators.cls.types.Type[0m
-[0m[[0m[31merror[0m] [0m[0m        """[0m
-[0m[[0m[31merror[0m] [0m[0m        ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/java/org/combinators/guidemo/domain/instances/AdventureGameVersion1.java:13:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   method List(org.combinators.guidemo.domain.WeatherTypes,org.combinators.guidemo.domain.WeatherTypes)[0m
+[0m[[0m[31merror[0m] [0m[0m  location: class java.util.Arrays[0m
+[0m[[0m[31merror[0m] [0m[0m        super.setWeather(new ArrayList<WeatherTypes>(Arrays.List(WeatherTypes.Blizzard, WeatherTypes.Sunny)));[0m

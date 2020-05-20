@@ -13,9 +13,6 @@ namespace AdventureGrains
         //==================== CHANGES =======================
         private int health = 100; //Change for player classes
         private int damage = 20;
-        //FireballCD
-        //roarCD
-        ///roarActive
         //====================================================
         
         IRoomGrain roomGrain; // Current room
@@ -24,6 +21,16 @@ namespace AdventureGrains
         bool killed = false;
 
         PlayerInfo myInfo;
+        
+        //==================== CHANGES =======================
+        public new virtual IGrainFactory GrainFactory
+        {
+            get { return base.GrainFactory; }
+        }
+
+        public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
+            base.RegisterTimer(asyncCallback, state, dueTime, period);
+        //====================================================
 
         public override Task OnActivateAsync()
         {
@@ -94,10 +101,10 @@ namespace AdventureGrains
             return Task.CompletedTask;
         }
 
-        Task IPlayerGrain.SetRoomGrain(IRoomGrain room)
+        public async Task<string> SetRoomGrain(IRoomGrain room)
         {
             this.roomGrain = room;
-            return room.Enter(myInfo);
+            return await room.Enter(myInfo);
         }
 
         async Task<string> Go(string direction)
@@ -109,10 +116,9 @@ namespace AdventureGrains
             if (destination != null)
             {
                 await this.roomGrain.Exit(myInfo);
-                await destination.Enter(myInfo);
-
+                
                 this.roomGrain = destination;
-                var desc = await destination.Description(myInfo);
+                string desc = await destination.Enter(myInfo);
 
                 if (desc != null)
                     description.Append(desc);
@@ -155,7 +161,7 @@ namespace AdventureGrains
                 var weapon = things.Where(t => t.Category == "weapon").FirstOrDefault();
                 if (weapon != null)
                 {
-                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key).Die();
+                    await GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player").Die();
                     return target + " is now dead.";
                 }
                 return "With what? Your bare hands?";
@@ -168,23 +174,22 @@ namespace AdventureGrains
                 if (weapons.Count() > 0)
                 {
                     //======================================== CHANGES =============================================
-                    return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).Kill(this.roomGrain, this.damage);
+                    return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, this.damage);
                     //==============================================================================================
                 }
                 return "With what? Your bare hands?";
             }
             //======================================== CHANGES =============================================
-            //Boss
-            // var boss = await this.roomGrain.GetBoss();
-            // if (boss != null)
-            // {
-            //     var weapons = boss.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
-            //     if (weapons.Count() > 0)
-            //     {
-            //         return await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, this.damage);
-            //     }
-            //     return "With what? Your bare hands?";
-            // }
+            var boss = await this.roomGrain.GetBoss();
+            if (boss != null)
+            {
+                var weapons = boss.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
+                if (weapons.Count() > 0)
+                {
+                    return await GrainFactory.GetGrain<IBossGrain>(boss.Id, "AdventureGrains.Boss").Kill(this.roomGrain, this.damage);
+                }
+                return "With what? Your bare hands?";
+            }
             //==============================================================================================
             return "I can't see " + target + " here. Are you sure?";
         }
@@ -196,47 +201,27 @@ namespace AdventureGrains
             {
                 if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
-                    //Roar damageTaken
-                    
-                    //Fireball / none damageTaken
+                    if (roarActive)
+                    {
+                        this.health -= (int)(damage * 0.5);
+                    }
+                    else
+                    {
+                        this.health -= damage;   
+                    }
+
                     if (this.health <= 0)
                     {
-                        await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
+                        await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key, "AdventureGrains.Player").Die();
                     }
                 }
             }
-
             return;
         }
 
-        //Fireball implementation
-            //Boss
-            // var boss = await this.roomGrain.GetBoss();
-            // if (boss != null)
-            // {
-            //     string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, 50);
-            //     return res;
-            // }
+        //Fireball
 
-        //Fireball cooldown implementation
-
-        //Roar implementation
-
-        //RoarActive implementation
-
-        //Roar cooldown implementation
-        
-
-        public async Task WeatherEffect(int effect)
-        {
-            this.health += effect;
-            if (this.health <= 0)
-            {
-                await GrainFactory.GetGrain<IPlayerGrain>(this.myInfo.Key).Die();
-            }
-
-            return;
-        }
+        //Roar
         //==================================================================
 
         private string RemoveStopWords(string s)
@@ -267,7 +252,7 @@ namespace AdventureGrains
             return sb.ToString().Trim().ToLower();
         }
 
-        async Task<string> IPlayerGrain.Play(string command)
+        public async Task<string> Play(string command)
         {
             Thing thing;
             string target;
@@ -319,9 +304,9 @@ namespace AdventureGrains
                     return "You are carrying: " + string.Join(" ", things.Select(x => x.Name));
                 
                 //======================= CHANGES ============================
-                //Fireball case
+                //Fireball Case
                 
-                //Roar case
+                //Roar Case
                 //============================================================
 
                 case "end":

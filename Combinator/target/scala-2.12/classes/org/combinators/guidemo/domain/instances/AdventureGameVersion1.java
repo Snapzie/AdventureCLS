@@ -2,9 +2,14 @@ package org.combinators.guidemo.domain.instances;
 
 import org.combinators.guidemo.domain.AdventureGame;
 import org.combinators.guidemo.domain.AbilityTypes;
+import org.combinators.guidemo.domain.WeatherTypes;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdventureGameVersion1 extends AdventureGame {
     public AdventureGameVersion1() {
-        super.setAbility(AbilityTypes.none);
+        super.setAbility(AbilityTypes.fireball);
+        super.setWeather(new ArrayList<WeatherTypes>(Arrays.asList(WeatherTypes.Blizzard, WeatherTypes.Sunny)));
     }
 }
