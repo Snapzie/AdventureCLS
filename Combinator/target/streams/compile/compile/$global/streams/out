@@ -1,4 +1,0 @@
-[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/java/org/combinators/guidemo/domain/instances/AdventureGameVersion1.java:13:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   method List(org.combinators.guidemo.domain.WeatherTypes,org.combinators.guidemo.domain.WeatherTypes)[0m
-[0m[[0m[31merror[0m] [0m[0m  location: class java.util.Arrays[0m
-[0m[[0m[31merror[0m] [0m[0m        super.setWeather(new ArrayList<WeatherTypes>(Arrays.List(WeatherTypes.Blizzard, WeatherTypes.Sunny)));[0m
