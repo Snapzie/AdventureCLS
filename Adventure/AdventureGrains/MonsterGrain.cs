@@ -22,9 +22,6 @@ namespace AdventureGrains
         {
             get { return base.GrainFactory; }
         }
-        
-        public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
-            base.RegisterTimer(asyncCallback, state, dueTime, period);
         //====================================================
         
         MonsterInfo monsterInfo = new MonsterInfo();
