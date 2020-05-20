@@ -196,6 +196,21 @@ namespace Tests
         }
         
         [Fact]
+        public async void PlayerFireballBossDamageReductionTest()
+        {
+            //Arrange
+            await this.player.SetRoomGrain(this.room);
+            await this.boss.SetInfo();
+            await this.boss.SetRoomGrain(this.room);
+            Thread.Sleep(6000);
+            Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
+            //Act
+            string res = await this.player.Play("fireball patches");
+            //Assert
+            Assert.Equal("Patches the one-eyed demon took 25 damage. He now has 175 health left!", res);
+        }
+        
+        [Fact]
         public async void DescriptionNoPlayersNoItemsWithBossNoMonstersTest()
         {
             //Arrange

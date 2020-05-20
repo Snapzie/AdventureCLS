@@ -143,27 +143,30 @@ namespace Tests
         [Fact]
         public async void PlayerEnterTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-
+            //Act
             string desc = await room.Object.Enter(new PlayerInfo());
-            
+            //Assert
             Assert.Equal("Test room with exit to the north\nIt is hailing!\nYour health is: 0\n\n", desc);
         }
         
         [Fact]
         public async void PlayerExitTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
             PlayerInfo pi = new PlayerInfo(){Name = "testPlayer"};
-            
             await this.room.Object.Enter(pi);
             PlayerInfo foundPlayer = await this.room.Object.FindPlayer("testPlayer");
             Assert.Equal(pi, foundPlayer);
+            //Act
             await this.room.Object.Exit(pi);
+            //Assert
             foundPlayer = await this.room.Object.FindPlayer("testPlayer");
 
             Assert.Null(foundPlayer);
@@ -172,80 +175,88 @@ namespace Tests
         [Fact]
         public async void MonsterEnterMonsterFindTest()
         {
+            //Arrange
             MonsterInfo mi = new MonsterInfo();
             mi.Name = "testMonster";
-
             await room.Object.Enter(mi);
+            //Act
             MonsterInfo monster = await room.Object.FindMonster("testMonster");
-            
+            //Assert
             Assert.Equal(mi, monster);
         }
         
         [Fact]
         public async void MonsterExitTest()
         {
+            //Arrange
             MonsterInfo mi = new MonsterInfo(){Name = "testMonster"};
-            
             await this.room.Object.Enter(mi);
             MonsterInfo foundMonster = await this.room.Object.FindMonster("testMonster");
             Assert.Equal(mi, foundMonster);
+            //Act
             await this.room.Object.Exit(mi);
             foundMonster = await this.room.Object.FindMonster("testMonster");
-            
+            //Assert
             Assert.Null(foundMonster);
         }
         
         [Fact]
         public async void BossEnterGetBossWithBossTest()
         {
+            //Arrange
             MonsterInfo bi = new MonsterInfo(){Name = "testBoss"};
-
             await room.Object.BossEnter(bi);
+            //Act
             MonsterInfo boss = await room.Object.GetBoss();
-            
+            //Assert
             Assert.Equal(bi, boss);
         }
         
         [Fact]
         public async void GetBossWithoutBossTest()
         {
+            //Act
             MonsterInfo boss = await room.Object.GetBoss();
-            
+            //Assert
             Assert.Null(boss);
         }
         
         [Fact]
         public async void BossExitTest()
         {
+            //Arrange
             MonsterInfo bi = new MonsterInfo(){Name = "testBoss"};
-
             await room.Object.BossEnter(bi);
             MonsterInfo boss = await room.Object.GetBoss();
             Assert.Equal(bi, boss);
+            //Act
             await this.room.Object.BossExit(bi);
             boss = await room.Object.GetBoss();
-            
+            //Assert
             Assert.Null(boss);
         }
         
         [Fact]
         public async void MonsterFindNoMonsterTest()
         {
+            //Act
             MonsterInfo monster = await room.Object.FindMonster("testMonster");
+            //Assert
             Assert.Null(monster);
         }
 
         [Fact]
         public async void GetTargetsForMonsterWithPlayerTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
             PlayerInfo pi = new PlayerInfo() {Key = new Guid(), Name = "testPlayer"};
             await this.room.Object.Enter(pi);
-
+            //Act
             List<PlayerInfo> lpi = await this.room.Object.GetTargetsForMonster();
-
+            //Assert
             Assert.Single(lpi);
             Assert.Equal(pi, lpi[0]);
         }
@@ -253,64 +264,60 @@ namespace Tests
         [Fact]
         public async void GetTargetsForMonsterWithoutPlayerTest()
         {
+            //Act
             List<PlayerInfo> lpi = await this.room.Object.GetTargetsForMonster();
-
+            //Assert
             Assert.Empty(lpi);
         }
 
         [Fact]
         public async void FindPlayerWithPlayerTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
             PlayerInfo pi = new PlayerInfo() {Key = new Guid(), Name = "testPlayer"};
             await this.room.Object.Enter(pi);
-
+            //Act
             PlayerInfo foundPlayer = await this.room.Object.FindPlayer("testPlayer");
-            
+            //Assert
             Assert.Equal(pi, foundPlayer);
         }
         
         [Fact]
         public async void FindPlayerWithoutPlayerTest()
         {
+            //Act
             PlayerInfo foundPlayer = await this.room.Object.FindPlayer("testPlayer");
-            
+            //Assert
             Assert.Null(foundPlayer);
         }
 
         [Fact]
         public async void DropFindThingTest()
         {
+            //Arrange
             Thing t = new Thing() {Name = "testItem"};
-
             await this.room.Object.Drop(t);
+            //Act
             Thing foundThing = await this.room.Object.FindThing("testItem");
-            
+            //Assert
             Assert.Equal(t, foundThing);
         }
         
         [Fact]
         public async void TakeSomethingTest()
         {
+            //Arrange
             Thing t = new Thing() {Name = "testItem"};
-
             await this.room.Object.Drop(t);
             Thing foundThing = await this.room.Object.FindThing("testItem");
             Assert.Equal(t, foundThing);
+            //Act
             await this.room.Object.Take(t);
             foundThing = await this.room.Object.FindThing("testItem");
-            
-            Assert.Null(foundThing);
-        }
-        
-        [Fact]
-        public async void TakeNothingTest()
-        {
-            await this.room.Object.Take(It.IsAny<Thing>());
-            Thing foundThing = await this.room.Object.FindThing("testItem");
-            
+            //Assert
             Assert.Null(foundThing);
         }
 
