@@ -24,7 +24,7 @@ namespace Tests
         private Mock<BossGrain> boss;
 
         public BossTests(ClusterFixture fixture)
-        {
+        { 
             _cluster = fixture.Cluster;
 
             //Room Setup
