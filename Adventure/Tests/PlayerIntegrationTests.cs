@@ -33,7 +33,7 @@ namespace Tests
             room = _cluster.GrainFactory.GetGrain<IRoomGrain>(monsterId);
             //monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(0);
 
-            player.SetRoomGrain(room).Wait();
+            //player.SetRoomGrain(room).Wait();
 
             monsterInfo = new MonsterInfo();
             monsterInfo.Id = monsterId;
@@ -55,6 +55,7 @@ namespace Tests
         public async void PlayerFireballTestMonster()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(monsterId);
             await monster.SetInfo(monsterInfo);
             await monster.SetRoomGrain(room);
@@ -70,6 +71,9 @@ namespace Tests
         [Fact]
         public async void PlayerFireballTestPlayer()
         {
+            //Arrange
+            await player.SetRoomGrain(room);
+
             //Act
             string res = await player.Play("fireball nobody");
 
@@ -82,6 +86,7 @@ namespace Tests
         public async void PlayerGoRoomTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             IRoomGrain newRoom = _cluster.GrainFactory.GetGrain<IRoomGrain>(123);
             RoomInfo newRoomInfo = new RoomInfo();
             newRoomInfo.Description = "some desc";
@@ -104,6 +109,9 @@ namespace Tests
         [Fact]
         public async void PlayerGoNoAdjacentRoomTest()
         {
+            //Arrange
+            await player.SetRoomGrain(room);
+
             //Act
             string res = await this.player.Play("north");
 
@@ -115,6 +123,7 @@ namespace Tests
         public async void PlayerTakeTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             Thing knife = new Thing();
             knife.Name = "knife";
             await room.Drop(knife);
@@ -131,6 +140,7 @@ namespace Tests
         public async void PlayerDropTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             Thing knife = new Thing();
             knife.Name = "knife";
             await this.room.Drop(knife);
@@ -148,6 +158,7 @@ namespace Tests
         public async void PlayerKillPlayerTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             Thing knife = new Thing();
             knife.Name = "knife";
             knife.Category = "weapon";
@@ -171,6 +182,7 @@ namespace Tests
         public async void PlayerKillMonsterTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             Thing knife = new Thing();
             knife.Name = "knife";
             knife.Category = "weapon";
@@ -203,6 +215,9 @@ namespace Tests
         [Fact]
         public async void PlayerLookTest()
         {
+            //Arrange
+            await player.SetRoomGrain(room);
+
             //Act
             string res = await this.player.Play("look");
 
@@ -214,6 +229,7 @@ namespace Tests
         public async void MonsterAttackPlayerTest()
         {
             //Arrange
+            await player.SetRoomGrain(room);
             monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(monsterId);
             await monster.SetInfo(monsterInfo);
             await monster.SetRoomGrain(room);
@@ -236,6 +252,9 @@ namespace Tests
         [Fact]
         public async void PlayerTakeDamageTest()
         {
+            //Arrange
+            await player.SetRoomGrain(room);
+
             //Act
             await this.player.TakeDamage(this.room, -5);
             //Assert
@@ -255,6 +274,56 @@ namespace Tests
             await this.player.TakeDamage(this.room, int.MinValue);
             //Assert
             Assert.Equal(-2147483549, await this.player.GetHealth());
+        }
+
+        [Fact]
+        public async void PlayerDescriptionNoPlayersNoItemsNoMonstersTest()
+        {
+            //Act
+            string desc = await room.Description(new PlayerInfo());
+
+            //Assert
+            Assert.Equal("Your health is: 100\n", desc);
+        }
+
+        [Fact]
+        public async void PlayerDescriptionWithPlayersNoItemsNoMonstersTest()
+        {
+            //Arrange
+            await this.player.SetRoomGrain(this.room);
+
+            string desc = await room.Description(new PlayerInfo());
+
+            Assert.Equal("Beware! These guys are in the room with you:\n  nobody\nYour health is: 100\n", desc);
+        }
+
+        [Fact]
+        public async void PlayerDescriptionNoPlayersNoItemsWithMonstersTest()
+        {
+            //Arrange
+            monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(monsterId);
+            await this.monster.SetInfo(monsterInfo);
+            await this.monster.SetRoomGrain(this.room);
+
+            //Act
+            string desc = await room.Description(new PlayerInfo());
+
+            //Assert
+            Assert.Equal("Beware! These guys are in the room with you:\n  testMonster\nYour health is: 100\n", desc);
+        }
+
+        [Fact]
+        public async void PlayerDescriptionNoPlayersWithItemsNoMonstersTest()
+        {
+            //Arrange
+            Thing t = new Thing() { Name = "testThing" };
+            await this.room.Drop(t);
+
+            //Act
+            string desc = await room.Description(new PlayerInfo());
+
+            //Assert
+            Assert.Equal("The following things are present:\n  testThing\nYour health is: 100\n", desc);
         }
 
     }
