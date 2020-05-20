@@ -13,7 +13,6 @@ using Assert = Xunit.Assert;
 
 namespace Tests
 {
-    [Collection(ClusterCollection.Name)]
     public class BossIntegrationTests : TestKitBase
     {
         private readonly TestCluster _cluster;
