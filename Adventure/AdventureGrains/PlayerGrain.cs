@@ -246,7 +246,7 @@ namespace AdventureGrains
             var boss = await this.roomGrain.GetBoss();
             if (boss != null)
             {
-                string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id).Kill(this.roomGrain, 50);
+                string res = await GrainFactory.GetGrain<IBossGrain>(boss.Id, "AdventureGrains.Boss").Kill(this.roomGrain, 50);
                 return res;
             }
             this.fireballCD = false;

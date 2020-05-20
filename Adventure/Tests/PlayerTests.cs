@@ -119,7 +119,22 @@ namespace Tests
         [Fact]
         public async void FireballTestBoss()
         {
+            //Arrange
+            MonsterInfo bossInfo = new MonsterInfo();
+            bossInfo.Id = 666;
+            bossInfo.Name = "testBoss";
+            var boss = new Mock<IBossGrain>();
+            boss.Setup(b => b.SetInfo()).Returns(Task.FromResult(bossInfo));
+            boss.Setup(b => b.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
 
+            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(boss.Object);
+            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bossInfo));
+
+            //Act
+            string res = await player.Object.Play("fireball testBoss");
+
+            //Assert
+            Assert.Equal("Ouch!", res);
         }
 
         [Fact]
@@ -127,12 +142,12 @@ namespace Tests
         {
             //Arrange done in Constructor
 
-            //Arrange
+            //Act
             string res = await player.Object.Play("fireball");
             //Assert
             Assert.Equal("Fireball what?", res);
 
-            //Arrange
+            //Act
             string res2 = await player.Object.Play("fireball No One");
             //Assert
             Assert.Equal("I can't see No One here. Are you sure?", res2);
