@@ -17,7 +17,6 @@ namespace Tests
         private readonly TestCluster _cluster;
         private Mock<RoomGrain> room;
         private Mock<IRoomGrain> exitRoom;
-        //private PlayerInfo playerInfo = new PlayerInfo();
 
         public RoomTests(ClusterFixture fixture)
         {
@@ -43,96 +42,101 @@ namespace Tests
         [Fact]
         public async void ExitToWithRoomTest()
         {
+            //Act
             var exitedTo = await room.Object.ExitTo("north");
+            //Assert
             Assert.Equal(exitRoom.Object, exitedTo);
         }
         
         [Fact]
         public async void ExitToWithoutRoomTest()
         {
+            //Act
             var exitedTo = await room.Object.ExitTo("south");
+            //Assert
             Assert.Null(exitedTo);
         }
 
         [Fact]
         public async void DescriptionNoPlayersNoItemsNoBossNoMonstersTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-
+            //Act
             string desc = await room.Object.Description(new PlayerInfo());
-            
+            //Assert
             Assert.Equal("Your health is: 0\n", desc);
         }
         
         [Fact]
         public async void DescriptionWithPlayersNoItemsNoBossNoMonstersTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-            
             PlayerInfo pi = new PlayerInfo();
             pi.Name = "testPlayer";
             pi.Key = Guid.NewGuid();
             await room.Object.Enter(pi);
-            
+            //Act
             string desc = await room.Object.Description(new PlayerInfo());
-            
+            //Assert
             Assert.Equal("Beware! These guys are in the room with you:\n  testPlayer\nYour health is: 0\n", desc);
         }
         
         [Fact]
         public async void DescriptionNoPlayersNoItemsNoBossWithMonstersTest()
         {
+            //Arrange
             var monster = new Mock<IMonsterGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<Guid>(), "AdventureGrains.Monster"))
                 .Returns(monster.Object);
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-            
             MonsterInfo mi = new MonsterInfo();
             mi.Name = "testMonster";
             await room.Object.Enter(mi);
-
+            //Act
             string desc = await room.Object.Description(new PlayerInfo());
-            
+            //Assert
             Assert.Equal("Beware! These guys are in the room with you:\n  testMonster\nYour health is: 0\n", desc);
         }
         
         [Fact]
         public async void DescriptionNoPlayersNoItemsWithBossNoMonstersTest()
         {
+            //Arrange
             var boss = new Mock<IBossGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss"))
                 .Returns(boss.Object);
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-            
             MonsterInfo bi = new MonsterInfo();
             bi.Name = "testBoss";
             await room.Object.Enter(bi);
-
+            //Act
             string desc = await room.Object.Description(new PlayerInfo());
-            
+            //Asserts
             Assert.Equal("Beware! These guys are in the room with you:\n  testBoss\nYour health is: 0\n", desc);
         }
         
         [Fact]
         public async void DescriptionNoPlayersWithItemsNoBossNoMonstersTest()
         {
+            //Arrange
             var player = new Mock<IPlayerGrain>();
             room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
                 .Returns(player.Object);
-            
             Thing t = new Thing() {Name = "testThing"};
             await this.room.Object.Drop(t);
-
+            //Act
             string desc = await room.Object.Description(new PlayerInfo());
-            
+            //Assert
             Assert.Equal("The following things are present:\n  testThing\nYour health is: 0\n", desc);
         }
 
