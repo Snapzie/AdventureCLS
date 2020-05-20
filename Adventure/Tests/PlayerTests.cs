@@ -14,7 +14,7 @@ using Assert = Xunit.Assert;
 namespace Tests
 {
     [Collection(ClusterCollection.Name)]
-    public class PlayerTests : TestKitBase, IDisposable
+    public class PlayerTests : TestKitBase
     {
         private readonly TestCluster _cluster;
         private Mock<IRoomGrain> room;
@@ -22,7 +22,6 @@ namespace Tests
         private Mock<IMonsterGrain> monster;
         MonsterInfo mi;
         RoomInfo ri;
-        //Guid roomGUID;
 
 
         public PlayerTests(ClusterFixture fixture)
@@ -38,39 +37,15 @@ namespace Tests
             room = new Mock<IRoomGrain>();
             ri = new RoomInfo();
             ri.Id = 1;
-            //roomGUID = new Guid();
             
             //Monster Setup
             monster = new Mock<IMonsterGrain>();
 
             //Player Setup
             player = new Mock<PlayerGrain>();
-            //player.Setup(x => x.RegisterTimer(It.IsAny<Func<object, Task>>(), 
-            //        It.IsAny<object>(), It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            //    .Callback<Func<object, Task>, object, TimeSpan, TimeSpan>((a, b, c, d) => { }).Returns(Mock.Of<IDisposable>());
             player.Setup(x => x.GrainFactory.GetGrain<IMonsterGrain>(
                 It.IsAny<long>(), "Monster")).Returns(monster.Object);
             player.Object.SetRoomGrain(room.Object).Wait();
-
-        //    Func<object, Task> action = null;
-        //    object state = null;
-        //    var dueTime = TimeSpan.FromSeconds(2);
-        //    var period = TimeSpan.FromSeconds(1);
-        //    player.Setup(x => x.RegisterTimer(It.IsAny<Func<object, Task>>(),
-        //            It.IsAny<object>(), It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-        //        .Callback<Func<object, Task>, object, TimeSpan, TimeSpan>((a, b, c, d) =>
-        //        {
-        //            action = a;
-        //            state = b;
-        //            dueTime = c;
-        //            period = d;
-        //        }).Returns(Mock.Of<IDisposable>());
-        }
-        
-        public async void Dispose()
-        {
-            //Necessary to dispose timers
-            //await this.monster.Kill(this.room, 999);
         }
 
         [Fact]
@@ -98,6 +73,7 @@ namespace Tests
         [Fact]
         public async void FireballTestPlayer()
         {
+            //Arrange
             var enemyPlayer = new Mock<IPlayerGrain>();
             PlayerInfo pi = new PlayerInfo();
             pi.Key = new Guid();
@@ -111,8 +87,9 @@ namespace Tests
             enemyPlayer.Setup(x => x.TakeDamage(It.IsAny<IRoomGrain>(), It.IsAny<int>()))
                 .Returns(Task.FromResult("testPlayer took 50 damage and now has 0 health left!"));
 
+            //Act
             string res = await player.Object.Play("fireball testPlayer");
-
+            //Assert
             Assert.Equal("testPlayer took 50 damage and now has 0 health left!", res);
         }
 
@@ -138,10 +115,8 @@ namespace Tests
         }
 
         [Fact]
-        public async void FireballTestNoOne() //REDUNDANCY I FIREBALL CASE? Eller empty
+        public async void FireballTestNoOne()
         {
-            //Arrange done in Constructor
-
             //Act
             string res = await player.Object.Play("fireball");
             //Assert
@@ -154,7 +129,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void FireballTestCooldown() //Fireball does not come off cooldown
+        public async void FireballTestCooldown()
         {
             //Arrange
             Func<object, Task> action = null;
@@ -188,14 +163,6 @@ namespace Tests
         [Fact]
         public async void RoarTest()
         {
-            //Arrange
-            //room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
-
-            //Act
-            string res = await this.player.Object.Play("roar someone");
-            //Assert
-            Assert.Equal("Can not roar others", res);
-
             //Act
             string res2 = await this.player.Object.Play("roar");
 
@@ -212,10 +179,28 @@ namespace Tests
             //Assert
             Assert.Equal(75, await this.player.Object.GetHealth());
 
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, -4);
+            //Assert
+            Assert.Equal(77, await this.player.Object.GetHealth());
+
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, 1);
+            //Assert
+            Assert.Equal(77, await this.player.Object.GetHealth());
         }
 
         [Fact]
-        public async void RoarCooldownTest() //TakeDamage prob
+        public async void RoarSomeoneTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("roar someone");
+            //Assert
+            Assert.Equal("Can not roar others", res);
+        }
+
+        [Fact]
+        public async void RoarCooldownTest()
         {
             //Arrange
             Func<object, Task> action = null;
@@ -247,10 +232,8 @@ namespace Tests
         public async void TakeDamageTest() //GetPrimaryKey is inaccessible and non-overridable
         {
             //Arrange partly done in Constructor
-            //room.Setup(r => r.GetId()).Returns(Task.FromResult(ri.Id));
             PlayerInfo pi = new PlayerInfo();
             pi.Key = new Guid();
-            //player.Setup(p => p.GetId()).Returns(Task.FromResult(pi.Key));
             player.Setup(p => p.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player")).Returns(player.Object);
 
             //Act
@@ -267,12 +250,6 @@ namespace Tests
             await this.player.Object.TakeDamage(this.room.Object, 0);
             //Assert
             Assert.Equal(104, await this.player.Object.GetHealth());
-
-            //Act
-            await this.player.Object.TakeDamage(this.room.Object, int.MinValue); //Player dies, myinfo is NULL FAM WOWIE
-            //Assert
-            Assert.Equal(-2147483544, await this.player.Object.GetHealth());
-
         }
 
         [Fact]
@@ -307,7 +284,6 @@ namespace Tests
             Thing knife = new Thing();
             knife.Name = "knife";
             room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
-            //room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
 
             //Act
             string res = await this.player.Object.Play("take knife");
@@ -321,6 +297,16 @@ namespace Tests
         {
             //Act
             string res = await this.player.Object.Play("take knife");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
+
+        [Fact]
+        public async void TakeNoInputTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("take");
 
             //Assert
             Assert.Equal("I don't understand.", res);
@@ -348,6 +334,16 @@ namespace Tests
         {
             //Act
             string res = await this.player.Object.Play("Drop knife");
+
+            //Assert
+            Assert.Equal("I don't understand.", res);
+        }
+
+        [Fact]
+        public async void DropNoInputTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("Drop");
 
             //Assert
             Assert.Equal("I don't understand.", res);
@@ -490,15 +486,26 @@ namespace Tests
 
             //Assert
             Assert.Contains("knife", res);
+
+            //Act
+            string res2 = await this.player.Object.Play("inventory");
+
+            //Assert
+            Assert.Contains("knife", res2);
         }
 
         [Fact]
         public async void InventoryEmptyTest()
         {
             //Act
-            string res = await this.player.Object.Play("inventory");
+            string res = await this.player.Object.Play("inv");
             //Assert
             Assert.Equal("You are carrying: ", res);
+
+            //Act
+            string res2 = await this.player.Object.Play("inventory");
+            //Assert
+            Assert.Equal("You are carrying: ", res2);
         }
 
         [Fact]
@@ -530,138 +537,5 @@ namespace Tests
             //Assert
             Assert.Equal("I don't understand.", res);
         }
-        //Black
-        //        [Fact]
-        //        public async Task FireballDamageTest()
-        //        {
-        //            string text = await this.player.Play("fireball TestMonster");
-        //            Assert.Contains("took 50 damage", text);
-        //        }
-        //        
-        //        [Fact]
-        //        public async Task FireballCooldownTest()
-        //        {
-        //            await this.player.Play("fireball TestMonster");
-        //            string text = await this.player.Play("fireball TestMonster");
-        //            Assert.Equal("Fireball is on cooldown", text);
-        //            
-        //            Thread.Sleep(10010);
-        //            text = await this.player.Play("fireball TestMonster");
-        //            Assert.Equal("TestMonster is dead.", text);
-        //        }
-        //
-        //        [Fact]
-        //        public async Task FireballTargetNotFoundTest()
-        //        {
-        //            string text = await this.player.Play("fireball This Is Not A Name");
-        //            Assert.Equal("I can't see This Is Not A Name here. Are you sure?", text);
-        //        }
-        //        
-        //        //White
-        //        [Fact]
-        //        public async Task FireballEmptyStringTest()
-        //        {
-        //            string text = await this.player.Play("fireball ");
-        //            Assert.Equal("Fireball what?", text);
-        //        }
-        //        
-        //        //Blcak
-        //        [Fact]
-        //        public async Task RoarTest()
-        //        {
-        //            Assert.Equal(100, await this.player.GetHealth());
-        //            string text = await this.player.Play("roar");
-        //            Assert.Equal("Roar has been activated!", text);
-        //            Thread.Sleep(2010);
-        //            Assert.Equal(95, await this.player.GetHealth());
-        //            
-        //            Thread.Sleep(10010);
-        //            Assert.Equal(85, await this.player.GetHealth());
-        //        }
-        //        
-        //        [Fact]
-        //        public async Task RoarCooldownTest()
-        //        {
-        //            string text = await this.player.Play("roar");
-        //            Assert.Equal("Roar has been activated!", text);
-        //            text = await this.player.Play("roar");
-        //            Assert.Equal("Roar is on cooldown", text);
-        //
-        //            Thread.Sleep(20010);
-        //            text = await this.player.Play("roar");
-        //            Assert.Equal("Roar has been activated!", text);
-        //        }
-        //    }
-        //    
-        //    [Collection(ClusterCollection.Name)]
-        //    public class PlayerGrainTests
-        //    {
-        //        private readonly TestCluster _cluster;
-        //        private IRoomGrain room;
-        //        private IPlayerGrain player;
-        //        
-        //        public PlayerGrainTests(ClusterFixture fixture)
-        //        {
-        //            _cluster = fixture.Cluster;
-        //            
-        //            //Room Setup
-        //            int num = new Random().Next();
-        //            this.room = _cluster.GrainFactory.GetGrain<IRoomGrain>(num);
-        //            RoomInfo ri = new RoomInfo();
-        //            ri.Description = "This is a test room";
-        //            ri.Directions = new Dictionary<string, long>();
-        //            ri.Id = num;
-        //            ri.Name = "TestRoom";
-        //            this.room.SetInfo(ri).Wait();
-        //            
-        //            //Player Setup
-        //            this.player = _cluster.GrainFactory.GetGrain<IPlayerGrain>(Guid.NewGuid());
-        //            this.player.SetName("TestPlayer").Wait();
-        //            this.player.SetRoomGrain(this.room).Wait();
-        //        }
-        //
-        //        [Fact]
-        //        public async Task DamageTest()
-        //        {
-        //            Assert.Equal(100, await this.player.GetHealth());
-        //            
-        //            await this.player.TakeDamage(this.room, -5);
-        //            Assert.Equal(105, await this.player.GetHealth());
-        //            
-        //            await this.player.TakeDamage(this.room, 50);
-        //            Assert.Equal(55, await this.player.GetHealth());
-        //            
-        //            await this.player.TakeDamage(this.room, 0);
-        //            Assert.Equal(55, await this.player.GetHealth());
-        //        }
-        //        
-        //        [Fact]
-        //        public async Task ItemTests()
-        //        {
-        //            //Make thing
-        //            Thing thing = new Thing();
-        //            thing.Category = "weapon";
-        //            thing.Commands = new List<string>() {"kill"};
-        //            thing.Id = 1;
-        //            thing.Name = "knife";
-        //            thing.FoundIn = this.room.GetPrimaryKeyLong();
-        //            await this.room.Drop(thing);
-        //            //Knife exists in room
-        //            Assert.NotNull(await this.room.FindThing("knife"));
-        //            
-        //            //Player can take knife
-        //            await this.player.Play("take knife");
-        //            Assert.Null(await this.room.FindThing("knife"));
-        //            
-        //            //Player can die
-        //            Assert.Equal(100, await this.player.GetHealth());
-        //            await this.player.TakeDamage(this.room, 200);
-        //            Assert.Equal(-100, await this.player.GetHealth());
-        //            PlayerInfo foundPlayer = await this.room.FindPlayer("TestPlayer");
-        //            Assert.Null(foundPlayer);
-        //            
-        //            //Player drops item on death
-        //            Assert.NotNull(await this.room.FindThing("knife"));
-        //        }
     }
 }

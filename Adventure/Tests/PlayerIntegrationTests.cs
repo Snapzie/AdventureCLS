@@ -18,7 +18,6 @@ namespace Tests
         private IPlayerGrain player;
         private IMonsterGrain monster;
         private IRoomGrain room;
-        //private Guid playerGuid;
         private MonsterInfo monsterInfo;
         private Random rand = new Random();
         private long monsterId;
@@ -26,29 +25,14 @@ namespace Tests
         public PlayerIntegrationTests(ClusterFixture fixture)
         {
             _cluster = fixture.Cluster;
-            //_cluster.Deploy();
-            //playerGuid = new Guid();
             monsterId = rand.Next();
             player = _cluster.GrainFactory.GetGrain<IPlayerGrain>(Guid.NewGuid());
             room = _cluster.GrainFactory.GetGrain<IRoomGrain>(monsterId);
-            //monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(0);
-
-            //player.SetRoomGrain(room).Wait();
 
             monsterInfo = new MonsterInfo();
             monsterInfo.Id = monsterId;
             monsterInfo.KilledBy = new List<long> { 0 };
             monsterInfo.Name = "testMonster";
-            //monster.SetInfo(monsterInfo).Wait();
-            //monster.SetRoomGrain(room).Wait();
-        }
-
-        public async void Dispose()
-        {
-            await this.monster?.Kill(this.room, 999);
-            await this.player?.Die();
-            //await this.player.TakeDamage(this.room, 999);
-            this._cluster.StopAllSilos();
         }
 
         [Fact]
@@ -201,8 +185,29 @@ namespace Tests
             string res = await this.player.Play("kill testMonster");
             //Assert
             Assert.Equal("testMonster took 20 damage. He now has 80 health left!", res);
+        }
+
+        [Fact]
+        public async void PlayerKillMonsterDieTest()
+        {
+            //Arrange
+            await player.SetRoomGrain(room);
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            knife.Category = "weapon";
+            knife.Id = 0;
+            await this.room.Drop(knife);
+            await this.player.Play("take knife");
+            MonsterInfo mi = new MonsterInfo();
+            mi.Id = 1;
+            mi.Name = "testMonster";
+            mi.KilledBy = new List<long> { 0 };
+            IMonsterGrain enemyMonster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(1);
+            await enemyMonster.SetInfo(mi);
+            await enemyMonster.SetRoomGrain(this.room);
 
             //Act
+            await this.player.Play("kill testMonster");
             await this.player.Play("kill testMonster");
             await this.player.Play("kill testMonster");
             await this.player.Play("kill testMonster");
@@ -269,11 +274,6 @@ namespace Tests
             await this.player.TakeDamage(this.room, 0);
             //Assert
             Assert.Equal(99, await this.player.GetHealth());
-
-            //Act
-            await this.player.TakeDamage(this.room, int.MinValue);
-            //Assert
-            Assert.Equal(-2147483549, await this.player.GetHealth());
         }
 
         [Fact]

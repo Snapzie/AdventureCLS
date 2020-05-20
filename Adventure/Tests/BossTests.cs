@@ -35,7 +35,6 @@ namespace Tests
             ri.Directions = new Dictionary<string, long>();
             ri.Id = num;
             ri.Name = "TestRoom";
-            //this.room.SetInfo(ri).Wait();
 
             //Player Setup
             this.playerInfo.Key = new Guid();
@@ -43,15 +42,6 @@ namespace Tests
 
             //Boss Setup
             this.boss = new Mock<BossGrain>();
-
-            //this.boss.SetInfo().Wait(); 
-            //this.boss.SetRoomGrain(this.room).Wait();
-        }
-
-        public async void Dispose()
-        {
-            //Necessary to dispose timers
-            //await this.boss.Kill(this.room, 999);
         }
 
         [Fact]
@@ -123,7 +113,7 @@ namespace Tests
             Assert.Equal(" took 0 damage. He now has 200 health left!", res3);
 
             //Act
-            string res4 = await this.boss.Object.Kill(this.room.Object, int.MaxValue);
+            string res4 = await this.boss.Object.Kill(this.room.Object, 201);
             //Assert
             Assert.Equal(" has been slain!", res4);
         }
@@ -153,45 +143,6 @@ namespace Tests
             string res3 = await this.boss.Object.Kill(this.room.Object, -5);
             //Assert
             Assert.Equal(" took -2 damage. He now has 202 health left!", res3);
-
-            //Act
-            string res4 = await this.boss.Object.Kill(this.room.Object, int.MaxValue);
-            //Assert
-            Assert.Equal(" has been slain!", res4);
         }
-
-        //        [Fact]
-        //        public async void AddSpawnTest()
-        //        {
-        //            await this.room.Enter(this.playerInfo);
-        //            Assert.NotNull(this.room.GetBoss());
-        //            Assert.Empty(await this.room.GetMonsters());
-        //            
-        //            Thread.Sleep(5010);
-        //            Assert.Single(this.room.GetMonsters().Result);
-        //        }
-        //        
-        //        [Fact]
-        //        public async void AddHealTest()
-        //        {
-        //            await this.room.Enter(this.playerInfo);
-        //            Assert.NotNull(this.room.GetBoss());
-        //            Assert.Empty(await this.room.GetMonsters());
-        //            
-        //            Thread.Sleep(5010);
-        //            Assert.Single(this.room.GetMonsters().Result);
-        //            long id = this.room.GetMonsters().Result[0].Id;
-        //            IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(id);
-        //            string text = await monster.Kill(this.room, 0);
-        //            Assert.Contains("100 health left!", text);
-        //            
-        //            Thread.Sleep(5000);
-        //            text = await monster.Kill(this.room, 0);
-        //            Assert.Contains("110 health left!", text);
-
-        //            //Necessary to dispose timers
-        //            string bossText = await this.boss.Kill(this.room, 999);
-        //            Assert.Contains("Patches the one-eyed demon has been slain!", bossText);
-        //        }
     }
 }
