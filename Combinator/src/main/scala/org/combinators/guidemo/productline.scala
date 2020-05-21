@@ -28,8 +28,9 @@ abstract class AdventureGameController (webJars: WebJarsUtil, lifeCycle: Applica
     implicit val myResultPersistable: Persistable.Aux[MyResult] =
         new MyResultPersistable
     override lazy val results: Results = EmptyInhabitationBatchJobResults(repository.forInhabitation)
-        .addJob[MyResult](repository.semanticPlayerTarget) 
-        .addJob[MyResult](repository.semanticPlayerTestTarget)
+        //.addJob[MyResult](repository.semanticPlayerTarget) 
+        //.addJob[MyResult](repository.semanticPlayerTestTarget)
+        .addJob[MyResult](repository.semanticBossTarget)
         .compute()
     override lazy val controllerAddress: String = adventureGame.getClass.getSimpleName.toLowerCase
 }

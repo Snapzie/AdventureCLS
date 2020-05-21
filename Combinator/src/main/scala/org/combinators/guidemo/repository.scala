@@ -464,7 +464,7 @@ class Repository(adventureGame: AdventureGame) {
   }
 
   @combinator object SetupBoss {
-      def apply(boss: String): String = {
+      def apply(boss: MyResult): String = {
         """
         private async Task MakeBoss(IRoomGrain room)
         {
@@ -506,7 +506,7 @@ class Repository(adventureGame: AdventureGame) {
   }
 
   @combinator object SetupNone {
-      def apply(boss: String): String = {
+      def apply(boss: MyResult): String = {
         """
         public async Task Configure(string filename)
         {
@@ -572,6 +572,6 @@ class Repository(adventureGame: AdventureGame) {
     ReflectedRepository(
         this,
         classLoader = this.getClass.getClassLoader,
-        substitutionSpace = this.abilityKinding.merge(this.bossKinding))
+        substitutionSpace = this.abilityKinding.merge(this.bossKinding.merge(this.bossAbilityKinding)))
   }
 }
