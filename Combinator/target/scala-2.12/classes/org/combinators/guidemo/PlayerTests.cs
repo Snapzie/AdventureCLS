@@ -55,74 +55,6 @@ namespace Tests
         }
 
         [Fact]
-        public async void RoarTest()
-        {
-            //Act
-            string res2 = await this.player.Object.Play("roar");
-
-            //Assert
-            Assert.Equal("Roar has been activated!", res2);
-
-            //Act
-            await this.player.Object.TakeDamage(this.room.Object, 50);
-            //Assert
-            Assert.Equal(75, await this.player.Object.GetHealth());
-
-            //Act
-            await this.player.Object.TakeDamage(this.room.Object, 0);
-            //Assert
-            Assert.Equal(75, await this.player.Object.GetHealth());
-
-            //Act
-            await this.player.Object.TakeDamage(this.room.Object, -4);
-            //Assert
-            Assert.Equal(77, await this.player.Object.GetHealth());
-
-            //Act
-            await this.player.Object.TakeDamage(this.room.Object, 1);
-            //Assert
-            Assert.Equal(77, await this.player.Object.GetHealth());
-        }
-
-        [Fact]
-        public async void RoarSomeoneTest()
-        {
-            //Act
-            string res = await this.player.Object.Play("roar someone");
-            //Assert
-            Assert.Equal("Can not roar others", res);
-        }
-
-        [Fact]
-        public async void RoarCooldownTest()
-        {
-            //Arrange
-            Func<object, Task> action = null;
-            object state = null;
-            TimeSpan dueTime = TimeSpan.FromSeconds(100);
-            TimeSpan period = TimeSpan.FromSeconds(100);
-            player.Setup(x => x.RegisterTimer(It.IsAny<Func<object, Task>>(),
-                    It.IsAny<object>(), It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-                .Callback<Func<object, Task>, object, TimeSpan, TimeSpan>((a, b, c, d) =>
-                {
-                    action = a;
-                    state = b;
-                    dueTime = c;
-                    period = d;
-                }).Returns(Mock.Of<IDisposable>());
-            await this.player.Object.Play("roar");
-
-            //Act
-            string res = await this.player.Object.Play("roar");
-            //Assert
-            Assert.Equal("Roar is on cooldown", res);
-            Assert.NotNull(action);
-            Assert.Equal(20, dueTime.TotalSeconds);
-            Assert.Equal(-1, period.TotalSeconds);
-            Assert.Null(state);
-        }
-
-        [Fact]
         public async void TakeDamageTest() //GetPrimaryKey is inaccessible and non-overridable
         {
             //Arrange partly done in Constructor
@@ -287,32 +219,6 @@ namespace Tests
 
             //Assert
             Assert.Equal("Oof!", res);
-        }
-
-        [Fact]
-        public async void KillBossTest()
-        {
-            //Arrange
-            MonsterInfo bi = new MonsterInfo();
-            bi.Id = 0;
-            bi.KilledBy = new List<long> { 0 };
-            Thing knife = new Thing();
-            knife.Name = "knife";
-            knife.Category = "weapon";
-            knife.Id = 0;
-            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
-            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
-            await this.player.Object.Play("take knife");
-            Mock<IBossGrain> enemyBoss = new Mock<IBossGrain>();
-            enemyBoss.Setup(eb => eb.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
-            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bi));
-            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(enemyBoss.Object);
-
-            //Act
-            string res = await player.Object.Play("kill testBoss");
-
-            //Assert
-            Assert.Equal("Ouch!", res);
         }
 
         [Fact]

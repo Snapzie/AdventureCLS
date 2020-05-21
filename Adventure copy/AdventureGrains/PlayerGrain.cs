@@ -10,6 +10,28 @@ namespace AdventureGrains
 {
     public class PlayerGrain : Orleans.Grain, IPlayerGrain
     {
+        private bool roarCD = false;
+
+        private Task<string> Roar()
+        {
+            this.roarCD = true;
+            this.roarActive = true;
+            RegisterTimer((_) => RoarActive(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(-1));
+            RegisterTimer((_) => RoarCooldown(), null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(-1));
+            return Task.FromResult("Roar has been activated!");
+        }
+        
+        private Task RoarActive()
+        {
+            this.roarActive = false;
+            return Task.CompletedTask;
+        }
+
+        private Task RoarCooldown()
+        {
+            this.roarCD = false;
+            return Task.CompletedTask;
+        }
         //==================== CHANGES =======================
         private int health = 100; //Change for player classes
         private int damage = 20;
@@ -268,6 +290,14 @@ namespace AdventureGrains
 
             switch (verb)
             {
+                case "roar":
+                    if (words.Length > 1)
+                        return "Can not roar others";
+                    if (roarCD)
+                    {
+                        return "Roar is on cooldown";
+                    }
+                    return await Roar();
                 case "look":
                     return await this.roomGrain.Description(myInfo);
 

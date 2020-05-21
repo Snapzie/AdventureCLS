@@ -13,6 +13,7 @@ namespace AdventureGrains
         //==================== CHANGES =======================
         private int health = 100; //Change for player classes
         private int damage = 20;
+        private bool roarActive = false;
         //====================================================
         
         IRoomGrain roomGrain; // Current room

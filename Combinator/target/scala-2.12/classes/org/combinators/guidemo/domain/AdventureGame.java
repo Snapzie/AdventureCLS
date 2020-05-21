@@ -5,6 +5,7 @@ import java.util.*;
 
 public class AdventureGame {
     private AbilityTypes ability;
+    private BossAbilityTypes boss;
     private ArrayList<WeatherTypes> weather;
 
     public AbilityTypes getAbility() {
@@ -19,5 +20,12 @@ public class AdventureGame {
     }
     public void setWeather(ArrayList<WeatherTypes> weather) {
         this.weather = weather;
+    }
+
+    public BossAbilityTypes getBoss() {
+        return boss;
+    }
+    public void setBoss(BossAbilityTypes boss) {
+        this.boss = boss;
     }
 }

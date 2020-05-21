@@ -14,6 +14,7 @@ import org.combinators.guidemo.domain.{AdventureGame, AbilityTypes}
 import org.combinators.templating.persistable.Persistable
 
 import org.combinators.guidemo.domain.WeatherTypes;
+import org.combinators.guidemo.domain.BossAbilityTypes;
 
 class Repository(adventureGame: AdventureGame) {
   lazy val ability = Variable("ability")
@@ -26,6 +27,7 @@ class Repository(adventureGame: AdventureGame) {
   Kinding(boss)
     .addOption('variationWithBoss).addOption('variationWithoutBoss)
 
+//################################## PLAYER ######################################################
   @combinator object PlayerGrain {
       def apply(caseString: String,
             ability: String): MyResult = {
@@ -47,20 +49,6 @@ class Repository(adventureGame: AdventureGame) {
       val semanticType: Type =
         'testAbility(ability, boss) =>: 'playerTest(ability, boss)
   }
-
-//   @combinator object RoomGrain {
-//       def apply(caseString: String,
-//             ability: String,
-//             damageTaken: String): MyResult = {
-//           val file = MyResult(readFile("PlayerGrain.cs"), "PlayerGrain.cs")
-//           addArbCode(file, caseString, "switch (verb)")
-//           addArbCode(file, ability, "PlayerGrain")
-//           addArbCode(file, damageTaken, "if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())")
-//           file
-//       }
-//       val semanticType: Type =
-//         'case(ability) =>: 'ability(ability) =>: 'room('weather)
-//   }
 
   @combinator object abilityFireball {
     def apply(): String = {
@@ -110,7 +98,6 @@ class Repository(adventureGame: AdventureGame) {
     def apply(): String = {
         """
         private bool roarCD = false;
-        private bool roarActive = false;
 
         private Task<string> Roar()
         {
@@ -179,6 +166,81 @@ class Repository(adventureGame: AdventureGame) {
   @combinator object caseNone {
     def apply(): String = {""}
     val semanticType: Type = 'case('none)
+  }
+
+  @combinator object testNoBoss {
+      def apply(): String = {""}
+        val semanticType: Type = 'bossPresent(ability, 'variationWithoutBoss)
+  }
+
+  @combinator object testBoss {
+      def apply(): String = {
+        """
+        [Fact]
+        public async void KillBossTest()
+        {
+            //Arrange
+            MonsterInfo bi = new MonsterInfo();
+            bi.Id = 0;
+            bi.KilledBy = new List<long> { 0 };
+            Thing knife = new Thing();
+            knife.Name = "knife";
+            knife.Category = "weapon";
+            knife.Id = 0;
+            room.Setup(r => r.FindThing(It.IsAny<string>())).Returns(Task.FromResult(knife));
+            room.Setup(r => r.Take(It.IsAny<Thing>())).Returns(Task.FromResult(knife));
+            await this.player.Object.Play("take knife");
+            Mock<IBossGrain> enemyBoss = new Mock<IBossGrain>();
+            enemyBoss.Setup(eb => eb.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
+            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bi));
+            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(enemyBoss.Object);
+
+            //Act
+            string res = await player.Object.Play("kill testBoss");
+
+            //Assert
+            Assert.Equal("Ouch!", res);
+        }"""
+      }
+        val semanticType: Type = 'boss('variationWithBoss)
+  }
+
+  @combinator object testRoarBoss {
+      def apply(boss: String): String = {boss + ""}
+        val semanticType: Type = 'boss('variationWithBoss) =>: 'bossPresent('roar, 'variationWithBoss)
+  }
+
+  @combinator object tesNoneBoss {
+      def apply(boss: String): String = {boss + ""}
+        val semanticType: Type = 'boss('variationWithBoss) =>: 'bossPresent('none, 'variationWithBoss)
+  }
+
+  @combinator object testFireballBoss {
+      def apply(boss: String): String = {
+        boss +
+        """
+        [Fact]
+        public async void FireballTestBoss()
+        {
+            //Arrange
+            MonsterInfo bossInfo = new MonsterInfo();
+            bossInfo.Id = 666;
+            bossInfo.Name = "testBoss";
+            var boss = new Mock<IBossGrain>();
+            boss.Setup(b => b.SetInfo()).Returns(Task.FromResult(bossInfo));
+            boss.Setup(b => b.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
+
+            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(boss.Object);
+            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bossInfo));
+
+            //Act
+            string res = await player.Object.Play("fireball testBoss");
+
+            //Assert
+            Assert.Equal("Ouch!", res);
+        }"""
+      }
+        val semanticType: Type = 'boss('variationWithBoss) =>: 'bossPresent('fireball, 'variationWithBoss)
   }
 
   @combinator object testFireball {
@@ -272,76 +334,83 @@ class Repository(adventureGame: AdventureGame) {
         val semanticType: Type = 'bossPresent('fireball, boss) =>: 'testAbility('fireball, boss)
   }
 
-  @combinator object testFireballBoss {
-      def apply(): String = {
+  @combinator object testRoar {
+      def apply(bossPresent: String): String = {
         """
         [Fact]
-        public async void FireballTestBoss()
+        public async void RoarTest()
         {
-            //Arrange
-            MonsterInfo bossInfo = new MonsterInfo();
-            bossInfo.Id = 666;
-            bossInfo.Name = "testBoss";
-            var boss = new Mock<IBossGrain>();
-            boss.Setup(b => b.SetInfo()).Returns(Task.FromResult(bossInfo));
-            boss.Setup(b => b.Kill(It.IsAny<IRoomGrain>(), It.IsAny<int>())).Returns(Task.FromResult("Ouch!"));
-
-            player.Setup(p => p.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss")).Returns(boss.Object);
-            room.Setup(r => r.GetBoss()).Returns(Task.FromResult(bossInfo));
-
             //Act
-            string res = await player.Object.Play("fireball testBoss");
+            string res2 = await this.player.Object.Play("roar");
 
             //Assert
-            Assert.Equal("Ouch!", res);
-        }"""
-      }
-        val semanticType: Type = 'bossPresent('fireball, 'variationWithBoss)
-  }
+            Assert.Equal("Roar has been activated!", res2);
 
-  @combinator object testFireballNoBoss {
-      def apply(): String = {
-            """
-            """
-      }
-        val semanticType: Type = 'bossPresent(ability, 'variationWithoutBoss)
-  }
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, 50);
+            //Assert
+            Assert.Equal(75, await this.player.Object.GetHealth());
 
-  @combinator object testRoar {
-      def apply(): String = {
-        """
-        [Fact]
-        public async Task RoarTest()
-        {
-            Assert.Equal(100, await this.player.GetHealth());
-            string text = await this.player.Play("roar");
-            Assert.Equal("Roar has been activated!", text);
-            Thread.Sleep(2010);
-            Assert.Equal(95, await this.player.GetHealth());
-            
-            Thread.Sleep(10010);
-            Assert.Equal(85, await this.player.GetHealth());
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, 0);
+            //Assert
+            Assert.Equal(75, await this.player.Object.GetHealth());
+
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, -4);
+            //Assert
+            Assert.Equal(77, await this.player.Object.GetHealth());
+
+            //Act
+            await this.player.Object.TakeDamage(this.room.Object, 1);
+            //Assert
+            Assert.Equal(77, await this.player.Object.GetHealth());
         }
-        
-        [Fact]
-        public async Task RoarCooldownTest()
-        {
-            string text = await this.player.Play("roar");
-            Assert.Equal("Roar has been activated!", text);
-            text = await this.player.Play("roar");
-            Assert.Equal("Roar is on cooldown", text);
 
-            Thread.Sleep(20010);
-            text = await this.player.Play("roar");
-            Assert.Equal("Roar has been activated!", text);
-        }"""
+        [Fact]
+        public async void RoarSomeoneTest()
+        {
+            //Act
+            string res = await this.player.Object.Play("roar someone");
+            //Assert
+            Assert.Equal("Can not roar others", res);
+        }
+
+        [Fact]
+        public async void RoarCooldownTest()
+        {
+            //Arrange
+            Func<object, Task> action = null;
+            object state = null;
+            TimeSpan dueTime = TimeSpan.FromSeconds(100);
+            TimeSpan period = TimeSpan.FromSeconds(100);
+            player.Setup(x => x.RegisterTimer(It.IsAny<Func<object, Task>>(),
+                    It.IsAny<object>(), It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+                .Callback<Func<object, Task>, object, TimeSpan, TimeSpan>((a, b, c, d) =>
+                {
+                    action = a;
+                    state = b;
+                    dueTime = c;
+                    period = d;
+                }).Returns(Mock.Of<IDisposable>());
+            await this.player.Object.Play("roar");
+
+            //Act
+            string res = await this.player.Object.Play("roar");
+            //Assert
+            Assert.Equal("Roar is on cooldown", res);
+            Assert.NotNull(action);
+            Assert.Equal(20, dueTime.TotalSeconds);
+            Assert.Equal(-1, period.TotalSeconds);
+            Assert.Null(state);
+        }""" + bossPresent
       }
-        val semanticType: Type = 'testAbility('roar)
+        val semanticType: Type = 'bossPresent('roar, boss) =>: 'testAbility('roar, boss)
   }
 
-  @combinator object testNone {
-    def apply(): String = {""}
-    val semanticType: Type = 'testAbility('none)
+  @combinator object testNoAbility {
+    def apply(boss: String): String = {boss + ""}
+    val semanticType: Type = 'bossPresent('none, boss) =>: 'testAbility('none, boss)
   }
   
   def semanticPlayerTarget: Type = {
@@ -353,21 +422,29 @@ class Repository(adventureGame: AdventureGame) {
   }
 
   def semanticPlayerTestTarget: Type = {
+      var b: Type = 'variationWithoutBoss;
       val a: Type = adventureGame.getAbility match {
           case AbilityTypes.fireball => 'fireball
-          case AbilityTypes.roar => 'playerTest('roar)
-          case AbilityTypes.none => 'playerTest('none)
+          case AbilityTypes.roar => 'roar
+          case AbilityTypes.none => 'none
       }
-      if (adventureGame.getWeather.contains(WeatherTypes.Blizzard)) {
-          return 'playerTest(a, 'variationWithBoss)
+      if (adventureGame.getBoss != BossAbilityTypes.none) {
+          b = 'variationWithBoss
+      }else {
+          b = 'variationWithoutBoss
       }
-      'playerTest('roar, 'variationWithBoss)
+      'playerTest(a, b)
   }
+
+  //##############################################################################################
+  //################################## BOSS ######################################################
+
+  //##############################################################################################
 
   def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(
         this,
         classLoader = this.getClass.getClassLoader,
-        substitutionSpace = this.abilityKinding.merge(this.bossKinding))//.merge(this.damageTakenKinding)
+        substitutionSpace = this.abilityKinding.merge(this.bossKinding))
   }
 }
