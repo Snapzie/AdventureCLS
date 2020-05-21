@@ -438,7 +438,134 @@ class Repository(adventureGame: AdventureGame) {
 
   //##############################################################################################
   //################################## BOSS ######################################################
+  lazy val bossAbility = Variable("bossAbility")
+  lazy val bossAbilityKinding: Kinding =
+  Kinding(bossAbility)
+    .addOption('heal).addOption('DR)
 
+  @combinator object AdventureBossSetup {
+      def apply(setup: String): MyResult = {
+          val file = MyResult(readFile("Adventure.cs"), "Adventure.cs")
+          addArbCode(file, setup, "public class Adventure", '{')
+          file
+      }
+      val semanticType: Type =
+        'setup(bossAbility) =>: 'AdventureSetup(bossAbility)
+  }
+
+  @combinator object AdventureSetup {
+      def apply(setup: String): MyResult = {
+          val file = MyResult(readFile("Adventure.cs"), "Adventure.cs")
+          addArbCode(file, setup, "public class Adventure", '{')
+          file
+      }
+      val semanticType: Type =
+        'setup('none) =>: 'AdventureSetup('none)
+  }
+
+  @combinator object SetupBoss {
+      def apply(boss: String): String = {
+        """
+        private async Task MakeBoss(IRoomGrain room)
+        {
+            var monsterGrain = client.GetGrain<IBossGrain>(666);
+            await monsterGrain.SetInfo();
+            await monsterGrain.SetRoomGrain(room);
+        }
+
+        public async Task Configure(string filename)
+        {
+            var rand = new Random();
+
+            using (var jsonStream = new JsonTextReader(File.OpenText(filename)))
+            {
+                var deserializer = new JsonSerializer();
+                var data = deserializer.Deserialize<MapInfo>(jsonStream);
+
+                var rooms = new List<IRoomGrain>();
+                foreach (var room in data.Rooms)
+                {
+                    var roomGr = await MakeRoom(room);
+                    if (room.Id >= 0)
+                        rooms.Add(roomGr);
+                }
+                foreach (var thing in data.Things)
+                {
+                    await MakeThing(thing);
+                }
+                foreach (var monster in data.Monsters)
+                {
+                    await MakeMonster(monster, rooms[rand.Next(0, rooms.Count)]);
+                }
+                await MakeBoss(rooms[4]);
+            }
+        }"""
+      }
+      val semanticType: Type =
+        'boss(bossAbility) =>: 'setup(bossAbility)
+  }
+
+  @combinator object SetupNone {
+      def apply(boss: String): String = {
+        """
+        public async Task Configure(string filename)
+        {
+            var rand = new Random();
+
+            using (var jsonStream = new JsonTextReader(File.OpenText(filename)))
+            {
+                var deserializer = new JsonSerializer();
+                var data = deserializer.Deserialize<MapInfo>(jsonStream);
+
+                var rooms = new List<IRoomGrain>();
+                foreach (var room in data.Rooms)
+                {
+                    var roomGr = await MakeRoom(room);
+                    if (room.Id >= 0)
+                        rooms.Add(roomGr);
+                }
+                foreach (var thing in data.Things)
+                {
+                    await MakeThing(thing);
+                }
+                foreach (var monster in data.Monsters)
+                {
+                    await MakeMonster(monster, rooms[rand.Next(0, rooms.Count)]);
+                }
+            }
+        }"""
+      }
+      val semanticType: Type =
+        'boss('none) =>: 'setup('none)
+  }
+
+  @combinator object BossGrain {
+      def apply(caseString: String,
+            ability: String): MyResult = {
+          val file = MyResult(readFile("BossGrain.cs"), "BossGrain.cs")
+          
+          file
+      }
+      val semanticType: Type =
+        'BossOnActivateAsync(bossAbility) =>: 'bossRoomInteracation(bossAbility)=>: 'bossAbility(bossAbility) =>: 'boss(bossAbility)
+  }
+
+  @combinator object BossGrainEmpty {
+      def apply(): MyResult = {
+          val file = MyResult("", "BossGrain.cs")
+          file
+      }
+      val semanticType: Type =
+        'boss('none)
+  }
+
+  def semanticBossTarget: Type = {
+      adventureGame.getBoss match {
+          case BossAbilityTypes.none => 'AdventureSetup('none)
+          case BossAbilityTypes.heal => 'AdventureSetup('heal)
+          case BossAbilityTypes.DR => 'AdventureSetup('DR)
+      }
+  }
   //##############################################################################################
 
   def forInhabitation: ReflectedRepository[Repository] = {
