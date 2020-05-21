@@ -30,6 +30,7 @@ abstract class AdventureGameController (webJars: WebJarsUtil, lifeCycle: Applica
     override lazy val results: Results = EmptyInhabitationBatchJobResults(repository.forInhabitation)
         //.addJob[MyResult](repository.semanticPlayerTarget) 
         //.addJob[MyResult](repository.semanticPlayerTestTarget)
+        .addJob[MyResult](repository.semanticAdventureTarget)
         .addJob[MyResult](repository.semanticBossTarget)
         .compute()
     override lazy val controllerAddress: String = adventureGame.getClass.getSimpleName.toLowerCase

@@ -28,13 +28,7 @@ namespace AdventureGrains
             get { return base.GrainFactory; }
         }
 
-        public override Task OnActivateAsync()
-        {
-            this.healTimer = RegisterTimer((_) => HealAdds(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20));
-            this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
-            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
-            return base.OnActivateAsync();
-        }
+        //OnActivateAsync
         
         public Task SetInfo()
         {
@@ -53,56 +47,11 @@ namespace AdventureGrains
             await this.roomGrain.BossEnter(this.monsterInfo);
         }
 
-        public async Task SpawnAdds(IRoomGrain room)
-        {
-            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+        //spawnAdds
 
-            if (targets.Count > 0)
-            {
-                var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
-                MonsterInfo addInfo = new MonsterInfo();
-                addInfo.Id = addCounter;
-                addInfo.Name = "one-and-a-half-eyed demon";
-                addInfo.KilledBy = new List<long>() {1};
-                this.spawnedMonsters.Add(addInfo);
-                await monsterGrain.SetInfo(addInfo);
-                await monsterGrain.SetRoomGrain(room);
-                this.addCounter += 1;
-                this.addActive = true; //Damage reduction synthesis
-            }
+        //UpdateAdds
 
-            return;
-        }
-
-        public Task UpdateAdds(MonsterInfo mi)
-        {
-            foreach (MonsterInfo monster in this.spawnedMonsters)
-            {
-                if (mi.Id == monster.Id)
-                {
-                    this.spawnedMonsters.Remove(monster);
-
-                    if (this.spawnedMonsters.Count < 1) //Damage reduction synthesis
-                    {
-                        this.addActive = false;
-                    }
-                    break;
-                }
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public async Task HealAdds()
-        {
-            if (this.spawnedMonsters.Count > 0)
-            {
-                foreach (var monster in this.spawnedMonsters)
-                {
-                    await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);
-                }
-            }
-        }
+        //HealAdds
 
         public Task<string> Kill(IRoomGrain room, int damage)
         {

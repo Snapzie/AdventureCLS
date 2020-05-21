@@ -436,23 +436,8 @@ class Repository(adventureGame: AdventureGame) {
       'playerTest(a, b)
   }
 
-  //##############################################################################################
-  //################################## BOSS ######################################################
-  lazy val bossAbility = Variable("bossAbility")
-  lazy val bossAbilityKinding: Kinding =
-  Kinding(bossAbility)
-    .addOption('heal).addOption('DR)
-
-  @combinator object AdventureBossSetup {
-      def apply(setup: String): MyResult = {
-          val file = MyResult(readFile("Adventure.cs"), "Adventure.cs")
-          addArbCode(file, setup, "public class Adventure", '{')
-          file
-      }
-      val semanticType: Type =
-        'setup(bossAbility) =>: 'AdventureSetup(bossAbility)
-  }
-
+  //########################################################################################################
+  //################################## AdventureSetup ######################################################
   @combinator object AdventureSetup {
       def apply(setup: String): MyResult = {
           val file = MyResult(readFile("Adventure.cs"), "Adventure.cs")
@@ -460,11 +445,11 @@ class Repository(adventureGame: AdventureGame) {
           file
       }
       val semanticType: Type =
-        'setup('none) =>: 'AdventureSetup('none)
+        'setup(boss) =>: 'AdventureSetup(boss)
   }
 
   @combinator object SetupBoss {
-      def apply(boss: MyResult): String = {
+      def apply(): String = {
         """
         private async Task MakeBoss(IRoomGrain room)
         {
@@ -502,11 +487,11 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'boss(bossAbility) =>: 'setup(bossAbility)
+        'setup('variationWithBoss)
   }
 
-  @combinator object SetupNone {
-      def apply(boss: MyResult): String = {
+  @combinator object SetupNoBoss {
+      def apply(): String = {
         """
         public async Task Configure(string filename)
         {
@@ -536,14 +521,31 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'boss('none) =>: 'setup('none)
+        'setup('variationWithoutBoss)
   }
 
+  def semanticAdventureTarget: Type = {
+      if (adventureGame.getBoss != BossAbilityTypes.none) {
+          return 'AdventureSetup('variationWithBoss)
+      }else {
+          return 'AdventureSetup('variationWithoutBoss)
+      }
+  }
+  //##############################################################################################
+  //################################## BOSS ######################################################
+  lazy val bossAbility = Variable("bossAbility")
+  lazy val bossAbilityKinding: Kinding =
+  Kinding(bossAbility)
+    .addOption('heal).addOption('DR)
+
   @combinator object BossGrain {
-      def apply(caseString: String,
-            ability: String): MyResult = {
+      def apply(bossOnActivateAsync: String,
+            bossRoomInteracation: String,
+            bossAbility: String): MyResult = {
           val file = MyResult(readFile("BossGrain.cs"), "BossGrain.cs")
-          
+          addArbCode(file, bossOnActivateAsync, "public class BossGrain", '{')
+          addArbCode(file, bossRoomInteracation, "public class BossGrain", '{')
+          addArbCode(file, bossAbility, "public class BossGrain", '{')
           file
       }
       val semanticType: Type =
@@ -559,11 +561,152 @@ class Repository(adventureGame: AdventureGame) {
         'boss('none)
   }
 
+  @combinator object BossOnActivateAsyncHeal {
+      def apply(): String = {
+        """
+        public override Task OnActivateAsync()
+        {
+            this.healTimer = RegisterTimer((_) => HealAdds(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20));
+            this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
+            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+            return base.OnActivateAsync();
+        }"""
+      }
+      val semanticType: Type =
+        'BossOnActivateAsync('heal)
+  }
+
+  @combinator object BossOnActivateAsyncDR {
+      def apply(): String = {
+        """
+        public override Task OnActivateAsync()
+        {
+            this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
+            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+            return base.OnActivateAsync();
+        }"""
+      }
+      val semanticType: Type =
+        'BossOnActivateAsync('DR)
+  }
+
+  @combinator object bossRoomInteracationHeal {
+      def apply(): String = {
+        """
+        public async Task SpawnAdds(IRoomGrain room)
+        {
+            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+
+            if (targets.Count > 0)
+            {
+                var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
+                MonsterInfo addInfo = new MonsterInfo();
+                addInfo.Id = addCounter;
+                addInfo.Name = "one-and-a-half-eyed demon";
+                addInfo.KilledBy = new List<long>() {1};
+                this.spawnedMonsters.Add(addInfo);
+                await monsterGrain.SetInfo(addInfo);
+                await monsterGrain.SetRoomGrain(room);
+                this.addCounter += 1;
+            }
+
+            return;
+        }
+
+        public Task UpdateAdds(MonsterInfo mi)
+        {
+            foreach (MonsterInfo monster in this.spawnedMonsters)
+            {
+                if (mi.Id == monster.Id)
+                {
+                    this.spawnedMonsters.Remove(monster);
+                    break;
+                }
+            }
+
+            return Task.CompletedTask;
+        }"""
+      }
+      val semanticType: Type =
+        'bossRoomInteracation('heal)
+  }
+
+  @combinator object bossRoomInteracationDR {
+      def apply(): String = {
+        """
+        public async Task SpawnAdds(IRoomGrain room)
+        {
+            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+
+            if (targets.Count > 0)
+            {
+                var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
+                MonsterInfo addInfo = new MonsterInfo();
+                addInfo.Id = addCounter;
+                addInfo.Name = "one-and-a-half-eyed demon";
+                addInfo.KilledBy = new List<long>() {1};
+                this.spawnedMonsters.Add(addInfo);
+                await monsterGrain.SetInfo(addInfo);
+                await monsterGrain.SetRoomGrain(room);
+                this.addCounter += 1;
+                this.addActive = true; //Damage reduction synthesis
+            }
+
+            return;
+        }
+
+        public Task UpdateAdds(MonsterInfo mi)
+        {
+            foreach (MonsterInfo monster in this.spawnedMonsters)
+            {
+                if (mi.Id == monster.Id)
+                {
+                    this.spawnedMonsters.Remove(monster);
+
+                    if (this.spawnedMonsters.Count < 1) //Damage reduction synthesis
+                    {
+                        this.addActive = false;
+                    }
+                    break;
+                }
+            }
+
+            return Task.CompletedTask;
+        }"""
+      }
+      val semanticType: Type =
+        'bossRoomInteracation('DR)
+  }
+
+  @combinator object bossAbilityHeal {
+      def apply(): String = {
+        """
+        public async Task HealAdds()
+        {
+            if (this.spawnedMonsters.Count > 0)
+            {
+                foreach (var monster in this.spawnedMonsters)
+                {
+                    await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);
+                }
+            }
+        }"""
+      }
+      val semanticType: Type =
+        'bossAbility('DR)
+  }
+
+  @combinator object bossAbilityDR {
+      def apply(): String = {""}
+      val semanticType: Type =
+        'bossAbility('DR)
+  }
+
   def semanticBossTarget: Type = {
       adventureGame.getBoss match {
-          case BossAbilityTypes.none => 'AdventureSetup('none)
-          case BossAbilityTypes.heal => 'AdventureSetup('heal)
-          case BossAbilityTypes.DR => 'AdventureSetup('DR)
+          case BossAbilityTypes.none => 'boss('none)
+          case BossAbilityTypes.heal => 'boss('heal)
+          case BossAbilityTypes.DR => 'boss('DR)
       }
   }
   //##############################################################################################
