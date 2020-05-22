@@ -1,4 +1,3 @@
-[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/java/org/combinators/guidemo/domain/instances/AdventureGameVersion1.java:13:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   variable BossAbilityTypes[0m
-[0m[[0m[31merror[0m] [0m[0m  location: class org.combinators.guidemo.domain.instances.AdventureGameVersion1[0m
-[0m[[0m[31merror[0m] [0m[0m        super.setBoss(BossAbilityTypes.heal);[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/scala/org/combinators/guidemo/repository.scala:808:22: cloudyWeather is already defined as lazy value cloudyWeather[0m
+[0m[[0m[31merror[0m] [0m[0m  @combinator object cloudyWeather {[0m
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m
