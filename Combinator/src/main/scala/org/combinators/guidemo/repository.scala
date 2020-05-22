@@ -549,7 +549,7 @@ class Repository(adventureGame: AdventureGame) {
           file
       }
       val semanticType: Type =
-        'BossOnActivateAsync(bossAbility) =>: 'bossRoomInteracation(bossAbility)=>: 'bossAbility(bossAbility) =>: 'boss(bossAbility)
+        'bossOnActivateAsync(bossAbility) =>: 'bossRoomInteracation(bossAbility)=>: 'bossAbility(bossAbility) =>: 'boss(bossAbility)
   }
 
   @combinator object BossGrainEmpty {
@@ -573,7 +573,7 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'BossOnActivateAsync('heal)
+        'bossOnActivateAsync('heal)
   }
 
   @combinator object BossOnActivateAsyncDR {
@@ -587,7 +587,7 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'BossOnActivateAsync('DR)
+        'bossOnActivateAsync('DR)
   }
 
   @combinator object bossRoomInteracationHeal {
@@ -710,6 +710,121 @@ class Repository(adventureGame: AdventureGame) {
       }
   }
   //##############################################################################################
+  //################################## Room ######################################################
+  lazy val blizzardWeather = Variable("blizzardWeather")
+  lazy val blizzardWeatherKinding: Kinding =
+  Kinding(blizzardWeather)
+    .addOption('blizzard).addOption('none)
+  lazy val sunnyWeather = Variable("sunnyWeather")
+  lazy val sunnyWeatherKinding: Kinding =
+  Kinding(sunnyWeather)
+    .addOption('sunnyWeather).addOption('none)
+  lazy val nightWeather = Variable("nightWeather")
+  lazy val nightWeatherKinding: Kinding =
+  Kinding(nightWeather)
+    .addOption('nightWeather).addOption('none)
+  lazy val cloudyWeather = Variable("cloudyWeather")
+  lazy val cloudyWeatherKinding: Kinding =
+  Kinding(cloudyWeather)
+    .addOption('cloudyWeather).addOption('none)
+    
+  @combinator object RoomGrain {
+      def apply(bossActive: String,
+            weatherTypes: String): MyResult = {
+          val file = MyResult(readFile("BossGrain.cs"), "BossGrain.cs")
+          addArbCode(file, bossActive, "public class RoomGrain", '{')
+          addArbCode(file, weatherTypes, "public class RoomGrain", '{')
+          addArbCode(file, bossAbility, "public class BossGrain", '{')
+          file
+      }
+      val semanticType: Type =
+        'bossActive(boss) =>: 'weatherTypes(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)  =>: 'room(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather, boss)
+  }
+
+  @combinator object WeatherTypes {
+      def apply(blizzard: String,
+            sunny: String,
+            night: String,
+            cloudy: String): MyResult = {
+        var counter = 0
+        var blizzardPart = ""
+        var sunnyPart = ""
+        var nightPart = ""
+        var cloudyPart = ""
+        if (blizzard != ""){
+            counter += 1
+            blizzardPart = "case $counter:" + blizzard
+        }
+        if (sunny != ""){
+            counter += 1
+            sunnyPart = "case $counter:" + sunny
+        }
+        if (night != ""){
+            counter += 1
+            nightPart = "case $counter:" + night
+        }
+        if (cloudy != ""){
+            counter += 1
+            cloudyPart = "case $counter:" + cloudy
+        }
+        """
+        public async Task<string> Enter(PlayerInfo player)
+        {
+            players.RemoveAll(x => x.Key == player.Key);
+            players.Add(player);
+            int num = rand.Next(0, $counter);
+            switch (num)
+            {"""
+            + blizzardPart
+            + sunnyPart
+            + nightPart
+            + cloudyPart
+        +
+        """
+            }
+            IPlayerGrain playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player.Key, "AdventureGrains.Player");
+            return await activeWeather.WeatherEffect(this, playerGrain, player, this.description);
+        }"""
+      }
+      val semanticType: Type =
+        /*'weather(blizzardWeather) =>:*/ 'weather(sunnyWeather) =>: 'weather(nightWeather) =>: 'weather(cloudyWeather) =>: 'weatherTypes(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)
+  }
+
+  @combinator object BlizzardWeather {
+      def apply(): String = {
+        """
+        activeWeather = new BlizzardWeather();
+        break;
+        """
+      }
+      val semanticType: Type =
+        'weather('blizzard)
+  }
+
+  def semanticRoomTarget: Type = {
+      val weathers = adventureGame.getWeather
+      var blizzard: Type = 'none
+      var sunny: Type = 'none
+      var night: Type = 'none
+      var cloudy: Type = 'none
+      var boss: Type = 'variationWithoutBoss
+      if(weathers.contains(WeatherTypes.blizzard)) {
+          blizzard = 'blizzard
+      }
+      if(weathers.contains(WeatherTypes.blizzard)) {
+          sunny = 'sunnyWeather
+      }
+      if(weathers.contains(WeatherTypes.blizzard)) {
+          night = 'nightWeather
+      }
+      if(weathers.contains(WeatherTypes.blizzard)) {
+          cloudy = 'cloudyWeather
+      }
+    //   if (adventureGame.getBoss != BossAbilityTypes.none) {
+    //       boss 'variationWithBoss
+      'room(blizzard, sunny, night, cloudy)
+         
+  }
 
   def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(

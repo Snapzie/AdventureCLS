@@ -12,6 +12,6 @@ public class AdventureGameVersion1 extends AdventureGame {
     public AdventureGameVersion1() {
         super.setAbility(AbilityTypes.fireball);
         super.setBoss(BossAbilityTypes.heal);
-        super.setWeather(new ArrayList<WeatherTypes>(Arrays.asList(WeatherTypes.Blizzard, WeatherTypes.Sunny)));
+        super.setWeather(new ArrayList<WeatherTypes>(Arrays.asList(WeatherTypes.Blizzard)));
     }
 }
