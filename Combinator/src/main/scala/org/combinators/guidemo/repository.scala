@@ -538,6 +538,11 @@ class Repository(adventureGame: AdventureGame) {
   Kinding(bossAbility)
     .addOption('heal).addOption('DR)
 
+  lazy val bossTestAbility = Variable("bossTestAbility")
+  lazy val bossTestAbilityKinding: Kinding =
+  Kinding(bossTestAbility)
+    .addOption('DR).addOption('heal)
+
   @combinator object BossGrain {
       def apply(bossOnActivateAsync: String,
             bossRoomInteracation: String,
@@ -559,6 +564,23 @@ class Repository(adventureGame: AdventureGame) {
       }
       val semanticType: Type =
         'boss('none)
+  }
+
+  @combinator object BossTest {
+      def apply(bossAbility: String) : MyResult = {
+          val file = MyResult(readFile("BossTests.cs"), "BossTests.cs")
+          addArbCode(file, bossAbility, "public class BossTests", '{')
+          file
+      }
+      val semanticType: Type = 'bossTest(bossTestAbility) =>: 'bossTestAbility(bossTestAbility) 
+  }
+
+  @combinator object BossTestEmpty {
+      def apply(): MyResult = {
+          val file = MyResult("", "BossTests.cs")
+          file
+      }
+      val semanticType: Type = 'bossTestAbility('none)
   }
 
   @combinator object BossOnActivateAsyncHeal {
@@ -702,11 +724,104 @@ class Repository(adventureGame: AdventureGame) {
         'bossAbility('DR)
   }
 
+  @combinator object bossTestDR {
+      def apply(): String = {
+        """
+        [Fact]
+        public async void SpawnAddsBuffTest()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert 
+            Assert.Equal(" took 10 damage. He now has 190 health left!", res);
+
+            //Act
+            await this.boss.Object.SpawnAdds(this.room.Object);
+            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 5 damage. He now has 185 health left!", res2);
+        }
+
+        [Fact]
+        public async void UpdateAddsBuffTest()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            MonsterInfo monsterInfo = new MonsterInfo();
+            monsterInfo.Id = 100;
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            await this.boss.Object.SpawnAdds(this.room.Object);
+
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 5 damage. He now has 195 health left!", res);
+
+            //Act
+            await this.boss.Object.UpdateAdds(monsterInfo);
+            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 10 damage. He now has 185 health left!", res2);
+        }
+
+        [Fact]
+        public async void KillTestAddsActive()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+            await this.boss.Object.SpawnAdds(this.room.Object);
+
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 1);
+            //Assert
+            Assert.Equal(" took 0 damage. He now has 200 health left!", res);
+
+            //Act
+            string res2 = await this.boss.Object.Kill(this.room.Object, 0);
+            //Assert
+            Assert.Equal(" took 0 damage. He now has 200 health left!", res2);
+
+            //Act
+            string res3 = await this.boss.Object.Kill(this.room.Object, -5);
+            //Assert
+            Assert.Equal(" took -2 damage. He now has 202 health left!", res3);
+        }"""
+      }
+      val semanticType: Type = 'bossTest('DR)
+  }
+
+  @combinator object bossTestHeal {
+      def apply() : String = {""}
+      val semanticType: Type = 'bossTest('heal)
+  }
+
   def semanticBossTarget: Type = {
       adventureGame.getBoss match {
           case BossAbilityTypes.none => 'boss('none)
           case BossAbilityTypes.heal => 'boss('heal)
           case BossAbilityTypes.DR => 'boss('DR)
+      }
+  }
+
+  def semanticBossTestTarget: Type = {
+      adventureGame.getBoss match {
+          case BossAbilityTypes.none => 'bossTestAbility('none)
+          case BossAbilityTypes.heal => 'bossTestAbility('heal)
+          case BossAbilityTypes.DR => 'bossTestAbility('DR)
       }
   }
   //##############################################################################################
@@ -727,6 +842,11 @@ class Repository(adventureGame: AdventureGame) {
   lazy val cloudyWeatherKinding: Kinding =
   Kinding(cloudyWeather)
     .addOption('cloudyWeather).addOption('none)
+
+  lazy val bossPresentRoom = Variable("bossPresentRoom")
+  lazy val bossPresentRoomKinding: Kinding =
+  Kinding(bossPresentRoom)
+    .addOption('boss).addOption('noBoss)
     
   @combinator object RoomGrain {
       def apply(weatherTypes: String): MyResult = {
@@ -737,6 +857,15 @@ class Repository(adventureGame: AdventureGame) {
       }
       val semanticType: Type =
         /*'bossActive(boss) =>:*/ 'weatherTypes(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)  =>: 'room(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)
+  }
+
+  @combinator object RoomGrainTest {
+      def apply(roomTest: String): MyResult = {
+          val file = MyResult(readFile("RoomTests.cs"), "RoomTests.cs")
+          addArbCode(file, roomTest, "public class RoomTests", '{')
+          file
+      }
+      val semanticType: Type = 'roomTest(bossPresentRoom) =>: 'roomTestFile(bossPresentRoom)
   }
 
   @combinator object WeatherTypes {
@@ -811,6 +940,63 @@ class Repository(adventureGame: AdventureGame) {
         'cloudyWeather('none)
   }
 
+  @combinator object roomTestBoss {
+      def apply(): String = {
+        """
+        [Fact]
+        public async void DescriptionNoPlayersNoItemsWithBossNoMonstersTest()
+        {
+            //Arrange
+            var boss = new Mock<IBossGrain>();
+            room.Setup(x => x.GrainFactory.GetGrain<IBossGrain>(It.IsAny<long>(), "AdventureGrains.Boss"))
+                .Returns(boss.Object);
+            var player = new Mock<IPlayerGrain>();
+            room.Setup(x => x.GrainFactory.GetGrain<IPlayerGrain>(It.IsAny<Guid>(), "AdventureGrains.Player"))
+                .Returns(player.Object);
+            MonsterInfo bi = new MonsterInfo();
+            bi.Name = "testBoss";
+            await room.Object.Enter(bi);
+            //Act
+            string desc = await room.Object.Description(new PlayerInfo());
+            //Asserts
+            Assert.Equal("Beware! These guys are in the room with you:\n  testBoss\nYour health is: 0\n", desc);
+        }
+
+        [Fact]
+        public async void BossEnterGetBossWithBossTest()
+        {
+            //Arrange
+            MonsterInfo bi = new MonsterInfo(){Name = "testBoss"};
+            await room.Object.BossEnter(bi);
+            //Act
+            MonsterInfo boss = await room.Object.GetBoss();
+            //Assert
+            Assert.Equal(bi, boss);
+        }
+
+        [Fact]
+        public async void BossExitTest()
+        {
+            //Arrange
+            MonsterInfo bi = new MonsterInfo(){Name = "testBoss"};
+            await room.Object.BossEnter(bi);
+            MonsterInfo boss = await room.Object.GetBoss();
+            Assert.Equal(bi, boss);
+            //Act
+            await this.room.Object.BossExit(bi);
+            boss = await room.Object.GetBoss();
+            //Assert
+            Assert.Null(boss);
+        }"""
+      }
+      val semanticType: Type = 'roomTest('boss)
+  }
+
+  @combinator object roomTestNoBoss {
+      def apply(): String = {""}
+      val semanticType: Type = 'roomTest('noBoss)
+  }
+
   def semanticRoomTarget: Type = {
       val weathers = adventureGame.getWeather
       var blizzard: Type = 'none
@@ -832,14 +1018,31 @@ class Repository(adventureGame: AdventureGame) {
       }
     //   if (adventureGame.getBoss != BossAbilityTypes.none) {
     //       boss = 'variationWithBoss
-      'room(blizzard, sunny, night, cloudy)
-         
+      'room(blizzard, sunny, night, cloudy)      
+  }
+
+  def semanticRoomTestTarget: Type = {
+      adventureGame.GetBoss match {
+          case BossAbilityTypes.none => 'roomTestFile('noBoss)
+          case BossAbilityTypes.heal => 'roomTestFile('boss)
+          case BossAbilityTypes.DR => 'roomTestFile('boss)
+      }
   }
 
   def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(
         this,
         classLoader = this.getClass.getClassLoader,
-        substitutionSpace = this.abilityKinding.merge(this.bossKinding.merge(this.bossAbilityKinding.merge(this.blizzardWeatherKinding.merge(this.sunnyWeatherKinding.merge(this.nightWeatherKinding.merge(this.cloudyWeatherKinding)))))))
+        substitutionSpace = this.abilityKinding.merge(
+            this.bossKinding.merge(
+                this.bossAbilityKinding.merge(this.bossTestAbilityKinding.merge(
+                    this.blizzardWeatherKinding.merge(
+                        this.sunnyWeatherKinding.merge(
+                            this.nightWeatherKinding.merge(this.cloudyWeatherKinding(
+                                this.bossTestAbilityKinding.merge(
+                                    this.bossPresentRoomKinding
+                                )))))))))
+    )
   }
+
 }

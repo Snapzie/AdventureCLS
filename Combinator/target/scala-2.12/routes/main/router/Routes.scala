@@ -1,7 +1,7 @@
 
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/resources/routes
-// @DATE:Wed May 20 19:12:07 CEST 2020
+// @SOURCE:/Users/karllevinsen/Documents/GitHub/bachelor/AdventureCLS/Combinator/src/main/resources/routes
+// @DATE:Sat May 23 12:45:18 CEST 2020
 
 package router
 

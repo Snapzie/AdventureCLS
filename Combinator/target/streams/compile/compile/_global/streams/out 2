@@ -1,0 +1,4 @@
+[0m[[0m[33mwarn[0m] [0m[0m/Users/karllevinsen/Documents/GitHub/bachelor/AdventureCLS/Combinator/src/main/scala/org/combinators/guidemo/repository.scala:807:22: Class org.combinators.guidemo.Repository$bossTestNone$ differs only in case from org.combinators.guidemo.Repository$BossTestNone$. Such classes will overwrite one another on case-insensitive filesystems.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  @combinator object bossTestNone {[0m
+[0m[[0m[33mwarn[0m] [0m[0m                     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m

@@ -1,3 +1,0 @@
-[0m[[0m[31merror[0m] [0m[0m/Users/Casper/Documents/Uni/Bachelor/AdventureCLS/Combinator/src/main/scala/org/combinators/guidemo/repository.scala:808:22: cloudyWeather is already defined as lazy value cloudyWeather[0m
-[0m[[0m[31merror[0m] [0m[0m  @combinator object cloudyWeather {[0m
-[0m[[0m[31merror[0m] [0m[0m                     ^[0m
