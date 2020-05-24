@@ -1015,7 +1015,7 @@ class Repository(adventureGame: AdventureGame) {
       }
       if(weathers.contains(org.combinators.guidemo.domain.WeatherTypes.Cloudy)) {
           cloudy = 'cloudyWeather
-      }
+      } 
     //   if (adventureGame.getBoss != BossAbilityTypes.none) {
     //       boss = 'variationWithBoss
       'room(blizzard, sunny, night, cloudy)      
