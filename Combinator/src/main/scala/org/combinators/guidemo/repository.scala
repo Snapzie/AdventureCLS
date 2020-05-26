@@ -543,287 +543,287 @@ class Repository(adventureGame: AdventureGame) {
   Kinding(bossTestAbility)
     .addOption('DR).addOption('heal)
 
-//   @combinator object BossGrain {
-//       def apply(bossOnActivateAsync: String,
-//             bossRoomInteraction: String,
-//             bossAbility: String): MyResult = {
-//           val file = MyResult(readFile("BossGrain.cs"), "BossGrain.cs")
-//           addArbCode(file, bossOnActivateAsync, "public class BossGrain", '{')
-//           addArbCode(file, bossRoomInteraction, "public class BossGrain", '{')
-//           addArbCode(file, bossAbility, "public class BossGrain", '{')
-//           file
-//       }
-//       val semanticType: Type =
-//         'bossOnActivateAsync(bossAbility) =>: 'bossRoomInteraction(bossAbility)=>: 'bossAbility(bossAbility) =>: 'boss(bossAbility)
-//   }
+  @combinator object BossGrain {
+      def apply(bossOnActivateAsync: String,
+            bossRoomInteraction: String,
+            bossAbility: String): MyResult = {
+          val file = MyResult(readFile("BossGrain.cs"), "BossGrain.cs")
+          addArbCode(file, bossOnActivateAsync, "public class BossGrain", '{')
+          addArbCode(file, bossRoomInteraction, "public class BossGrain", '{')
+          addArbCode(file, bossAbility, "public class BossGrain", '{')
+          file
+      }
+      val semanticType: Type =
+        'bossOnActivateAsync(bossAbility) =>: 'bossRoomInteraction(bossAbility)=>: 'bossAbility(bossAbility) =>: 'boss(bossAbility)
+  }
 
-//   @combinator object BossGrainEmpty {
-//       def apply(): MyResult = {
-//           val file = MyResult("", "BossGrain.cs")
-//           file
-//       }
-//       val semanticType: Type =
-//         'boss('none)
-//   }
+  @combinator object BossGrainEmpty {
+      def apply(): MyResult = {
+          val file = MyResult("", "BossGrain.cs")
+          file
+      }
+      val semanticType: Type =
+        'boss('none)
+  }
 
-//   @combinator object BossTest {
-//       def apply(bossAbility: String) : MyResult = {
-//           val file = MyResult(readFile("BossTests.cs"), "BossTests.cs")
-//           addArbCode(file, bossAbility, "public class BossTests", '{')
-//           file
-//       }
-//       val semanticType: Type = 'bossTest(bossTestAbility) =>: 'bossTestAbility(bossTestAbility) 
-//   }
+  @combinator object BossTest {
+      def apply(bossAbility: String) : MyResult = {
+          val file = MyResult(readFile("BossTests.cs"), "BossTests.cs")
+          addArbCode(file, bossAbility, "public class BossTests", '{')
+          file
+      }
+      val semanticType: Type = 'bossTest(bossTestAbility) =>: 'bossTestAbility(bossTestAbility) 
+  }
 
-//   @combinator object BossTestEmpty {
-//       def apply(): MyResult = {
-//           val file = MyResult("", "BossTests.cs")
-//           file
-//       }
-//       val semanticType: Type = 'bossTestAbility('none)
-//   }
+  @combinator object BossTestEmpty {
+      def apply(): MyResult = {
+          val file = MyResult("", "BossTests.cs")
+          file
+      }
+      val semanticType: Type = 'bossTestAbility('none)
+  }
 
-//   @combinator object BossOnActivateAsyncHeal {
-//       def apply(): String = {
-//         """
-//         public override Task OnActivateAsync()
-//         {
-//             this.healTimer = RegisterTimer((_) => HealAdds(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20));
-//             this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
-//             this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
-//             return base.OnActivateAsync();
-//         }"""
-//       }
-//       val semanticType: Type =
-//         'bossOnActivateAsync('heal)
-//   }
+  @combinator object BossOnActivateAsyncHeal {
+      def apply(): String = {
+        """
+        public override Task OnActivateAsync()
+        {
+            this.healTimer = RegisterTimer((_) => HealAdds(), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20));
+            this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
+            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+            return base.OnActivateAsync();
+        }"""
+      }
+      val semanticType: Type =
+        'bossOnActivateAsync('heal)
+  }
 
-//   @combinator object BossOnActivateAsyncDR {
-//       def apply(): String = {
-//         """
-//         public override Task OnActivateAsync()
-//         {
-//             this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
-//             this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
-//             return base.OnActivateAsync();
-//         }"""
-//       }
-//       val semanticType: Type =
-//         'bossOnActivateAsync('DR)
-//   }
+  @combinator object BossOnActivateAsyncDR {
+      def apply(): String = {
+        """
+        public override Task OnActivateAsync()
+        {
+            this.spawnTimer = RegisterTimer((_) => SpawnAdds(this.roomGrain), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(25));
+            this.attackTimer = RegisterTimer((_) => Attack(this.roomGrain, this.damage), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+            return base.OnActivateAsync();
+        }"""
+      }
+      val semanticType: Type =
+        'bossOnActivateAsync('DR)
+  }
 
-//   @combinator object bossRoomInteractionHeal {
-//       def apply(): String = {
-//         """
-//         public async Task SpawnAdds(IRoomGrain room)
-//         {
-//             List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+  @combinator object bossRoomInteractionHeal {
+      def apply(): String = {
+        """
+        public async Task SpawnAdds(IRoomGrain room)
+        {
+            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
 
-//             if (targets.Count > 0)
-//             {
-//                 var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
-//                 MonsterInfo addInfo = new MonsterInfo();
-//                 addInfo.Id = addCounter;
-//                 addInfo.Name = "one-and-a-half-eyed demon";
-//                 addInfo.KilledBy = new List<long>() {1};
-//                 this.spawnedMonsters.Add(addInfo);
-//                 await monsterGrain.SetInfo(addInfo);
-//                 await monsterGrain.SetRoomGrain(room);
-//                 this.addCounter += 1;
-//             }
+            if (targets.Count > 0)
+            {
+                var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
+                MonsterInfo addInfo = new MonsterInfo();
+                addInfo.Id = addCounter;
+                addInfo.Name = "one-and-a-half-eyed demon";
+                addInfo.KilledBy = new List<long>() {1};
+                this.spawnedMonsters.Add(addInfo);
+                await monsterGrain.SetInfo(addInfo);
+                await monsterGrain.SetRoomGrain(room);
+                this.addCounter += 1;
+            }
 
-//             return;
-//         }
+            return;
+        }
 
-//         public Task UpdateAdds(MonsterInfo mi)
-//         {
-//             foreach (MonsterInfo monster in this.spawnedMonsters)
-//             {
-//                 if (mi.Id == monster.Id)
-//                 {
-//                     this.spawnedMonsters.Remove(monster);
-//                     break;
-//                 }
-//             }
+        public Task UpdateAdds(MonsterInfo mi)
+        {
+            foreach (MonsterInfo monster in this.spawnedMonsters)
+            {
+                if (mi.Id == monster.Id)
+                {
+                    this.spawnedMonsters.Remove(monster);
+                    break;
+                }
+            }
 
-//             return Task.CompletedTask;
-//         }"""
-//       }
-//       val semanticType: Type =
-//         'bossRoomInteraction('heal)
-//   }
+            return Task.CompletedTask;
+        }"""
+      }
+      val semanticType: Type =
+        'bossRoomInteraction('heal)
+  }
 
-//   @combinator object bossRoomInteractionDR {
-//       def apply(): String = {
-//         """
-//         public async Task SpawnAdds(IRoomGrain room)
-//         {
-//             List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
+  @combinator object bossRoomInteractionDR {
+      def apply(): String = {
+        """
+        public async Task SpawnAdds(IRoomGrain room)
+        {
+            List<PlayerInfo> targets = await roomGrain.GetTargetsForMonster();
 
-//             if (targets.Count > 0)
-//             {
-//                 var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
-//                 MonsterInfo addInfo = new MonsterInfo();
-//                 addInfo.Id = addCounter;
-//                 addInfo.Name = "one-and-a-half-eyed demon";
-//                 addInfo.KilledBy = new List<long>() {1};
-//                 this.spawnedMonsters.Add(addInfo);
-//                 await monsterGrain.SetInfo(addInfo);
-//                 await monsterGrain.SetRoomGrain(room);
-//                 this.addCounter += 1;
-//                 this.addActive = true; //Damage reduction synthesis
-//             }
+            if (targets.Count > 0)
+            {
+                var monsterGrain = GrainFactory.GetGrain<IMonsterGrain>(addCounter, "AdventureGrains.Monster");
+                MonsterInfo addInfo = new MonsterInfo();
+                addInfo.Id = addCounter;
+                addInfo.Name = "one-and-a-half-eyed demon";
+                addInfo.KilledBy = new List<long>() {1};
+                this.spawnedMonsters.Add(addInfo);
+                await monsterGrain.SetInfo(addInfo);
+                await monsterGrain.SetRoomGrain(room);
+                this.addCounter += 1;
+                this.addActive = true; //Damage reduction synthesis
+            }
 
-//             return;
-//         }
+            return;
+        }
 
-//         public Task UpdateAdds(MonsterInfo mi)
-//         {
-//             foreach (MonsterInfo monster in this.spawnedMonsters)
-//             {
-//                 if (mi.Id == monster.Id)
-//                 {
-//                     this.spawnedMonsters.Remove(monster);
+        public Task UpdateAdds(MonsterInfo mi)
+        {
+            foreach (MonsterInfo monster in this.spawnedMonsters)
+            {
+                if (mi.Id == monster.Id)
+                {
+                    this.spawnedMonsters.Remove(monster);
 
-//                     if (this.spawnedMonsters.Count < 1) //Damage reduction synthesis
-//                     {
-//                         this.addActive = false;
-//                     }
-//                     break;
-//                 }
-//             }
+                    if (this.spawnedMonsters.Count < 1) //Damage reduction synthesis
+                    {
+                        this.addActive = false;
+                    }
+                    break;
+                }
+            }
 
-//             return Task.CompletedTask;
-//         }"""
-//       }
-//       val semanticType: Type =
-//         'bossRoomInteraction('DR)
-//   }
+            return Task.CompletedTask;
+        }"""
+      }
+      val semanticType: Type =
+        'bossRoomInteraction('DR)
+  }
 
-//   @combinator object bossAbilityHeal {
-//       def apply(): String = {
-//         """
-//         public async Task HealAdds()
-//         {
-//             if (this.spawnedMonsters.Count > 0)
-//             {
-//                 foreach (var monster in this.spawnedMonsters)
-//                 {
-//                     await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);
-//                 }
-//             }
-//         }"""
-//       }
-//       val semanticType: Type =
-//         'bossAbility('heal)
-//   }
+  @combinator object bossAbilityHeal {
+      def apply(): String = {
+        """
+        public async Task HealAdds()
+        {
+            if (this.spawnedMonsters.Count > 0)
+            {
+                foreach (var monster in this.spawnedMonsters)
+                {
+                    await GrainFactory.GetGrain<IMonsterGrain>(monster.Id).HealMonster(10);
+                }
+            }
+        }"""
+      }
+      val semanticType: Type =
+        'bossAbility('heal)
+  }
 
-//   @combinator object bossAbilityDR {
-//       def apply(): String = {""}
-//       val semanticType: Type =
-//         'bossAbility('DR)
-//   }
+  @combinator object bossAbilityDR {
+      def apply(): String = {""}
+      val semanticType: Type =
+        'bossAbility('DR)
+  }
 
-//   @combinator object bossTestDR {
-//       def apply(): String = {
-//         """
-//         [Fact]
-//         public async void SpawnAddsBuffTest()
-//         {
-//             //Arrange
-//             PlayerInfo playerInfo = new PlayerInfo();
-//             Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-//             this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-//             await this.boss.Object.SetRoomGrain(this.room.Object);
-//             this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+  @combinator object bossTestDR {
+      def apply(): String = {
+        """
+        [Fact]
+        public async void SpawnAddsBuffTest()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
 
-//             //Act
-//             string res = await this.boss.Object.Kill(this.room.Object, 10);
-//             //Assert 
-//             Assert.Equal(" took 10 damage. He now has 190 health left!", res);
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert 
+            Assert.Equal(" took 10 damage. He now has 190 health left!", res);
 
-//             //Act
-//             await this.boss.Object.SpawnAdds(this.room.Object);
-//             string res2 = await this.boss.Object.Kill(this.room.Object, 10);
-//             //Assert
-//             Assert.Equal(" took 5 damage. He now has 185 health left!", res2);
-//         }
+            //Act
+            await this.boss.Object.SpawnAdds(this.room.Object);
+            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 5 damage. He now has 185 health left!", res2);
+        }
 
-//         [Fact]
-//         public async void UpdateAddsBuffTest()
-//         {
-//             //Arrange
-//             PlayerInfo playerInfo = new PlayerInfo();
-//             MonsterInfo monsterInfo = new MonsterInfo();
-//             monsterInfo.Id = 100;
-//             Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-//             this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-//             this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
-//             await this.boss.Object.SetRoomGrain(this.room.Object);
-//             await this.boss.Object.SpawnAdds(this.room.Object);
+        [Fact]
+        public async void UpdateAddsBuffTest()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            MonsterInfo monsterInfo = new MonsterInfo();
+            monsterInfo.Id = 100;
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            await this.boss.Object.SpawnAdds(this.room.Object);
 
-//             //Act
-//             string res = await this.boss.Object.Kill(this.room.Object, 10);
-//             //Assert
-//             Assert.Equal(" took 5 damage. He now has 195 health left!", res);
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 5 damage. He now has 195 health left!", res);
 
-//             //Act
-//             await this.boss.Object.UpdateAdds(monsterInfo);
-//             string res2 = await this.boss.Object.Kill(this.room.Object, 10);
-//             //Assert
-//             Assert.Equal(" took 10 damage. He now has 185 health left!", res2);
-//         }
+            //Act
+            await this.boss.Object.UpdateAdds(monsterInfo);
+            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
+            //Assert
+            Assert.Equal(" took 10 damage. He now has 185 health left!", res2);
+        }
 
-//         [Fact]
-//         public async void KillTestAddsActive()
-//         {
-//             //Arrange
-//             PlayerInfo playerInfo = new PlayerInfo();
-//             Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-//             this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-//             await this.boss.Object.SetRoomGrain(this.room.Object);
-//             this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
-//             await this.boss.Object.SpawnAdds(this.room.Object);
+        [Fact]
+        public async void KillTestAddsActive()
+        {
+            //Arrange
+            PlayerInfo playerInfo = new PlayerInfo();
+            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
+            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
+            await this.boss.Object.SetRoomGrain(this.room.Object);
+            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
+            await this.boss.Object.SpawnAdds(this.room.Object);
 
-//             //Act
-//             string res = await this.boss.Object.Kill(this.room.Object, 1);
-//             //Assert
-//             Assert.Equal(" took 0 damage. He now has 200 health left!", res);
+            //Act
+            string res = await this.boss.Object.Kill(this.room.Object, 1);
+            //Assert
+            Assert.Equal(" took 0 damage. He now has 200 health left!", res);
 
-//             //Act
-//             string res2 = await this.boss.Object.Kill(this.room.Object, 0);
-//             //Assert
-//             Assert.Equal(" took 0 damage. He now has 200 health left!", res2);
+            //Act
+            string res2 = await this.boss.Object.Kill(this.room.Object, 0);
+            //Assert
+            Assert.Equal(" took 0 damage. He now has 200 health left!", res2);
 
-//             //Act
-//             string res3 = await this.boss.Object.Kill(this.room.Object, -5);
-//             //Assert
-//             Assert.Equal(" took -2 damage. He now has 202 health left!", res3);
-//         }"""
-//       }
-//       val semanticType: Type = 'bossTest('DR)
-//   }
+            //Act
+            string res3 = await this.boss.Object.Kill(this.room.Object, -5);
+            //Assert
+            Assert.Equal(" took -2 damage. He now has 202 health left!", res3);
+        }"""
+      }
+      val semanticType: Type = 'bossTest('DR)
+  }
 
-//   @combinator object bossTestHeal {
-//       def apply() : String = {""}
-//       val semanticType: Type = 'bossTest('heal)
-//   }
+  @combinator object bossTestHeal {
+      def apply() : String = {""}
+      val semanticType: Type = 'bossTest('heal)
+  }
 
-//   def semanticBossTarget: Type = {
-//       adventureGame.getBoss match {
-//           case BossAbilityTypes.none => 'boss('none)
-//           case BossAbilityTypes.heal => 'boss('heal)
-//           case BossAbilityTypes.DR => 'boss('DR)
-//       }
-//   }
+  def semanticBossTarget: Type = {
+      adventureGame.getBoss match {
+          case BossAbilityTypes.none => 'boss('none)
+          case BossAbilityTypes.heal => 'boss('heal)
+          case BossAbilityTypes.DR => 'boss('DR)
+      }
+  }
 
-//   def semanticBossTestTarget: Type = {
-//       adventureGame.getBoss match {
-//           case BossAbilityTypes.none => 'bossTestAbility('none)
-//           case BossAbilityTypes.heal => 'bossTestAbility('heal)
-//           case BossAbilityTypes.DR => 'bossTestAbility('DR)
-//       }
-//   }
+  def semanticBossTestTarget: Type = {
+      adventureGame.getBoss match {
+          case BossAbilityTypes.none => 'bossTestAbility('none)
+          case BossAbilityTypes.heal => 'bossTestAbility('heal)
+          case BossAbilityTypes.DR => 'bossTestAbility('DR)
+      }
+  }
   //##############################################################################################
   //################################## Room ######################################################
   lazy val blizzardWeather = Variable("blizzardWeather")
@@ -880,26 +880,26 @@ class Repository(adventureGame: AdventureGame) {
         var cloudyPart = ""
         if (blizzard != ""){
             counter += 1
-            blizzardPart = "case 1:" + blizzard
+            blizzardPart = "case $counter:" + blizzard
         }
         if (sunny != ""){
             counter += 1
-            sunnyPart = "case 1:" + sunny
+            sunnyPart = "case $counter:" + sunny
         }
         if (night != ""){
             counter += 1
-            nightPart = "case 1:" + night
+            nightPart = "case $counter:" + night
         }
         if (cloudy != ""){
             counter += 1
-            cloudyPart = "case 1:" + cloudy
+            cloudyPart = "case $counter:" + cloudy
         }
         """
         public async Task<string> Enter(PlayerInfo player)
         {
             players.RemoveAll(x => x.Key == player.Key);
             players.Add(player);
-            int num = rand.Next(0, 1);
+            int num = rand.Next(0, $counter);
             switch (num)
             {""" + blizzardPart + sunnyPart + nightPart + cloudyPart + """
             }
@@ -1024,7 +1024,8 @@ class Repository(adventureGame: AdventureGame) {
       }
     //   if (adventureGame.getBoss != BossAbilityTypes.none) {
     //       boss = 'variationWithBoss
-      'room(blizzard, sunny, night, cloudy)      
+    //  'room(blizzard, sunny, night, cloudy)
+      'room('blizzardWeahter, 'none, 'none, 'none)            
   }
 
 //   def semanticRoomTestTarget: Type = {
@@ -1036,267 +1037,267 @@ class Repository(adventureGame: AdventureGame) {
 //   }
   //###########################################################################################################
   //################################## PlayerIntegration ######################################################
-  @combinator object PlayerIntegrationTests {
-      def apply(ability: String): MyResult = {
-          val file = MyResult(readFile("PlayerIntegrationTests.cs"), "PlayerIntegrationTests.cs")
-          addArbCode(file, weatherTypes, "public class PlayerIntegrationTests", '{')
-          file
-      }
-      val semanticType: Type =
-        'playerIntegrationAbility(ability)  =>: 'playerIntegration(ability)
-  }
+//   @combinator object PlayerIntegrationTests {
+//       def apply(ability: String): MyResult = {
+//           val file = MyResult(readFile("PlayerIntegrationTests.cs"), "PlayerIntegrationTests.cs")
+//           addArbCode(file, weatherTypes, "public class PlayerIntegrationTests", '{')
+//           file
+//       }
+//       val semanticType: Type =
+//         'playerIntegrationAbility(ability)  =>: 'playerIntegration(ability)
+//   }
 
-  @combinator object PlayerIntegrationFireball {
-      def apply(): String = {
-        """
-        [Fact]
-        public async void PlayerFireballTestMonster()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(room);
-            monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(monsterId);
-            await monster.SetInfo(monsterInfo);
-            await monster.SetRoomGrain(room);
+//   @combinator object PlayerIntegrationFireball {
+//       def apply(): String = {
+//         """
+//         [Fact]
+//         public async void PlayerFireballTestMonster()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(room);
+//             monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(monsterId);
+//             await monster.SetInfo(monsterInfo);
+//             await monster.SetRoomGrain(room);
 
-            //Act
-            string res = await player.Play("fireball testMonster");
+//             //Act
+//             string res = await player.Play("fireball testMonster");
 
-            //Assert
-            Assert.Equal("testMonster took 50 damage. He now has 50 health left!", res);
+//             //Assert
+//             Assert.Equal("testMonster took 50 damage. He now has 50 health left!", res);
                 
-        }
+//         }
 
-        [Fact]
-        public async void PlayerFireballTestPlayer()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(room);
+//         [Fact]
+//         public async void PlayerFireballTestPlayer()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(room);
 
-            //Act
-            string res = await player.Play("fireball nobody");
+//             //Act
+//             string res = await player.Play("fireball nobody");
 
-            //Assert
-            Assert.Equal("nobody took 50 damage and now has 45 health left!", res);
-        }"""
-      }
-      val semanticType: Type =
-        'playerIntegrationAbility('fireball)
-  }
+//             //Assert
+//             Assert.Equal("nobody took 50 damage and now has 45 health left!", res);
+//         }"""
+//       }
+//       val semanticType: Type =
+//         'playerIntegrationAbility('fireball)
+//   }
 
-  @combinator object PlayerIntegrationRoar {
-      def apply(): String = {
-        """
-        [Fact]
-        public async void PlayerRoarTest()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(room);
+//   @combinator object PlayerIntegrationRoar {
+//       def apply(): String = {
+//         """
+//         [Fact]
+//         public async void PlayerRoarTest()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(room);
 
-            //Act
-            string res2 = await this.player.Play("roar");
+//             //Act
+//             string res2 = await this.player.Play("roar");
 
-            //Assert
-            Assert.Equal("Roar has been activated!", res2);
+//             //Assert
+//             Assert.Equal("Roar has been activated!", res2);
 
-            //Act
-            await this.player.TakeDamage(this.room, 50);
-            //Assert
-            Assert.Equal(70, await this.player.GetHealth());
+//             //Act
+//             await this.player.TakeDamage(this.room, 50);
+//             //Assert
+//             Assert.Equal(70, await this.player.GetHealth());
 
-            //Act
-            await this.player.TakeDamage(this.room, 0);
-            //Assert
-            Assert.Equal(70, await this.player.GetHealth());
+//             //Act
+//             await this.player.TakeDamage(this.room, 0);
+//             //Assert
+//             Assert.Equal(70, await this.player.GetHealth());
 
-            //Act
-            await this.player.TakeDamage(this.room, -4);
-            //Assert
-            Assert.Equal(72, await this.player.GetHealth());
+//             //Act
+//             await this.player.TakeDamage(this.room, -4);
+//             //Assert
+//             Assert.Equal(72, await this.player.GetHealth());
 
-            //Act
-            await this.player.TakeDamage(this.room, 1);
-            //Assert
-            Assert.Equal(72, await this.player.GetHealth());
-        }"""
-      }
-      val semanticType: Type =
-        'playerIntegrationAbility('roar)
-  }
+//             //Act
+//             await this.player.TakeDamage(this.room, 1);
+//             //Assert
+//             Assert.Equal(72, await this.player.GetHealth());
+//         }"""
+//       }
+//       val semanticType: Type =
+//         'playerIntegrationAbility('roar)
+//   }
 
-  @combinator object PlayerIntegrationNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'playerIntegrationAbility('none)
-  }
+//   @combinator object PlayerIntegrationNone {
+//       def apply(): String = {""}
+//       val semanticType: Type =
+//         'playerIntegrationAbility('none)
+//   }
 
-  def semanticPlayerIntegrationTarget: Type = {
-    adventureGame.getAbility match {
-        case AbilityTypes.none => 'playerIntegration('none)
-        case AbilityTypes.fireball => 'playerIntegration('fireball)
-        case AbilityTypes.roar => 'playerIntegration('roar)
-    }
-  }
+//   def semanticPlayerIntegrationTarget: Type = {
+//     adventureGame.getAbility match {
+//         case AbilityTypes.none => 'playerIntegration('none)
+//         case AbilityTypes.fireball => 'playerIntegration('fireball)
+//         case AbilityTypes.roar => 'playerIntegration('roar)
+//     }
+//   }
   //#########################################################################################################
   //################################## BossIntegration ######################################################
-  @combinator object BossIntegrationTests {
-      def apply(ability: String): MyResult = {
-          val file = MyResult(readFile("BossIntegrationTests.cs"), "BossIntegrationTests.cs")
-          addArbCode(file, weatherTypes, "public class BossIntegrationTests", '{')
-          file
-      }
-      val semanticType: Type =
-        'bossIntegrationPlayerAbility(ability) 'bossIntegrationAbility(bossAbility)  =>: 'bossIntegration(ability, bossAbility)
-  }
+//   @combinator object BossIntegrationTests {
+//       def apply(ability: String): MyResult = {
+//           val file = MyResult(readFile("BossIntegrationTests.cs"), "BossIntegrationTests.cs")
+//           addArbCode(file, weatherTypes, "public class BossIntegrationTests", '{')
+//           file
+//       }
+//       val semanticType: Type =
+//         'bossIntegrationPlayerAbility(ability) 'bossIntegrationAbility(bossAbility)  =>: 'bossIntegration(ability, bossAbility)
+//   }
 
-  @combinator object BossIntegrationTestsNone {
-      def apply(): MyResult = {
-          val file = MyResult("", "BossIntegrationTests.cs")
-          file
-      }
-      val semanticType: Type =
-        'bossIntegration(ability, 'none)
-  }
+//   @combinator object BossIntegrationTestsNone {
+//       def apply(): MyResult = {
+//           val file = MyResult("", "BossIntegrationTests.cs")
+//           file
+//       }
+//       val semanticType: Type =
+//         'bossIntegration(ability, 'none)
+//   }
 
-  @combinator object BossIntegrationPlayerFireball {
-      def apply(): String = {
-        """
-        [Fact]
-        public async void PlayerFireballBossTest()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetInfo();
-            await this.boss.SetRoomGrain(this.room);
-            //Act
-            string res = await this.player.Play("fireball patches");
-            //Assert
-            Assert.Equal("Patches the one-eyed demon took 50 damage. He now has 150 health left!", res);
-        }
+//   @combinator object BossIntegrationPlayerFireball {
+//       def apply(): String = {
+//         """
+//         [Fact]
+//         public async void PlayerFireballBossTest()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetInfo();
+//             await this.boss.SetRoomGrain(this.room);
+//             //Act
+//             string res = await this.player.Play("fireball patches");
+//             //Assert
+//             Assert.Equal("Patches the one-eyed demon took 50 damage. He now has 150 health left!", res);
+//         }
         
-        [Fact]
-        public async void PlayerFireballBossDamageReductionTest()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetInfo();
-            await this.boss.SetRoomGrain(this.room);
-            Thread.Sleep(6000);
-            Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
-            //Act
-            string res = await this.player.Play("fireball patches");
-            //Assert
-            Assert.Equal("Patches the one-eyed demon took 25 damage. He now has 175 health left!", res);
-        }"""
-      }
-      val semanticType: Type =
-        'bossIntegrationPlayerAbility('fireball)
-  }
+//         [Fact]
+//         public async void PlayerFireballBossDamageReductionTest()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetInfo();
+//             await this.boss.SetRoomGrain(this.room);
+//             Thread.Sleep(6000);
+//             Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
+//             //Act
+//             string res = await this.player.Play("fireball patches");
+//             //Assert
+//             Assert.Equal("Patches the one-eyed demon took 25 damage. He now has 175 health left!", res);
+//         }"""
+//       }
+//       val semanticType: Type =
+//         'bossIntegrationPlayerAbility('fireball)
+//   }
 
-  @combinator object BossIntegrationPlayerNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'bossIntegrationPlayerAbility('none)
-  }
+//   @combinator object BossIntegrationPlayerNone {
+//       def apply(): String = {""}
+//       val semanticType: Type =
+//         'bossIntegrationPlayerAbility('none)
+//   }
 
-  @combinator object BossIntegrationHeal {
-      def apply(): String = {
-        """
-        [Fact]
-        public async void BossHealAddsTest()
-        {
-            //Arrange
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetRoomGrain(this.room);
-            Thread.Sleep(11000);
-            MonsterInfo mi = await this.room.FindMonster("one-and-a-half-eyed demon");
-            Assert.Equal(100, mi.Id);
-            IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(100);
-            //Act
-            string res = await monster.Kill(this.room, 0);
-            //Assert
-            Assert.Equal("one-and-a-half-eyed demon took 0 damage. He now has 110 health left!", res);
-        }
+//   @combinator object BossIntegrationHeal {
+//       def apply(): String = {
+//         """
+//         [Fact]
+//         public async void BossHealAddsTest()
+//         {
+//             //Arrange
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetRoomGrain(this.room);
+//             Thread.Sleep(11000);
+//             MonsterInfo mi = await this.room.FindMonster("one-and-a-half-eyed demon");
+//             Assert.Equal(100, mi.Id);
+//             IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(100);
+//             //Act
+//             string res = await monster.Kill(this.room, 0);
+//             //Assert
+//             Assert.Equal("one-and-a-half-eyed demon took 0 damage. He now has 110 health left!", res);
+//         }
         
-        [Fact]
-        public async void BossKillWithAddTest()
-        {
-            //Arrange
-            await this.boss.SetInfo();
-            await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetRoomGrain(this.room);
-            await this.player.Play("take knife");
-            Thread.Sleep(6000);
-            Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
-            //Act
-            string res = await this.player.Play("kill Patches");
-            //Assert
-            Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 180 health left!", res);
-        }"""
-      }
-      val semanticType: Type =
-        'bossIntegrationAbility('heal)
-  }
+//         [Fact]
+//         public async void BossKillWithAddTest()
+//         {
+//             //Arrange
+//             await this.boss.SetInfo();
+//             await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetRoomGrain(this.room);
+//             await this.player.Play("take knife");
+//             Thread.Sleep(6000);
+//             Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
+//             //Act
+//             string res = await this.player.Play("kill Patches");
+//             //Assert
+//             Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 180 health left!", res);
+//         }"""
+//       }
+//       val semanticType: Type =
+//         'bossIntegrationAbility('heal)
+//   }
 
-  @combinator object BossIntegrationDR {
-      def apply(): String = {
-        """
-        [Fact]
-        public async void BossKillWithAddTest()
-        {
-            //Arrange
-            await this.boss.SetInfo();
-            await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetRoomGrain(this.room);
-            await this.player.Play("take knife");
-            Thread.Sleep(6000);
-            Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
-            //Act
-            string res = await this.player.Play("kill Patches");
-            //Assert
-            Assert.Equal("Patches the one-eyed demon took 10 damage. He now has 190 health left!", res);
-        }
+//   @combinator object BossIntegrationDR {
+//       def apply(): String = {
+//         """
+//         [Fact]
+//         public async void BossKillWithAddTest()
+//         {
+//             //Arrange
+//             await this.boss.SetInfo();
+//             await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetRoomGrain(this.room);
+//             await this.player.Play("take knife");
+//             Thread.Sleep(6000);
+//             Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
+//             //Act
+//             string res = await this.player.Play("kill Patches");
+//             //Assert
+//             Assert.Equal("Patches the one-eyed demon took 10 damage. He now has 190 health left!", res);
+//         }
         
-        [Fact]
-        public async void BossUpdateAddsTest()
-        {
-            //Arrange
-            await this.boss.SetInfo();
-            await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
-            await this.player.SetRoomGrain(this.room);
-            await this.boss.SetRoomGrain(this.room);
-            await this.player.Play("take knife");
-            Thread.Sleep(6000);
-            Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
-            string res = await this.player.Play("kill Patches");
-            Assert.Equal("Patches the one-eyed demon took 10 damage. He now has 190 health left!", res);
-            IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(100);
-            await monster.Kill(this.room, 100);
-            //Act
-            res = await this.player.Play("kill Patches");
-            //Assert
-            Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 170 health left!", res);
-        }"""
-      }
-      val semanticType: Type =
-        'bossIntegrationAbility('DR)
-  }
+//         [Fact]
+//         public async void BossUpdateAddsTest()
+//         {
+//             //Arrange
+//             await this.boss.SetInfo();
+//             await this.room.Drop(new Thing() {Category = "weapon", Name = "knife", Id = 1});
+//             await this.player.SetRoomGrain(this.room);
+//             await this.boss.SetRoomGrain(this.room);
+//             await this.player.Play("take knife");
+//             Thread.Sleep(6000);
+//             Assert.NotNull(await this.room.FindMonster("one-and-a-half-eyed demon"));
+//             string res = await this.player.Play("kill Patches");
+//             Assert.Equal("Patches the one-eyed demon took 10 damage. He now has 190 health left!", res);
+//             IMonsterGrain monster = _cluster.GrainFactory.GetGrain<IMonsterGrain>(100);
+//             await monster.Kill(this.room, 100);
+//             //Act
+//             res = await this.player.Play("kill Patches");
+//             //Assert
+//             Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 170 health left!", res);
+//         }"""
+//       }
+//       val semanticType: Type =
+//         'bossIntegrationAbility('DR)
+//   }
   
-  def semanticBossIntegrationTarget: Type = {
-      var a: Type = 'none
-      val b: Type = adventureGame.getBoss match {
-          case AbilityTypes.none => 'none
-          case AbilityTypes.heal => 'heal
-          case AbilityTypes.DR => 'DR
-      }
-      if (adventureGame.getAbility != AbilityTypes.fireball) {
-          a = 'none
-      }else {
-          a = 'fireball
-      }
-      'bossIntegration(a, b)
-  }
+//   def semanticBossIntegrationTarget: Type = {
+//       var a: Type = 'none
+//       val b: Type = adventureGame.getBoss match {
+//           case AbilityTypes.none => 'none
+//           case AbilityTypes.heal => 'heal
+//           case AbilityTypes.DR => 'DR
+//       }
+//       if (adventureGame.getAbility != AbilityTypes.fireball) {
+//           a = 'none
+//       }else {
+//           a = 'fireball
+//       }
+//       'bossIntegration(a, b)
+//   }
   //#########################################################################################################
   def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(

@@ -96,7 +96,6 @@ namespace AdventureGrains
                 {
                     return Task.FromResult(monsterInfo.Name + " snuck away. You were too slow!");
                 }
-                //=================================================== CHANGES =============================================================
                 this.health -= damage;
                 if (this.health <= 0)
                 {
@@ -108,8 +107,6 @@ namespace AdventureGrains
                 {
                     return Task.FromResult(monsterInfo.Name + $" took {damage.ToString()} damage. He now has {this.health} health left!");
                 }
-                //=========================================================================================================================
-                //return this.roomGrain.Exit(this.monsterInfo).ContinueWith(t => monsterInfo.Name + " is dead.");
             }
             return Task.FromResult(monsterInfo.Name + " is already dead. You were too slow and someone else got to him!");
         }
