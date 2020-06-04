@@ -849,9 +849,10 @@ class Repository(adventureGame: AdventureGame) {
     .addOption('boss).addOption('noBoss)
     
   @combinator object RoomGrain {
-      def apply(weatherTypes: String): MyResult = {
+      def apply(weatherTypes: String,
+                bossActive: String): MyResult = {
           val file = MyResult(readFile("RoomGrain.cs"), "RoomGrain.cs")
-          //addArbCode(file, bossActive, "public class RoomGrain", '{')
+          addArbCode(file, bossActive, "public class RoomGrain", '{')
           addArbCode(file, weatherTypes, "public class RoomGrain", '{')
           file
       }
@@ -908,7 +909,8 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'blizzardWeather(blizzardWeather) =>: 'sunnyWeather(sunnyWeather) =>: 'nightWeather(nightWeather) =>: 'cloudyWeather(cloudyWeather) =>: 'weatherTypes(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)
+        'weather(blizzardWeather) =>: 'weather(sunnyWeather) =>: 'weather(nightWeather) =>: 'weather(cloudyWeather) =>: 
+            'weatherTypes(blizzardWeather, sunnyWeather, nightWeather, cloudyWeather)
   }
 
   @combinator object WeatherTypesNone {
@@ -928,7 +930,8 @@ class Repository(adventureGame: AdventureGame) {
         }"""
       }
       val semanticType: Type =
-        'blizzardWeather('none) =>: 'sunnyWeather('none) =>: 'nightWeather('none) =>: 'cloudyWeather('none) =>: 'weatherTypes('none, 'none, 'none, 'none)
+        'weather('none) =>: 'weather('none) =>: 'weather('none) =>: 'weather('none) =>: 
+            'weatherTypes('none, 'none, 'none, 'none)
   }
 
   @combinator object WeatherTypesBoss {
@@ -970,13 +973,7 @@ class Repository(adventureGame: AdventureGame) {
         """
       }
       val semanticType: Type =
-        'blizzardWeather('blizzardWeather)
-  }
-
-  @combinator object BlizzardWeatherNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'blizzardWeather('none)
+        'weather('blizzardWeather)
   }
 
   @combinator object SunnyWeather {
@@ -987,13 +984,7 @@ class Repository(adventureGame: AdventureGame) {
         """
       }
       val semanticType: Type =
-        'SunnyWeather('SunnyWeather)
-  }
-
-  @combinator object SunnyWeatherNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'sunnyWeather('none)
+        'weather('SunnyWeather)
   }
 
   @combinator object NightWeather {
@@ -1004,13 +995,7 @@ class Repository(adventureGame: AdventureGame) {
         """
       }
       val semanticType: Type =
-        'NightWeather('NightWeather)
-  }
-
-  @combinator object NightWeatherNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'nightWeather('none)
+        'weather('NightWeather)
   }
 
   @combinator object cloudyWeather {
@@ -1021,13 +1006,13 @@ class Repository(adventureGame: AdventureGame) {
         """
       }
       val semanticType: Type =
-        'cloudyWeather('cloudyWeather)
+        'weather('cloudyWeather)
   }
 
-  @combinator object cloudyWeatherNone {
+  @combinator object NoneWeather {
       def apply(): String = {""}
       val semanticType: Type =
-        'cloudyWeather('none)
+        'weather('none)
   }
 
   @combinator object roomTestBoss {
