@@ -10,8 +10,11 @@ import java.util.List;
 
 public class AdventureGameVersion1 extends AdventureGame {
     public AdventureGameVersion1() {
-        super.setAbility(AbilityTypes.fireball);
-        super.setBoss(BossAbilityTypes.DR);
-        super.setWeather(new ArrayList<WeatherTypes>(Arrays.asList(WeatherTypes.Blizzard)));
+        super.setAbility(AbilityTypes.Roar);
+        super.setBoss(BossAbilityTypes.Heal);
+        super.setWeather(new ArrayList<WeatherTypes>(Arrays.asList(
+            WeatherTypes.Blizzard,
+            WeatherTypes.Sunny,
+            WeatherTypes.Cloudy)));
     }
 }

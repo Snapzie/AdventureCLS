@@ -202,11 +202,9 @@ namespace AdventureGrains
         {
             if (this.roomGrain != null)
             {
-//                Guid g1 = await this.roomGrain.RoomId();
-//                Guid g2 = await room.RoomId();
                 if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
-                    if (roarActive) //TODO: Remove for synthesis
+                    if (roarActive) 
                     {
                         this.health -= (int)(damage * 0.5);
                     }
