@@ -35,10 +35,6 @@ namespace Tests
             monsterInfo.Name = "testMonster";
         }
 
-        //Fireball
-
-        //Roar
-
         [Fact]
         public async void PlayerGoRoomTest()
         {
@@ -122,9 +118,9 @@ namespace Tests
             await this.room.Drop(knife);
             await this.player.Play("take knife");
             PlayerInfo pi = new PlayerInfo();
-            pi.Key = new Guid();
+            pi.Key = Guid.NewGuid();
             pi.Name = "testPlayer";
-            IPlayerGrain enemyPlayer = _cluster.GrainFactory.GetGrain<IPlayerGrain>(new Guid());
+            IPlayerGrain enemyPlayer = _cluster.GrainFactory.GetGrain<IPlayerGrain>(pi.Key);
             await enemyPlayer.SetName("testPlayer");
             await enemyPlayer.SetRoomGrain(this.room);
 

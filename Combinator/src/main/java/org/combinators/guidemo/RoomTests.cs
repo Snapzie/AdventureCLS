@@ -39,10 +39,6 @@ namespace Tests
             room.Object.SetInfo(ri).Wait();
         }
 
-        //DescriptionWithBossTest
-        //BossEnterGetBoss
-        //BossExit
-
         [Fact]
         public async void ExitToWithRoomTest()
         {
@@ -278,17 +274,5 @@ namespace Tests
             //Assert
             Assert.Null(foundThing);
         }
-
-//        [Fact]
-//        public async void RoomEffectTest()
-//        {
-//            List<WeatherTypes> weathers = new List<WeatherTypes>() {WeatherTypes.Blizzard, WeatherTypes.Cloudy, WeatherTypes.Night, WeatherTypes.Sunny}; // Dark, hailing, cloudy, sunny
-//            for (int i = 0; i < 1000; i++)
-//            {
-//                await this.room.Enter(this.playerInfo);
-//                string text = await this.room.Description(this.playerInfo);
-//                Assert.True(text.Contains("hailing") || text.Contains("cloudy") || text.Contains("dark")|| text.Contains("sunny"), text);
-//            }
-//        }
     }
 }

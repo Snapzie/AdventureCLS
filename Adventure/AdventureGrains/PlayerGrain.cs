@@ -50,6 +50,8 @@ namespace AdventureGrains
 
         async Task IPlayerGrain.Die()
         {
+            this.health = 0;
+            
             // Drop everything
             var tasks = new List<Task<string>>();
             foreach (var thing in new List<Thing>(things))

@@ -11,12 +11,10 @@ namespace AdventureGrains
 {
     public class RoomGrain : Grain, IRoomGrain
     {
-        public Random rand = new Random(0); // For testing purposes
+        public Random rand = new Random(0);
         private string description;
-        //=================================== CHANGES ===========================================
         private IWeatherEffect activeWeather;
         private MonsterInfo boss = null;
-        //=======================================================================================
 
         List<PlayerInfo> players = new List<PlayerInfo>();
         List<MonsterInfo> monsters = new List<MonsterInfo>();
@@ -25,19 +23,10 @@ namespace AdventureGrains
 
         Dictionary<string, IRoomGrain> exits = new Dictionary<string, IRoomGrain>();
         
-        //==================== CHANGES =======================
         public new virtual IGrainFactory GrainFactory
         {
             get { return base.GrainFactory; }
         }
-
-//        public Task<Guid> RoomId()
-//        {
-//            return Task.FromResult(this.GetPrimaryKey());
-//        }
-        //====================================================
-
-        //Room.Enter
 
         public Task Exit(PlayerInfo player)
         {
@@ -51,36 +40,14 @@ namespace AdventureGrains
             monsters.Add(monster);
             return Task.CompletedTask;
         }
-        
-        //================= CHANGES ============================
-        public Task BossEnter(MonsterInfo monster)
-        {
-            monsters.RemoveAll(x => x.Id == monster.Id);
-            this.boss = monster;
-            return Task.CompletedTask;
-        }
-        
-        public Task<MonsterInfo> GetBoss()
-        {
-            return Task.FromResult(this.boss);
-        }
-        
-        public Task BossExit(MonsterInfo monster)
-        {
-            this.boss = null;
-            return Task.CompletedTask;
-        }
-        //======================================================
 
         public async Task Exit(MonsterInfo monster)
         {
             monsters.RemoveAll(x => x.Id == monster.Id);
-            //================================== CHANGES ============================
             if (this.boss != null)
             {
                 await GrainFactory.GetGrain<IBossGrain>(this.boss.Id).UpdateAdds(monster);
             }
-            //=======================================================================
 
             return;
         }
@@ -127,16 +94,13 @@ namespace AdventureGrains
             return Task.FromResult(monsters.Where(x => x.Name.ToLower().Contains(name)).FirstOrDefault());
         }
         
-        //==================== CHANGES =======================
         public Task<List<PlayerInfo>> GetTargetsForMonster()
         {
             return Task.FromResult(players);
         }
-        //====================================================
 
         public async Task<string> Description(PlayerInfo whoisAsking)
         {
-            //================================== CHANGES ============================
             StringBuilder sb = new StringBuilder();
 
             if (things.Count > 0)
@@ -149,7 +113,7 @@ namespace AdventureGrains
             }
             
             var others = players.Where(pi => pi.Key != whoisAsking.Key).ToArray();
-            if (others.Length > 0 || monsters.Count > 0 || this.boss != null) //Boss Synthesis
+            if (others.Length > 0 || monsters.Count > 0 || this.boss != null)
             {
                 sb.AppendLine("Beware! These guys are in the room with you:");
                 if (others.Length > 0)
@@ -169,7 +133,6 @@ namespace AdventureGrains
                     sb.Append("  ").AppendLine(this.boss.Name);
                 }
             }
-            //=======================================================================
             sb.AppendLine($"Your health is: {await GrainFactory.GetGrain<IPlayerGrain>(whoisAsking.Key, "AdventureGrains.Player").GetHealth()}");
 
             return await Task.FromResult(sb.ToString());

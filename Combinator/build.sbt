@@ -28,7 +28,8 @@ lazy val commonSettings = Seq(
 //     guice
 //   )
   libraryDependencies ++= Seq(
-    "org.combinators" %% "cls-scala" % "2.0.0+12-8d994c6b",
+    //"org.combinators" %% "cls-scala" % "2.0.0+12-8d994c6b",
+    "org.combinators" %% "cls-scala" % "2.1.0+32-f8609f42",
     "org.combinators" %% "templating" % "1.0.0+3-bee373e9",
     "org.combinators" %% "cls-scala-presentation-play-git" %
     "1.0.0-RC1+8-63d5cf0b",

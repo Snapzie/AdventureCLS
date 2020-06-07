@@ -10,20 +10,16 @@ namespace AdventureGrains
 {
     public class PlayerGrain : Orleans.Grain, IPlayerGrain
     {
-        //==================== CHANGES =======================
-        private int health = 100; //Change for player classes
+        private int health = 100;
         private int damage = 20;
         private bool roarActive = false;
-        //====================================================
-        
-        IRoomGrain roomGrain; // Current room
-        List<Thing> things = new List<Thing>(); // Things that the player is carrying
+        IRoomGrain roomGrain;
+        List<Thing> things = new List<Thing>();
 
         bool killed = false;
 
         PlayerInfo myInfo;
         
-        //==================== CHANGES =======================
         public new virtual IGrainFactory GrainFactory
         {
             get { return base.GrainFactory; }
@@ -31,7 +27,6 @@ namespace AdventureGrains
 
         public virtual new IDisposable RegisterTimer(Func<object, Task> asyncCallback, object state, TimeSpan dueTime, TimeSpan period) =>
             base.RegisterTimer(asyncCallback, state, dueTime, period);
-        //====================================================
 
         public override Task OnActivateAsync()
         {
@@ -39,15 +34,15 @@ namespace AdventureGrains
             return base.OnActivateAsync();
         }
         
-        //==================== CHANGES =======================
         public Task<int> GetHealth()
         {
             return Task.FromResult<int>(this.health);
         }
-        //====================================================
 
         async Task IPlayerGrain.Die()
         {
+            this.health = 0;
+            
             // Drop everything
             var tasks = new List<Task<string>>();
             foreach (var thing in new List<Thing>(things))
@@ -146,7 +141,6 @@ namespace AdventureGrains
             if (!killed)
                 return null;
 
-            // Go to room '-2', which is the place of no return.
             var room = GrainFactory.GetGrain<IRoomGrain>(-2);
             return await room.Description(myInfo);
         }
@@ -174,13 +168,10 @@ namespace AdventureGrains
                 var weapons = monster.KilledBy.Join(things, id => id, t => t.Id, (id, t) => t);
                 if (weapons.Count() > 0)
                 {
-                    //======================================== CHANGES =============================================
                     return await GrainFactory.GetGrain<IMonsterGrain>(monster.Id, "AdventureGrains.Monster").Kill(this.roomGrain, this.damage);
-                    //==============================================================================================
                 }
                 return "With what? Your bare hands?";
             }
-            //======================================== CHANGES =============================================
             var boss = await this.roomGrain.GetBoss();
             if (boss != null)
             {
@@ -191,18 +182,16 @@ namespace AdventureGrains
                 }
                 return "With what? Your bare hands?";
             }
-            //==============================================================================================
             return "I can't see " + target + " here. Are you sure?";
         }
         
-        //=========================== CHANGES ==============================
         public async Task TakeDamage(IRoomGrain room, int damage)
         {
             if (this.roomGrain != null)
             {
                 if (this.roomGrain.GetPrimaryKey() == room.GetPrimaryKey())
                 {
-                    if (roarActive)
+                    if (roarActive) 
                     {
                         this.health -= (int)(damage * 0.5);
                     }
@@ -219,11 +208,6 @@ namespace AdventureGrains
             }
             return;
         }
-
-        //Fireball
-
-        //Roar
-        //==================================================================
 
         private string RemoveStopWords(string s)
         {
@@ -303,12 +287,6 @@ namespace AdventureGrains
                 case "inv":
                 case "inventory":
                     return "You are carrying: " + string.Join(" ", things.Select(x => x.Name));
-                
-                //======================= CHANGES ============================
-                //Fireball Case
-                
-                //Roar Case
-                //============================================================
 
                 case "end":
                     return "";

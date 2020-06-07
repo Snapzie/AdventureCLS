@@ -45,53 +45,6 @@ namespace Tests
         }
 
         [Fact]
-        public async void SpawnAddsBuffTest()
-        {
-            //Arrange
-            PlayerInfo playerInfo = new PlayerInfo();
-            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-            await this.boss.Object.SetRoomGrain(this.room.Object);
-            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
-
-            //Act
-            string res = await this.boss.Object.Kill(this.room.Object, 10);
-            //Assert 
-            Assert.Equal(" took 10 damage. He now has 190 health left!", res);
-
-            //Act
-            await this.boss.Object.SpawnAdds(this.room.Object);
-            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
-            //Assert
-            Assert.Equal(" took 5 damage. He now has 185 health left!", res2);
-        }
-
-        [Fact]
-        public async void UpdateAddsBuffTest()
-        {
-            //Arrange
-            PlayerInfo playerInfo = new PlayerInfo();
-            MonsterInfo monsterInfo = new MonsterInfo();
-            monsterInfo.Id = 100;
-            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
-            await this.boss.Object.SetRoomGrain(this.room.Object);
-            await this.boss.Object.SpawnAdds(this.room.Object);
-
-            //Act
-            string res = await this.boss.Object.Kill(this.room.Object, 10);
-            //Assert
-            Assert.Equal(" took 5 damage. He now has 195 health left!", res);
-
-            //Act
-            await this.boss.Object.UpdateAdds(monsterInfo);
-            string res2 = await this.boss.Object.Kill(this.room.Object, 10);
-            //Assert
-            Assert.Equal(" took 10 damage. He now has 185 health left!", res2);
-        }
-
-        [Fact]
         public async void KillTest()
         {
             //Arrange
@@ -116,33 +69,6 @@ namespace Tests
             string res4 = await this.boss.Object.Kill(this.room.Object, 201);
             //Assert
             Assert.Equal(" has been slain!", res4);
-        }
-
-        [Fact]
-        public async void KillTestAddsActive()
-        {
-            //Arrange
-            PlayerInfo playerInfo = new PlayerInfo();
-            Mock<IMonsterGrain> add = new Mock<IMonsterGrain>();
-            this.boss.Setup(b => b.GrainFactory.GetGrain<IMonsterGrain>(It.IsAny<long>(), "AdventureGrains.Monster")).Returns(add.Object);
-            await this.boss.Object.SetRoomGrain(this.room.Object);
-            this.room.Setup(r => r.GetTargetsForMonster()).Returns(Task.FromResult(new List<PlayerInfo> { playerInfo }));
-            await this.boss.Object.SpawnAdds(this.room.Object);
-
-            //Act
-            string res = await this.boss.Object.Kill(this.room.Object, 1);
-            //Assert
-            Assert.Equal(" took 0 damage. He now has 200 health left!", res);
-
-            //Act
-            string res2 = await this.boss.Object.Kill(this.room.Object, 0);
-            //Assert
-            Assert.Equal(" took 0 damage. He now has 200 health left!", res2);
-
-            //Act
-            string res3 = await this.boss.Object.Kill(this.room.Object, -5);
-            //Assert
-            Assert.Equal(" took -2 damage. He now has 202 health left!", res3);
         }
     }
 }

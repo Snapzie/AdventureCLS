@@ -27,8 +27,6 @@ namespace AdventureGrains
         {
             get { return base.GrainFactory; }
         }
-
-        //OnActivateAsync
         
         public Task SetInfo()
         {
@@ -46,12 +44,6 @@ namespace AdventureGrains
             this.roomGrain = room;
             await this.roomGrain.BossEnter(this.monsterInfo);
         }
-
-        //spawnAdds
-
-        //UpdateAdds
-
-        //HealAdds
 
         public Task<string> Kill(IRoomGrain room, int damage)
         {

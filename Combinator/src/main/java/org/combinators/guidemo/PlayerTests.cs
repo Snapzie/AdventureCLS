@@ -55,7 +55,7 @@ namespace Tests
         }
 
         [Fact]
-        public async void TakeDamageTest() //GetPrimaryKey is inaccessible and non-overridable
+        public async void TakeDamageTest()
         {
             //Arrange partly done in Constructor
             PlayerInfo pi = new PlayerInfo();

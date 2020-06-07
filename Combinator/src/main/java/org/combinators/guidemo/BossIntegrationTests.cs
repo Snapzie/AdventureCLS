@@ -93,10 +93,6 @@ namespace Tests
             Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 180 health left!", res);
         }
         
-        //DR
-
-        //Heal
-        
         [Fact]
         public async void BossAttacTest()
         {
@@ -113,8 +109,6 @@ namespace Tests
             //Assert
             Assert.Equal("Beware! These guys are in the room with you:\n  Patches the one-eyed demon\nYour health is: 93\n", res);
         }
-        
-        //Fireball
         
         [Fact]
         public async void DescriptionNoPlayersNoItemsWithBossNoMonstersTest()

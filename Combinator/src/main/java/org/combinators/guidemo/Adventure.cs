@@ -37,9 +37,5 @@ namespace AdventureSetup
             await monsterGrain.SetInfo(data);
             await monsterGrain.SetRoomGrain(room);
         }
-        
-        //Make Boss
-
-        //Adventure setup
     }
 }
