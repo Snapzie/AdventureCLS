@@ -45,8 +45,3 @@ class AdventureGameVersion1Controller @Inject()(webJars: WebJarsUtil, lifeCycle:
     extends AdventureGameController(webJars, lifeCycle) {
     lazy val adventureGame: AdventureGame = new AdventureGameVersion1()
 }
-
-// class PersonalGreetingController @Inject()(webJars: WebJarsUtil, lifeCycle: ApplicationLifecycle) 
-//     extends GreetingController(webJars, lifeCycle) {
-//     lazy val greeting: Greeting = new PersonalGreeting()
-// }
