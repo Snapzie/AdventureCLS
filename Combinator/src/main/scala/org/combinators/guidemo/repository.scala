@@ -1223,27 +1223,25 @@ class Repository(adventureGame: AdventureGame) {
   //#########################################################################################################
   //################################## BossIntegration ######################################################
   @combinator object BossIntegrationTests {
-      def apply(bossIntegrationPlayerAbility: String,
-                bossIntegrationAbility: String): MyResult = {
+      def apply(ability: String): MyResult = {
           val file = MyResult(readFile("BossIntegrationTests.cs"), "BossIntegrationTests.cs")
-          addArbCode(file, bossIntegrationPlayerAbility, "public class BossIntegrationTests", '{')
-          addArbCode(file, bossIntegrationAbility, "public class BossIntegrationTests", '{')
+          addArbCode(file, ability, "public class BossIntegrationTests", '{')
           file
       }
       val semanticType: Type =
-        'bossIntegrationPlayerAbility(ability) =>: 'bossIntegrationAbility(bossAbility)  =>: 'bossIntegration(ability, bossAbility)
-  }
+        'bossIntegrationAbility(ability, bossAbility) =>: 'bossIntegration(ability, bossAbility)
+    }
 
-  @combinator object BossIntegrationTestsNone {
+    @combinator object BossIntegrationTestsNone { 
       def apply(): MyResult = {
           val file = MyResult("", "BossIntegrationTests.cs")
           file
       }
       val semanticType: Type =
         'bossIntegration(ability, 'none)
-  }
+    }
 
-  @combinator object BossIntegrationPlayerFireball {
+    @combinator object BossIntegrationPlayerFireball {
       def apply(): String = {
         """
         [Fact]
@@ -1257,8 +1255,16 @@ class Repository(adventureGame: AdventureGame) {
             string res = await this.player.Play("fireball patches");
             //Assert
             Assert.Equal("Patches the one-eyed demon took 50 damage. He now has 150 health left!", res);
-        }
-        
+        }"""
+      }
+      val semanticType: Type =
+        'bossIntegrationPlayerAbility('fireball)
+    }
+
+    @combinator object BossIntegrationFireballDR {
+      def apply(bossIntegrationPlayerAbility : String): String = {
+        bossIntegrationPlayerAbility +
+        """
         [Fact]
         public async void PlayerFireballBossDamageReductionTest()
         {
@@ -1274,18 +1280,23 @@ class Repository(adventureGame: AdventureGame) {
             Assert.Equal("Patches the one-eyed demon took 25 damage. He now has 175 health left!", res);
         }"""
       }
-      val semanticType: Type =
-        'bossIntegrationPlayerAbility('fireball)
-  }
+      val semanticType: Type = 
+            'bossIntegrationPlayerAbility('fireball) =>: 'bossIntegrationFireball('fireball, 'DR)
+    }
 
-  @combinator object BossIntegrationPlayerNone {
-      def apply(): String = {""}
-      val semanticType: Type =
-        'bossIntegrationPlayerAbility('none)
-  }
+    @combinator object BossIntegrationFireballHeal {
+      def apply(bossIntegrationPlayerAbility : String) : String = { bossIntegrationPlayerAbility + ""}
+      val semanticType: Type = 'bossIntegrationPlayerAbility('fireball) =>: 'bossIntegrationFireball('fireball, 'heal)
+    }
 
-  @combinator object BossIntegrationHeal {
-      def apply(): String = {
+    @combinator object BossIntegrationNoAbility {
+        def apply(bossIntegrationPlayerAbility : String) : String = {""} 
+        val semanticType: Type = 
+            'bossIntegrationFireball('none, bossAbility)
+    }
+
+    @combinator object BossIntegrationHeal {
+      def apply(bossIntegrationFireball : String): String = {
         """
         [Fact]
         public async void BossHealAddsTest()
@@ -1318,14 +1329,14 @@ class Repository(adventureGame: AdventureGame) {
             string res = await this.player.Play("kill Patches");
             //Assert
             Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 180 health left!", res);
-        }"""
+        }""" + bossIntegrationFireball
       }
       val semanticType: Type =
-        'bossIntegrationAbility('heal)
-  }
+        'bossIntegrationFireball(ability, 'heal) =>: 'bossIntegrationAbility(ability,'heal)
+    }
 
-  @combinator object BossIntegrationDR {
-      def apply(): String = {
+    @combinator object BossIntegrationDR {
+      def apply(bossIntegrationFireball : String): String = {
         """
         [Fact]
         public async void BossKillWithAddTest()
@@ -1363,13 +1374,13 @@ class Repository(adventureGame: AdventureGame) {
             res = await this.player.Play("kill Patches");
             //Assert
             Assert.Equal("Patches the one-eyed demon took 20 damage. He now has 170 health left!", res);
-        }"""
+        }""" + bossIntegrationFireball
       }
       val semanticType: Type =
-        'bossIntegrationAbility('DR)
-  }
+        'bossIntegrationFireball(ability, 'DR) =>: 'bossIntegrationAbility(ability, 'DR)
+    }
   
-  def semanticBossIntegrationTarget: Type = {
+    def semanticBossIntegrationTarget: Type = {
       var a: Type = 'none
       val b: Type = adventureGame.getBoss match {
           case BossAbilityTypes.none => 'none
@@ -1382,25 +1393,11 @@ class Repository(adventureGame: AdventureGame) {
           a = 'fireball
       }
       'bossIntegration(a, b)
-  }
+    }
+
+
   //#########################################################################################################
-//   def forInhabitation: ReflectedRepository[Repository] = {
-//     ReflectedRepository(
-//         this,
-//         classLoader = this.getClass.getClassLoader,
-//         substitutionSpace = this.abilityKinding.merge(
-//             this.bossKinding.merge(
-//                 this.bossAbilityKinding.merge(
-//                     this.bossTestAbilityKinding.merge(
-//                         this.blizzardWeatherKinding.merge(
-//                             this.sunnyWeatherKinding.merge(
-//                                 this.nightWeatherKinding.merge(
-//                                     this.cloudyWeatherKinding.merge(
-//                                         this.bossTestAbilityKinding.merge(
-//                                             this.bossPresentRoomKinding
-//                                 )))))))))
-//     )
-//   }
+
 def forInhabitation: ReflectedRepository[Repository] = {
     ReflectedRepository(
         this,
